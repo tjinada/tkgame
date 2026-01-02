@@ -1,0 +1,127 @@
+{
+  "id": "sample-intro",
+  "name": "Sample Introduction",
+  "chapter": 1,
+  "scenes": [
+    {
+      "id": "intro-1",
+      "isStart": true,
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "smirk",
+      "description": "The heavy oak doors slam shut behind you, echoing through the cavernous main hall. Chains dangle from the vaulted ceiling like iron vines, and the air tastes of old stone and something sharper—fear, maybe, or anticipation.\n\nSandy stands at the center of the hall, arms crossed, her smirk cutting through the dim torchlight. She's been waiting.\n\n\"Fresh meat,\" she purrs, circling you slowly. Her heels click against the flagstones like a metronome counting down to something inevitable. \"The others will be so pleased. But first... let's establish some ground rules, shall we?\"",
+      "choices": [
+        {
+          "id": "submit-1",
+          "text": "\"Yes, Mistress. I understand my place.\"",
+          "type": "submit",
+          "next": "intro-2-submit",
+          "statChanges": { "obedience": 5 },
+          "affinityChanges": { "sandy": 3 }
+        },
+        {
+          "id": "defy-1",
+          "text": "\"I didn't sign up for this.\"",
+          "type": "defy",
+          "next": "intro-2-defy",
+          "rollRequired": {
+            "dc": 12,
+            "stat": "endurance",
+            "successNext": "intro-2-defy-success",
+            "failureNext": "intro-2-defy-fail"
+          }
+        },
+        {
+          "id": "observe-1",
+          "text": "Stay silent and observe the hall.",
+          "type": "observe",
+          "next": "intro-2-observe"
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "intro-2-submit",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "description": "Sandy's smirk softens into something almost approving. Almost.\n\n\"Good. You learn fast.\" She stops her circling, standing close enough that you can smell her perfume—something dark and floral. \"That attitude will serve you well here. The others aren't always so... welcoming to new toys.\"\n\nShe snaps her fingers, and somewhere in the shadows, you hear movement. Other students, watching. Waiting.\n\n\"Now then. Time for your first lesson.\"",
+      "choices": [
+        {
+          "id": "continue-submit",
+          "text": "Follow her obediently.",
+          "type": "submit",
+          "statChanges": { "obedience": 3 }
+        },
+        {
+          "id": "ask-question",
+          "text": "\"What kind of lesson, Mistress?\"",
+          "type": "custom"
+        }
+      ]
+    },
+    {
+      "id": "intro-2-defy-fail",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "angry",
+      "description": "Before you can finish the thought, Sandy's hand cracks across your cheek. The sound rings through the hall like a gunshot.\n\n\"Didn't sign up?\" Her voice has gone cold, all traces of playfulness burned away. \"You signed the moment you walked through those doors. And now?\"\n\nShe grabs your chin, forcing you to meet her eyes. They're like chips of obsidian.\n\n\"Now you'll learn exactly what that means.\"",
+      "choices": [
+        {
+          "id": "apologize",
+          "text": "\"I'm sorry, Mistress. It won't happen again.\"",
+          "type": "submit",
+          "statChanges": { "obedience": -5, "endurance": -10 },
+          "affinityChanges": { "sandy": -5 }
+        },
+        {
+          "id": "double-down",
+          "text": "Glare back defiantly.",
+          "type": "defy",
+          "statChanges": { "endurance": -15 },
+          "affinityChanges": { "sandy": -10 }
+        }
+      ]
+    },
+    {
+      "id": "intro-2-defy-success",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "amused",
+      "description": "Sandy pauses, one eyebrow arching. For a long moment, she just stares at you, and you hold her gaze without flinching.\n\nThen—unexpectedly—she laughs. It's a genuine sound, rich and surprised.\n\n\"Well, well. We have a fighter.\" She tilts her head, studying you with new interest. \"That's rare. Stupid, but rare. The others will enjoy breaking you.\"\n\nShe turns away, gesturing for you to follow.\n\n\"Don't worry. I'll make sure they don't damage you... too much.\"",
+      "choices": [
+        {
+          "id": "follow-wary",
+          "text": "Follow cautiously, staying alert.",
+          "type": "observe",
+          "affinityChanges": { "sandy": 2 }
+        },
+        {
+          "id": "press-luck",
+          "text": "\"Who are 'the others'?\"",
+          "type": "custom"
+        }
+      ]
+    },
+    {
+      "id": "intro-2-observe",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "teasing",
+      "description": "You say nothing, letting your eyes sweep across the hall instead. Ancient tapestries line the walls, their designs too faded to make out in the torchlight. Multiple doorways lead off into darkness, and you count at least three levels of balconies overhead, all shrouded in shadow.\n\nAnyone could be watching.\n\nSandy notices your assessment and clicks her tongue approvingly.\n\n\"Smart. Mapping the territory already.\" She steps closer, her voice dropping to a conspiratorial whisper. \"But between you and me? There's no way out. Not until I say so.\"\n\nHer smile sharpens.\n\n\"So let's make the most of your stay, shall we?\"",
+      "choices": [
+        {
+          "id": "acknowledge",
+          "text": "Nod slowly in acknowledgment.",
+          "type": "submit",
+          "statChanges": { "obedience": 2 }
+        },
+        {
+          "id": "test-boundaries",
+          "text": "\"Everyone has an exit strategy.\"",
+          "type": "defy"
+        }
+      ]
+    }
+  ]
+}

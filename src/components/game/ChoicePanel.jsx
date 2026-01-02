@@ -1,11 +1,58 @@
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Button } from '../ui/Button'
 
-export function ChoicePanel() {
-  const placeholderChoices = [
-    { id: 1, text: '"Yes, Mistress..." (Submit)', disabled: true },
-    { id: 2, text: '"I refuse." (Defy - DC 15)', disabled: true },
-    { id: 3, text: 'Look around the room', disabled: true },
-  ]
+export function ChoicePanel({ 
+  choices = [], 
+  onChoiceSelect, 
+  onCustomAction,
+  disabled = false,
+  isLoading = false,
+}) {
+  const [customAction, setCustomAction] = useState('')
+
+  const handleChoiceClick = (choiceId) => {
+    if (disabled || isLoading) return
+    onChoiceSelect?.(choiceId)
+  }
+
+  const handleCustomSubmit = () => {
+    if (!customAction.trim() || disabled || isLoading) return
+    onCustomAction?.(customAction.trim())
+    setCustomAction('')
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleCustomSubmit()
+    }
+  }
+
+  const getChoiceTypeIcon = (choice) => {
+    if (choice.rollRequired) return '🎲'
+    if (choice.type === 'submit') return '🙇'
+    if (choice.type === 'defy') return '💢'
+    if (choice.type === 'observe') return '👁️'
+    return '▸'
+  }
+
+  const getChoiceTypeLabel = (choice) => {
+    if (choice.rollRequired) {
+      return `DC ${choice.rollRequired.dc} ${choice.rollRequired.stat || ''}`
+    }
+    return null
+  }
+
+  if (choices.length === 0 && !onCustomAction) {
+    return (
+      <div className="p-4 bg-background-secondary rounded-xl">
+        <p className="text-center text-text-muted text-sm">
+          No choices available
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-4 p-4 bg-background-secondary rounded-xl">
@@ -13,34 +60,85 @@ export function ChoicePanel() {
         Choices
       </h3>
       
+      {/* Choice buttons */}
       <div className="space-y-2">
-        {placeholderChoices.map((choice) => (
-          <Button
+        {choices.map((choice, index) => (
+          <motion.div
             key={choice.id}
-            variant="secondary"
-            className="w-full text-left justify-start"
-            disabled={choice.disabled}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
           >
-            <span className="text-accent-primary mr-2">{choice.id}.</span>
-            {choice.text}
-          </Button>
+            <button
+              onClick={() => handleChoiceClick(choice.id)}
+              disabled={disabled || isLoading}
+              className={`
+                w-full text-left px-4 py-3 rounded-lg border transition-all
+                ${disabled || isLoading
+                  ? 'bg-background-tertiary/50 border-background-tertiary text-text-muted cursor-not-allowed'
+                  : 'bg-background-tertiary border-background-elevated hover:border-accent-primary hover:bg-background-elevated cursor-pointer'
+                }
+              `}
+            >
+              <div className="flex items-start gap-3">
+                <span className="text-lg flex-shrink-0">
+                  {getChoiceTypeIcon(choice)}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-text-primary">
+                    {choice.text}
+                  </p>
+                  {getChoiceTypeLabel(choice) && (
+                    <p className="text-xs text-accent-warning mt-1">
+                      {getChoiceTypeLabel(choice)}
+                    </p>
+                  )}
+                </div>
+                <span className="text-accent-primary/60 text-sm flex-shrink-0">
+                  {index + 1}
+                </span>
+              </div>
+            </button>
+          </motion.div>
         ))}
       </div>
 
       {/* Custom action input */}
-      <div className="pt-2 border-t border-background-tertiary">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Type custom action..."
-            disabled
-            className="flex-1 px-4 py-2 bg-background-tertiary text-text-primary rounded-lg border border-background-elevated focus:border-accent-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-          <Button variant="primary" disabled>
-            ➤
-          </Button>
+      {onCustomAction && (
+        <div className="pt-2 border-t border-background-tertiary">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={customAction}
+              onChange={(e) => setCustomAction(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type custom action..."
+              disabled={disabled || isLoading}
+              className={`
+                flex-1 px-4 py-2 rounded-lg border focus:outline-none transition-colors
+                ${disabled || isLoading
+                  ? 'bg-background-tertiary/50 border-background-tertiary text-text-muted cursor-not-allowed'
+                  : 'bg-background-tertiary border-background-elevated text-text-primary focus:border-accent-primary'
+                }
+              `}
+            />
+            <Button 
+              variant="primary" 
+              onClick={handleCustomSubmit}
+              disabled={disabled || isLoading || !customAction.trim()}
+            >
+              {isLoading ? (
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                '➤'
+              )}
+            </Button>
+          </div>
+          <p className="text-xs text-text-muted mt-2">
+            Press Enter to submit, or type a custom action
+          </p>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none">
+  <!-- Background -->
+  <rect width="400" height="600" fill="#12121a"/>
+  
+  <!-- Decorative frame -->
+  <rect x="10" y="10" width="380" height="580" rx="12" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.3"/>
+  <rect x="20" y="20" width="360" height="560" rx="8" stroke="#8b5cf6" stroke-width="1" fill="none" opacity="0.2"/>
+  
+  <!-- Corner decorations -->
+  <path d="M30 50 L30 30 L50 30" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M370 50 L370 30 L350 30" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M30 550 L30 570 L50 570" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M370 550 L370 570 L350 570" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.5"/>
+  
+  <!-- Silhouette -->
+  <ellipse cx="200" cy="180" rx="70" ry="85" fill="#22222e"/>
+  <path d="M100 340 Q120 280 200 260 Q280 280 300 340 L320 600 L80 600 Z" fill="#22222e"/>
+  
+  <!-- Icon -->
+  <circle cx="200" cy="420" r="40" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.4"/>
+  <path d="M180 420 L195 435 L220 405" stroke="#8b5cf6" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+  
+  <!-- Text -->
+  <text x="200" y="500" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="16" font-weight="500">
+    Upload Portrait
+  </text>
+  <text x="200" y="525" text-anchor="middle" fill="#475569" font-family="system-ui, sans-serif" font-size="12">
+    Click or drag image here
+  </text>
+</svg>

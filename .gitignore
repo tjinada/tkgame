@@ -27,7 +27,3 @@ Thumbs.db
 logs/
 *.log
 npm-debug.log*
-
-# Local scenario files (optional)
-src/data/scenarios/*.json
-!src/data/scenarios/.gitkeep

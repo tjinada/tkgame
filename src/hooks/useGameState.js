@@ -1,55 +1,208 @@
-import { useState, useEffect, useMemo } from 'react'
-import { StateManager } from '../engine/StateManager'
-import { DiceSystem } from '../engine/DiceSystem'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { GameEngine } from '../engine/GameEngine'
+import { CommandManager } from '../engine/CommandManager'
+import { saveSystem } from '../engine/SaveSystem'
 import npcsData from '../data/npcs.json'
 import configData from '../data/config.json'
 
 export function useGameState() {
-  const [stateManager] = useState(() => new StateManager())
-  const [diceSystem] = useState(() => new DiceSystem(stateManager))
-  const [state, setState] = useState(() => stateManager.getState())
+  const gameEngineRef = useRef(null)
+  const commandManagerRef = useRef(null)
+  
+  const [isInitialized, setIsInitialized] = useState(false)
+  const [isGameRunning, setIsGameRunning] = useState(false)
+  const [state, setState] = useState(null)
+  const [currentScene, setCurrentScene] = useState(null)
+  const [pendingRoll, setPendingRoll] = useState(null)
+  const [lastEvent, setLastEvent] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
+  // Initialize game engine
   useEffect(() => {
-    const unsubscribe = stateManager.onStateChange((newState) => {
+    const engine = new GameEngine()
+    gameEngineRef.current = engine
+    commandManagerRef.current = new CommandManager(engine)
+
+    // Subscribe to engine events
+    engine.onStateChange((newState) => {
       setState(newState)
     })
-    return unsubscribe
-  }, [stateManager])
+
+    engine.onSceneChange((scene) => {
+      setCurrentScene(scene)
+    })
+
+    engine.onDiceRoll((roll) => {
+      setPendingRoll(roll)
+    })
+
+    engine.onEventTrigger((event) => {
+      setLastEvent(event)
+    })
+
+    setIsInitialized(true)
+
+    return () => {
+      saveSystem.disableAutoSave()
+    }
+  }, [])
 
   const npcs = useMemo(() => npcsData.npcs, [])
   const statConfigs = useMemo(() => configData.stats, [])
 
+  // Game actions
+  const startNewGame = useCallback(async () => {
+    if (!gameEngineRef.current) return
+    
+    setIsLoading(true)
+    try {
+      await gameEngineRef.current.startNewGame()
+      setIsGameRunning(true)
+      setState(gameEngineRef.current.getState())
+      
+      // Enable auto-save
+      saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  const continueGame = useCallback(async () => {
+    if (!commandManagerRef.current) return
+    
+    setIsLoading(true)
+    try {
+      const result = await commandManagerRef.current.executeCommand('continue')
+      if (result.success) {
+        setIsGameRunning(true)
+        setState(gameEngineRef.current.getState())
+        saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
+      }
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  const loadGame = useCallback(async (slotId) => {
+    if (!commandManagerRef.current) return
+    
+    setIsLoading(true)
+    try {
+      const result = await commandManagerRef.current.executeCommand('load', { slotId })
+      if (result.success) {
+        setIsGameRunning(true)
+        setState(gameEngineRef.current.getState())
+        saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
+      }
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  const saveGame = useCallback((slotId, name) => {
+    if (!commandManagerRef.current) return
+    return commandManagerRef.current.executeCommand('save', { slotId, name })
+  }, [])
+
+  const processChoice = useCallback(async (choiceId) => {
+    if (!gameEngineRef.current || !isGameRunning) return null
+    
+    setIsLoading(true)
+    try {
+      const result = await gameEngineRef.current.processChoice(choiceId)
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [isGameRunning])
+
+  const processCustomAction = useCallback(async (actionText) => {
+    if (!gameEngineRef.current || !isGameRunning) return null
+    
+    setIsLoading(true)
+    try {
+      const result = await gameEngineRef.current.processCustomAction(actionText)
+      return result
+    } finally {
+      setIsLoading(false)
+    }
+  }, [isGameRunning])
+
+  const clearPendingRoll = useCallback(() => {
+    setPendingRoll(null)
+  }, [])
+
+  const clearLastEvent = useCallback(() => {
+    setLastEvent(null)
+  }, [])
+
+  // Convenience getters
+  const getStat = useCallback((name) => {
+    return state?.stats?.[name] ?? 0
+  }, [state])
+
+  const getAffinity = useCallback((npcId) => {
+    return state?.affinities?.[npcId] ?? 0
+  }, [state])
+
+  const getAffinityTier = useCallback((npcId) => {
+    if (!gameEngineRef.current) return null
+    return gameEngineRef.current.stateManager.getAffinityTier(npcId)
+  }, [])
+
+  const getToneStyles = useCallback(() => {
+    if (!gameEngineRef.current) return {}
+    return gameEngineRef.current.getToneStyles()
+  }, [])
+
+  const getSaves = useCallback(() => {
+    return saveSystem.listSaves()
+  }, [])
+
   return {
-    // Current state
-    stats: state.stats,
-    affinities: state.affinities,
-    chapter: state.chapter,
-    turn: state.turn,
-    currentScene: state.currentScene,
-    currentNpc: state.currentNpc,
-    currentLocation: state.currentLocation,
-    activeTone: state.activeTone,
-    perks: state.perks,
-    scars: state.scars,
+    // State
+    isInitialized,
+    isGameRunning,
+    isLoading,
+    
+    // Current state values
+    stats: state?.stats || {},
+    affinities: state?.affinities || {},
+    chapter: state?.chapter || 1,
+    turn: state?.turn || 0,
+    currentScene,
+    currentNpc: state?.currentNpc,
+    currentLocation: state?.currentLocation,
+    activeTone: state?.activeTone || 'Neutral',
+    perks: state?.perks || [],
+    scars: state?.scars || ['Fresh Meat'],
+
+    // Events
+    pendingRoll,
+    lastEvent,
 
     // Data
     npcs,
     statConfigs,
 
-    // Managers
-    stateManager,
-    diceSystem,
-
-    // Convenience methods
-    getStat: (name) => stateManager.getStat(name),
-    getAffinity: (npcId) => stateManager.getAffinity(npcId),
-    getAffinityTier: (npcId) => stateManager.getAffinityTier(npcId),
-    
     // Actions
-    modifyStat: (name, delta) => stateManager.modifyStat(name, delta),
-    modifyAffinity: (npcId, delta) => stateManager.modifyAffinity(npcId, delta),
-    roll: (options) => diceSystem.roll(options),
-    reset: () => stateManager.reset(),
+    startNewGame,
+    continueGame,
+    loadGame,
+    saveGame,
+    processChoice,
+    processCustomAction,
+    clearPendingRoll,
+    clearLastEvent,
+
+    // Getters
+    getStat,
+    getAffinity,
+    getAffinityTier,
+    getToneStyles,
+    getSaves,
   }
 }
 

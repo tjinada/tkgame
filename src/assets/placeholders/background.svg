@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" fill="none">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="50%" stop-color="#12121a"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <pattern id="gridPattern" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1a1a24" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <rect width="1920" height="1080" fill="url(#bgGrad)"/>
+  <rect width="1920" height="1080" fill="url(#gridPattern)" opacity="0.3"/>
+  
+  <!-- Decorative frame -->
+  <rect x="40" y="40" width="1840" height="1000" rx="20" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.15"/>
+  
+  <!-- Corner flourishes -->
+  <path d="M60 120 L60 60 L120 60" stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.3"/>
+  <path d="M1860 120 L1860 60 L1800 60" stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.3"/>
+  <path d="M60 960 L60 1020 L120 1020" stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.3"/>
+  <path d="M1860 960 L1860 1020 L1800 1020" stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.3"/>
+  
+  <!-- Center decoration -->
+  <circle cx="960" cy="540" r="150" stroke="#8b5cf6" stroke-width="1" fill="none" opacity="0.1"/>
+  <circle cx="960" cy="540" r="100" stroke="#8b5cf6" stroke-width="1" fill="none" opacity="0.15"/>
+  <circle cx="960" cy="540" r="50" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.2"/>
+  
+  <!-- Upload icon -->
+  <rect x="920" y="500" width="80" height="60" rx="8" stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.3"/>
+  <path d="M945 540 L960 525 L975 540" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <line x1="960" y1="525" x2="960" y2="550" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+  
+  <!-- Text -->
+  <text x="960" y="620" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="24" font-weight="500">
+    Upload Background
+  </text>
+  <text x="960" y="655" text-anchor="middle" fill="#475569" font-family="system-ui, sans-serif" font-size="16">
+    1920 × 1080 recommended
+  </text>
+</svg>
