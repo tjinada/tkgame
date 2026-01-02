@@ -1,14 +1,20 @@
+import { useState, useEffect } from 'react'
 import { Header } from './Header'
 import { SplitLayout } from './SplitLayout'
 import { Dashboard } from '../game/Dashboard'
 import { NarrativePanel } from '../game/NarrativePanel'
 import { ChoicePanel } from '../game/ChoicePanel'
 import { DiceModal } from '../game/DiceModal'
+import { GameMenu } from '../menu/GameMenu'
 import { SlideshowBackground } from '../visuals/SlideshowBackground'
 import { CharacterPortrait } from '../visuals/CharacterPortrait'
 import { BodyPartDisplay } from '../visuals/BodyPartDisplay'
 
-export function GameScreen({ gameState }) {
+export function GameScreen({ 
+  gameState, 
+  onAdminClick,
+  onMainMenu,
+}) {
   const { 
     chapter, 
     turn, 
@@ -23,7 +29,31 @@ export function GameScreen({ gameState }) {
     processCustomAction,
     getToneStyles,
     streamingContent,
+    saveGame,
+    loadGame,
+    getSaves,
   } = gameState
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [saves, setSaves] = useState([])
+
+  // Load saves when menu opens
+  useEffect(() => {
+    if (isMenuOpen && getSaves) {
+      setSaves(getSaves())
+    }
+  }, [isMenuOpen, getSaves])
+
+  // Handle Escape key to open/close menu
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsMenuOpen(prev => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   // Find current NPC data
   const currentNpcData = npcs?.find(n => n.id === currentNpc)
@@ -44,6 +74,22 @@ export function GameScreen({ gameState }) {
   // Handle custom action
   const handleCustomAction = async (actionText) => {
     await processCustomAction(actionText)
+  }
+
+  // Handle save
+  const handleSave = (slotId, name) => {
+    if (saveGame) {
+      saveGame(slotId, name)
+      setSaves(getSaves())
+    }
+  }
+
+  // Handle load
+  const handleLoad = (slotId) => {
+    if (loadGame) {
+      loadGame(slotId)
+      setIsMenuOpen(false)
+    }
   }
 
   // Left panel content
@@ -103,7 +149,13 @@ export function GameScreen({ gameState }) {
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col h-full">
-        <Header chapter={chapter} turn={turn} />
+        <Header 
+          chapter={chapter} 
+          turn={turn}
+          onAdminClick={onAdminClick}
+          onMenuClick={() => setIsMenuOpen(true)}
+          isPaused={isMenuOpen}
+        />
         <SplitLayout left={leftContent} right={rightContent} />
       </div>
 
@@ -113,6 +165,20 @@ export function GameScreen({ gameState }) {
         rollResult={pendingRoll}
         onClose={clearPendingRoll}
         autoCloseDelay={3000}
+      />
+
+      {/* Game Menu */}
+      <GameMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        onResume={() => setIsMenuOpen(false)}
+        onSave={handleSave}
+        onLoad={handleLoad}
+        onMainMenu={onMainMenu}
+        saves={saves}
+        currentChapter={chapter}
+        currentTurn={turn}
+        currentLocation={currentLocation}
       />
     </div>
   )

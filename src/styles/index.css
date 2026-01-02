@@ -48,64 +48,64 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Paragraph blocks */
-.paragraph-block {
-  margin-bottom: 1.75rem;
-  line-height: 1.9;
-}
-
-.paragraph-block:last-child {
-  margin-bottom: 0;
-}
-
 /* ================================
-   NARRATIVE TEXT (Descriptions)
+   NARRATIVE LINES (Descriptions)
    ================================ */
 
-.narrative-text {
-  font-size: 1.35rem;
+.narrative-line {
+  font-size: 1.3rem;
+  line-height: 1.85;
   font-style: italic;
-  color: #94a3b8; /* Muted slate gray */
-  display: inline;
+  color: #9ca3af; /* Muted gray */
+  margin-bottom: 1rem;
+  padding-left: 0;
+}
+
+@media (min-width: 768px) {
+  .narrative-line {
+    font-size: 1.4rem;
+  }
 }
 
 /* ================================
-   DIALOGUE TEXT (Speech)
+   DIALOGUE LINES (Speech)
    ================================ */
 
-.dialogue-text {
+.dialogue-line {
   font-size: 1.5rem;
+  line-height: 1.7;
   font-style: normal;
   font-weight: 600;
-  color: #f1f5f9; /* Bright white */
-  display: inline;
-  position: relative;
-  padding: 0 0.15em;
-  
-  /* Subtle glow effect */
-  text-shadow: 
-    0 0 1px rgba(241, 245, 249, 0.5),
-    0 0 20px rgba(139, 92, 246, 0.15);
-}
-
-/* Quotation marks styling */
-.dialogue-text::first-letter {
-  color: #a78bfa; /* Purple accent for opening quote */
-}
-
-/* ================================
-   ALTERNATIVE: Block-style dialogue
-   For longer dialogue segments
-   ================================ */
-
-/* When dialogue is standalone or very prominent */
-.dialogue-block {
-  display: block;
-  margin: 1rem 0;
+  color: #f8fafc; /* Bright white */
+  margin-bottom: 1.25rem;
   padding: 0.75rem 1.25rem;
-  border-left: 3px solid #8b5cf6;
-  background: linear-gradient(90deg, rgba(139, 92, 246, 0.08) 0%, transparent 100%);
+  
+  /* Left accent border */
+  border-left: 3px solid #a78bfa;
+  
+  /* Subtle background */
+  background: linear-gradient(90deg, 
+    rgba(139, 92, 246, 0.1) 0%, 
+    rgba(139, 92, 246, 0.03) 50%,
+    transparent 100%
+  );
   border-radius: 0 8px 8px 0;
+  
+  /* Subtle glow */
+  text-shadow: 0 0 30px rgba(248, 250, 252, 0.1);
+}
+
+@media (min-width: 768px) {
+  .dialogue-line {
+    font-size: 1.6rem;
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dialogue-line {
+    font-size: 1.7rem;
+  }
 }
 
 /* ================================
@@ -117,7 +117,7 @@ body {
   width: 3px;
   height: 1.4em;
   background-color: #8b5cf6;
-  margin-left: 2px;
+  margin-left: 4px;
   vertical-align: text-bottom;
   animation: cursorBlink 1s infinite;
 }
@@ -141,29 +141,22 @@ body {
 }
 
 /* ================================
-   RESPONSIVE ADJUSTMENTS
+   SPACING ADJUSTMENTS
    ================================ */
 
-@media (min-width: 768px) {
-  .narrative-text {
-    font-size: 1.45rem;
-  }
-  
-  .dialogue-text {
-    font-size: 1.6rem;
-  }
-  
-  .paragraph-block {
-    line-height: 2;
-  }
+.narrative-line + .dialogue-line {
+  margin-top: 1.5rem;
 }
 
-@media (min-width: 1024px) {
-  .narrative-text {
-    font-size: 1.5rem;
-  }
-  
-  .dialogue-text {
-    font-size: 1.7rem;
-  }
+.dialogue-line + .narrative-line {
+  margin-top: 1.5rem;
+}
+
+.dialogue-line + .dialogue-line {
+  margin-top: 0.75rem;
+}
+
+.narrative-line:last-child,
+.dialogue-line:last-child {
+  margin-bottom: 0;
 }

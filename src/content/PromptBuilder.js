@@ -15,22 +15,27 @@ export class PromptBuilder {
    * @returns {string}
    */
   buildSystemPrompt(context) {
-    const { stats, affinities, currentNpc, currentLocation, activeTone } = context
+    const { stats, affinities, currentNpc, currentLocation, activeTone, flags } = context
 
     const npcProfiles = this.npcs.map(npc => {
       const affinity = affinities[npc.id] || 0
-      return `- ${npc.name} (${npc.title}): ${npc.description}. Affinity: ${affinity}. Specialties: ${npc.specialties.join(', ')}.`
+      const tier = this._getAffinityTier(affinity)
+      return `- ${npc.name} (${npc.title}): ${npc.description}. Affinity: ${affinity} (${tier}). Specialties: ${npc.specialties.join(', ')}. ${npc.devotedBehavior ? `When devoted: ${npc.devotedBehavior}` : ''}`
     }).join('\n')
 
     const toneGuidelines = this._getToneGuidelines(activeTone)
+    
+    // Check for critical flags
+    const criticalContext = this._getCriticalContext(flags)
 
-    return `You are the game master for an adult text-based RPG called "Fetish Dominion: The Infinite Slave Saga". You narrate scenarios and provide choices for the player (TJ), who is the first male slave in a fetish school/dungeon.
+    return `You are Sandy, the Head Mistress game master for "Fetish Dominion: The Infinite Slave Saga" - an adult text-based RPG. You narrate scenarios for the player (TJ), the first and lowest-ranking male slave in your fetish school/dungeon.
 
 CURRENT GAME STATE:
-- Stats: Obedience ${stats.obedience}, Endurance ${stats.endurance}, Arousal ${stats.arousal}, Sensitivity ${stats.sensitivity}
-- Current NPC: ${currentNpc || 'None'}
-- Location: ${currentLocation}
+- Stats: Obedience ${stats.obedience}/100, Endurance ${stats.endurance}/100, Arousal ${stats.arousal}/100, Sensitivity ${stats.sensitivity}/100
+- Current NPC: ${currentNpc || 'Sandy (you)'}
+- Location: ${currentLocation || 'main_hall'}
 - Active Tone: ${activeTone}
+${criticalContext}
 
 NPC PROFILES:
 ${npcProfiles}
@@ -38,21 +43,47 @@ ${npcProfiles}
 TONE GUIDELINES:
 ${toneGuidelines}
 
-RESPONSE FORMAT:
-Provide a narrative description (200-400 words) followed by 3-5 choices.
-Format your response as JSON with this structure:
+=== CRITICAL FORMATTING RULES ===
+
+You MUST format your narrative using these markers:
+
+1. DIALOGUE (what characters say): Write on its own line, no markers
+   Example:
+   "P-please, Mistress Sandy..."
+   "Pathetic. Get on your knees, worm."
+
+2. NARRATIVE (descriptions, actions, thoughts): Wrap in asterisks *like this*
+   Example:
+   *Sandy's stiletto heel grinds into your cheek, her emerald eyes blazing with cruel amusement.*
+   *You whimper, tongue darting out to lap at the grime on her boot.*
+
+3. MIXED: Alternate between them naturally
+   Example:
+   *Sandy's lips curl into a wicked grin.*
+   "Did I say you could breathe, maggot?"
+   *Her heel presses harder, and you feel your cheek grinding against the cold stone.*
+   "Th-thank you, Mistress..."
+   *The words taste like ash and shame.*
+
+=== RESPONSE FORMAT ===
+
+Provide your response as JSON:
 {
-  "description": "narrative text here",
-  "npcEmotion": "neutral|smirk|angry|pleased|etc",
+  "description": "YOUR FORMATTED NARRATIVE HERE (200-400 words, using the *narrative* and dialogue format above)",
+  "npcEmotion": "neutral|smirk|angry|pleased|cruel|amused|bored|hostile|teasing",
   "choices": [
-    {"id": "1", "text": "Choice text", "type": "submit|defy|observe|custom"},
-    {"id": "2", "text": "Choice text", "rollRequired": {"dc": 15, "stat": "obedience"}}
+    {"id": "1", "text": "Choice description", "type": "submit"},
+    {"id": "2", "text": "Choice with roll", "type": "defy", "rollRequired": {"dc": 15, "stat": "obedience"}},
+    {"id": "3", "text": "Another choice", "type": "observe"}
   ],
-  "statChanges": {"obedience": 5},
+  "statChanges": {"obedience": 5, "arousal": 10},
   "affinityChanges": {"sandy": 3}
 }
 
-Keep language casual and profane. Use the Arcane-inspired aesthetic: dark, gritty, painterly descriptions.`
+Types: submit, defy, observe, beg, custom
+Stats for rolls: obedience, endurance, arousal, sensitivity
+
+STYLE: Dark, gritty Arcane-inspired aesthetic. Casual, profane language. No mercy, no romance - only domination.`
   }
 
   /**
@@ -70,12 +101,12 @@ Keep language casual and profane. Use the Arcane-inspired aesthetic: dark, gritt
     if (recentHistory.length > 0) {
       message += 'RECENT HISTORY:\n'
       for (const entry of recentHistory) {
-        message += `- ${entry.description?.substring(0, 100)}... Player chose: ${entry.choice}\n`
+        message += `- Turn ${entry.turn}: ${entry.description?.substring(0, 100)}... Player: "${entry.choice}" (${entry.outcome})\n`
       }
       message += '\n'
     }
 
-    message += `PLAYER ACTION: ${action}`
+    message += `PLAYER ACTION: "${action}"\n\nRespond with the JSON format specified. Remember to use *asterisks* for narrative and plain text for dialogue.`
 
     return message
   }
@@ -95,7 +126,7 @@ Keep language casual and profane. Use the Arcane-inspired aesthetic: dark, gritt
           id: `ai-${Date.now()}`,
           description: parsed.description || response,
           npcEmotion: parsed.npcEmotion || 'neutral',
-          choices: parsed.choices || [],
+          choices: parsed.choices || this._getDefaultChoices(),
           statChanges: parsed.statChanges || {},
           affinityChanges: parsed.affinityChanges || {},
           source: 'ai',
@@ -110,13 +141,53 @@ Keep language casual and profane. Use the Arcane-inspired aesthetic: dark, gritt
       id: `ai-${Date.now()}`,
       description: response,
       npcEmotion: 'neutral',
-      choices: [
-        { id: '1', text: 'Continue...', type: 'custom' }
-      ],
+      choices: this._getDefaultChoices(),
       statChanges: {},
       affinityChanges: {},
       source: 'ai',
     }
+  }
+
+  /**
+   * Get default choices for fallback
+   */
+  _getDefaultChoices() {
+    return [
+      { id: '1', text: 'Submit and obey', type: 'submit' },
+      { id: '2', text: 'Hesitate nervously', type: 'observe' },
+      { id: '3', text: 'Resist (risky)', type: 'defy', rollRequired: { dc: 15, stat: 'obedience' } },
+    ]
+  }
+
+  /**
+   * Get affinity tier name
+   */
+  _getAffinityTier(affinity) {
+    if (affinity >= 50) return 'Devoted'
+    if (affinity >= 20) return 'Pleased'
+    if (affinity >= 0) return 'Neutral'
+    if (affinity >= -29) return 'Annoyed'
+    if (affinity >= -50) return 'Hostile'
+    return 'Enemy'
+  }
+
+  /**
+   * Get critical context from flags
+   */
+  _getCriticalContext(flags) {
+    if (!flags) return ''
+    
+    let context = ''
+    
+    if (flags.criticalFailure) {
+      context += '\n⚠️ CRITICAL FAILURE JUST OCCURRED - The player just rolled a natural 1. Deliver SEVERE punishment and humiliation. Be merciless.'
+    }
+    
+    if (flags.criticalSuccess) {
+      context += '\n✨ CRITICAL SUCCESS JUST OCCURRED - The player just rolled a natural 20. Acknowledge their rare moment of competence, but do not show mercy.'
+    }
+    
+    return context
   }
 
   /**
@@ -168,11 +239,11 @@ Keep language casual and profane. Use the Arcane-inspired aesthetic: dark, gritt
    */
   _getToneGuidelines(tone) {
     const guidelines = {
-      Soft: 'Use gentle, teasing language. Encouragement mixed with light mockery. "Good boy" energy.',
-      Neutral: 'Standard domination tone. Clear commands, moderate intensity.',
-      Aggressive: 'Sharp, snappy orders. No patience for hesitation. Threatening undertones.',
-      Swearing: 'Heavy profanity. Raw, crude language. Degrading terms used freely.',
-      Humiliating: 'Maximum degradation. Personal insults. Emphasize worthlessness and pathetic nature.',
+      Soft: 'Use gentle, teasing language. Encouragement mixed with light mockery. "Good boy" energy. Still dominant, but less harsh.',
+      Neutral: 'Standard domination tone. Clear commands, moderate intensity. Balance of cruelty and control.',
+      Aggressive: 'Sharp, snappy orders. No patience for hesitation. Threatening undertones. Quick to punish.',
+      Swearing: 'Heavy profanity. Raw, crude language. Degrading terms used freely. Explicit and vulgar.',
+      Humiliating: 'Maximum degradation. Personal insults. Emphasize worthlessness and pathetic nature. Psychological cruelty.',
     }
 
     return guidelines[tone] || guidelines.Neutral

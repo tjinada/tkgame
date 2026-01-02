@@ -115,6 +115,15 @@ export function useGameState() {
     return commandManagerRef.current.executeCommand('save', { slotId, name })
   }, [])
 
+  const stopGame = useCallback(() => {
+    saveSystem.disableAutoSave()
+    setIsGameRunning(false)
+    setCurrentScene(null)
+    setStreamingContent('')
+    setPendingRoll(null)
+    setLastEvent(null)
+  }, [])
+
   const processChoice = useCallback(async (choiceId) => {
     if (!gameEngineRef.current || !isGameRunning) return null
     
@@ -172,6 +181,71 @@ export function useGameState() {
     return saveSystem.listSaves()
   }, [])
 
+  // Get full state for admin panel
+  const getFullState = useCallback(() => {
+    if (!gameEngineRef.current) return null
+    return gameEngineRef.current.getState()
+  }, [])
+
+  // Set full state from admin panel (cheats)
+  const setFullState = useCallback((newState) => {
+    if (!gameEngineRef.current || !newState) return
+    
+    // Update state manager directly
+    const stateManager = gameEngineRef.current.stateManager
+    
+    if (newState.stats) {
+      Object.entries(newState.stats).forEach(([stat, value]) => {
+        const currentValue = stateManager.getStat(stat)
+        const delta = value - currentValue
+        if (delta !== 0) {
+          stateManager.modifyStat(stat, delta)
+        }
+      })
+    }
+    
+    if (newState.affinities) {
+      Object.entries(newState.affinities).forEach(([npc, value]) => {
+        const currentValue = stateManager.getAffinity(npc)
+        const delta = value - currentValue
+        if (delta !== 0) {
+          stateManager.modifyAffinity(npc, delta)
+        }
+      })
+    }
+    
+    if (newState.chapter !== undefined) {
+      stateManager.state.chapter = newState.chapter
+    }
+    
+    if (newState.turn !== undefined) {
+      stateManager.state.turn = newState.turn
+    }
+    
+    if (newState.currentScene !== undefined) {
+      stateManager.state.currentScene = newState.currentScene
+    }
+    
+    if (newState.currentNpc !== undefined) {
+      stateManager.state.currentNpc = newState.currentNpc
+    }
+    
+    if (newState.currentLocation !== undefined) {
+      stateManager.state.currentLocation = newState.currentLocation
+    }
+    
+    if (newState.activeTone !== undefined) {
+      stateManager.state.activeTone = newState.activeTone
+    }
+    
+    if (newState.flags) {
+      stateManager.state.flags = { ...newState.flags }
+    }
+    
+    // Trigger state update
+    setState({ ...stateManager.state })
+  }, [])
+
   return {
     // State
     isInitialized,
@@ -206,6 +280,7 @@ export function useGameState() {
     continueGame,
     loadGame,
     saveGame,
+    stopGame,
     processChoice,
     processCustomAction,
     clearPendingRoll,
@@ -217,6 +292,8 @@ export function useGameState() {
     getAffinityTier,
     getToneStyles,
     getSaves,
+    getFullState,
+    setFullState,
   }
 }
 

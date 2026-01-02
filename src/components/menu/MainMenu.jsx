@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '../ui/Button'
 import { saveSystem } from '../../engine/SaveSystem'
+import { Settings } from 'lucide-react'
 
-export function MainMenu({ onStartNewGame, onLoadGame, onContinue }) {
+export function MainMenu({ onStartNewGame, onLoadGame, onContinue, onAdminClick }) {
   const [view, setView] = useState('main') // 'main' | 'load' | 'saves'
   const [saves, setSaves] = useState(() => saveSystem.listSaves())
   const [selectedSlot, setSelectedSlot] = useState(null)
@@ -47,6 +48,18 @@ export function MainMenu({ onStartNewGame, onLoadGame, onContinue }) {
           `,
         }}
       />
+
+      {/* Admin Button - Top Right */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        onClick={onAdminClick}
+        className="absolute top-6 right-6 p-3 rounded-lg bg-background-tertiary/50 hover:bg-background-tertiary border border-background-elevated transition-colors text-text-muted hover:text-text-primary"
+        title="Admin Panel"
+      >
+        <Settings size={20} />
+      </motion.button>
 
       {/* Decorative chains */}
       <div className="absolute top-0 left-1/4 w-px h-32 bg-gradient-to-b from-accent-primary/30 to-transparent" />

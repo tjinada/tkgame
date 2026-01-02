@@ -3,6 +3,7 @@ import { DiceSystem } from './DiceSystem'
 import { EventSystem } from './EventSystem'
 import { ToneEngine } from './ToneEngine'
 import { ContentRouter } from '../content/ContentRouter'
+import { debugLog } from '../components/admin/tabs/DebugTab'
 import sampleScenario from '../data/scenarios/sample.json'
 
 export class GameEngine {
@@ -52,7 +53,7 @@ export class GameEngine {
     }
 
     this.isRunning = true
-    console.log('New game started')
+    debugLog.game('New game started', { scene: startScene?.id })
     return startScene
   }
 
@@ -77,7 +78,7 @@ export class GameEngine {
     }
 
     this.isRunning = true
-    console.log('Game continued from save')
+    debugLog.game('Game continued', { chapter: savedState.chapter, turn: savedState.turn })
     return this.currentScene
   }
 
@@ -96,6 +97,8 @@ export class GameEngine {
       return { error: 'Invalid choice' }
     }
 
+    debugLog.game(`Choice selected: ${choice.text}`, { choiceId })
+
     const result = {
       choice,
       roll: null,
@@ -113,6 +116,7 @@ export class GameEngine {
       })
       result.roll = rollResult
       this._emit('diceRoll', rollResult)
+      debugLog.roll(rollResult)
 
       // Apply automatic roll effects
       this._applyRollEffects(rollResult, result)
@@ -154,6 +158,7 @@ export class GameEngine {
       const eventChanges = this.eventSystem.applyEventEffects(event)
       result.eventChanges = eventChanges
       this._emit('eventTrigger', event)
+      debugLog.event(event)
     }
 
     // Increment turn
@@ -253,6 +258,8 @@ export class GameEngine {
       return { error: 'Game not running' }
     }
 
+    debugLog.game(`Custom action: ${actionText.substring(0, 50)}...`)
+
     // Increment turn
     this.stateManager.incrementTurn()
 
@@ -300,13 +307,22 @@ export class GameEngine {
    * @returns {Promise<Object>} - The generated scene
    */
   async _generateWithStreaming(actionText) {
-    return this.contentRouter.generateFromActionStreaming(
-      actionText,
-      this._getContext(),
-      (delta, fullContent) => {
-        this._emit('streamChunk', { delta, fullContent })
-      }
-    )
+    debugLog.api('Generating content', { action: actionText.substring(0, 50) })
+    
+    try {
+      const result = await this.contentRouter.generateFromActionStreaming(
+        actionText,
+        this._getContext(),
+        (delta, fullContent) => {
+          this._emit('streamChunk', { delta, fullContent })
+        }
+      )
+      debugLog.api('Content generated', { sceneId: result?.id })
+      return result
+    } catch (error) {
+      debugLog.error('Content generation failed', error.message)
+      throw error
+    }
   }
 
   /**
