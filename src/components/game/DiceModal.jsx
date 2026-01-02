@@ -5,17 +5,19 @@ export function DiceModal({
   isOpen, 
   rollResult, 
   onClose,
-  autoCloseDelay = 3000,
+  autoCloseDelay = 4000,
 }) {
   const [displayNumber, setDisplayNumber] = useState(1)
-  const [phase, setPhase] = useState('rolling') // 'rolling' | 'result' | 'details'
+  const [phase, setPhase] = useState('rolling') // 'rolling' | 'result' | 'details' | 'effects'
   const [showModifiers, setShowModifiers] = useState(false)
+  const [showEffects, setShowEffects] = useState(false)
 
   useEffect(() => {
     if (!isOpen || !rollResult) return
 
     setPhase('rolling')
     setShowModifiers(false)
+    setShowEffects(false)
 
     // Rolling animation - cycle through numbers
     let rollCount = 0
@@ -33,6 +35,12 @@ export function DiceModal({
         setTimeout(() => {
           setShowModifiers(true)
           setPhase('details')
+          
+          // Show effects after modifiers
+          setTimeout(() => {
+            setShowEffects(true)
+            setPhase('effects')
+          }, 600)
         }, 500)
       }
     }, 80)
@@ -42,7 +50,7 @@ export function DiceModal({
 
   // Auto-close after delay
   useEffect(() => {
-    if (phase === 'details' && autoCloseDelay > 0) {
+    if (phase === 'effects' && autoCloseDelay > 0) {
       const timer = setTimeout(onClose, autoCloseDelay)
       return () => clearTimeout(timer)
     }
@@ -71,6 +79,11 @@ export function DiceModal({
     return 'rgba(139, 92, 246, 0.3)'
   }
 
+  const hasAutoEffects = rollResult.autoEffects && (
+    Object.keys(rollResult.autoEffects.statChanges || {}).length > 0 ||
+    rollResult.autoEffects.affinityChange !== 0
+  )
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -90,7 +103,7 @@ export function DiceModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ type: 'spring', damping: 20 }}
-            className="relative bg-background-secondary rounded-2xl p-8 min-w-[320px] border border-accent-primary/20"
+            className="relative bg-background-secondary rounded-2xl p-8 min-w-[360px] max-w-[420px] border border-accent-primary/20"
             onClick={(e) => e.stopPropagation()}
             style={{
               boxShadow: `0 0 60px ${getGlowColor()}`,
@@ -165,10 +178,13 @@ export function DiceModal({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-center"
+                className="text-center mb-4"
               >
                 <p className="text-sm text-text-muted mb-2">
                   vs DC <span className="font-mono text-text-primary">{rollResult.dc}</span>
+                  {rollResult.missedBy > 0 && (
+                    <span className="text-red-400 ml-2">(missed by {rollResult.missedBy})</span>
+                  )}
                 </p>
                 
                 {/* Success/Failure Banner */}
@@ -188,14 +204,89 @@ export function DiceModal({
                   {isSuccess && !isCritSuccess && '✓ Success'}
                   {isFailure && !isCritFail && '✗ Failure'}
                 </motion.div>
+
+                {/* Severity indicator */}
+                {rollResult.severity && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className={`mt-2 text-sm font-medium ${
+                      rollResult.severity.multiplier >= 2 ? 'text-red-500' :
+                      rollResult.severity.multiplier >= 1.5 ? 'text-orange-400' :
+                      rollResult.severity.multiplier >= 1 ? 'text-yellow-400' :
+                      'text-yellow-200'
+                    }`}
+                  >
+                    {rollResult.severity.name}
+                  </motion.p>
+                )}
               </motion.div>
             )}
+
+            {/* Auto Effects */}
+            <AnimatePresence>
+              {showEffects && hasAutoEffects && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="border-t border-background-tertiary pt-4 mt-4"
+                >
+                  <p className="text-xs text-text-muted uppercase tracking-wider mb-2">
+                    {isSuccess ? 'Bonuses' : 'Penalties'}
+                  </p>
+                  
+                  <div className="space-y-1">
+                    {Object.entries(rollResult.autoEffects.statChanges || {}).map(([stat, value]) => (
+                      value !== 0 && (
+                        <motion.div
+                          key={stat}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="flex justify-between items-center text-sm px-3 py-1"
+                        >
+                          <span className="text-text-secondary capitalize">{stat}</span>
+                          <span className={value > 0 ? 'text-green-400' : 'text-red-400'}>
+                            {value > 0 ? '+' : ''}{value}
+                          </span>
+                        </motion.div>
+                      )
+                    ))}
+                    
+                    {rollResult.autoEffects.affinityChange !== 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex justify-between items-center text-sm px-3 py-1"
+                      >
+                        <span className="text-text-secondary">NPC Affinity</span>
+                        <span className={rollResult.autoEffects.affinityChange > 0 ? 'text-green-400' : 'text-red-400'}>
+                          {rollResult.autoEffects.affinityChange > 0 ? '+' : ''}{rollResult.autoEffects.affinityChange}
+                        </span>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Description */}
+                  {rollResult.autoEffects.description && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-sm text-text-muted italic mt-3 text-center"
+                    >
+                      {rollResult.autoEffects.description}
+                    </motion.p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Click to close hint */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
+              transition={{ delay: 1.5 }}
               className="text-center text-xs text-text-muted mt-6"
             >
               Click anywhere to continue

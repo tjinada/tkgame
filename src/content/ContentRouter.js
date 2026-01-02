@@ -4,74 +4,20 @@ import { PromptBuilder } from './PromptBuilder'
 
 export class ContentRouter {
   constructor(options = {}) {
-    this.mode = options.mode || 'hybrid' // 'json-only', 'ai-only', 'hybrid'
     this.scenarioLoader = options.scenarioLoader || new ScenarioLoader()
     this.nanoGPTClient = options.nanoGPTClient || new NanoGPTClient()
     this.promptBuilder = options.promptBuilder || new PromptBuilder()
-  }
-
-  /**
-   * Get content for a scene
-   * @param {string} sceneId - The scene ID to load
-   * @param {Object} context - Current game context
-   * @returns {Promise<SceneContent>}
-   */
-  async getSceneContent(sceneId, context) {
-    // Try JSON first in hybrid mode
-    if (this.mode === 'json-only' || this.mode === 'hybrid') {
-      const jsonScene = this.scenarioLoader.getScene(sceneId)
-      if (jsonScene) {
-        return this._formatJsonScene(jsonScene)
-      }
-    }
-
-    // Fall back to AI if allowed
-    if (this.mode === 'ai-only' || this.mode === 'hybrid') {
-      return this._generateFromAI(`Load scene: ${sceneId}`, context)
-    }
-
-    // No content available
-    console.error(`No content found for scene: ${sceneId}`)
-    return this._getErrorContent('Scene not found')
-  }
-
-  /**
-   * Get the next scene based on a choice
-   * @param {string} choiceId - The choice that was made
-   * @param {Object} currentScene - The current scene
-   * @param {Object} context - Current game context
-   * @returns {Promise<SceneContent>}
-   */
-  async getNextScene(choiceId, currentScene, context) {
-    // Find the choice in the current scene
-    const choice = currentScene.choices?.find(c => c.id === choiceId)
     
-    if (choice?.next) {
-      // Choice specifies a next scene
-      return this.getSceneContent(choice.next, context)
-    }
-
-    // Generate continuation via AI
-    if (this.mode === 'ai-only' || this.mode === 'hybrid') {
-      const choiceText = choice?.text || choiceId
-      return this._generateFromAI(choiceText, context)
-    }
-
-    return this._getErrorContent('No next scene available')
+    // Modes: 'json-only', 'ai-only', 'hybrid'
+    this.mode = options.mode || 'hybrid'
   }
 
   /**
-   * Generate content from a freeform action
-   * @param {string} actionText - The player's action
-   * @param {Object} context - Current game context
-   * @returns {Promise<SceneContent>}
+   * Load a scenario for JSON content
+   * @param {Object} scenarioData - The scenario JSON
    */
-  async generateFromAction(actionText, context) {
-    if (this.mode === 'json-only') {
-      return this._getErrorContent('AI generation disabled in JSON-only mode')
-    }
-
-    return this._generateFromAI(actionText, context)
+  loadScenario(scenarioData) {
+    this.scenarioLoader.loadScenario(scenarioData)
   }
 
   /**
@@ -79,12 +25,7 @@ export class ContentRouter {
    * @param {string} mode - 'json-only', 'ai-only', or 'hybrid'
    */
   setMode(mode) {
-    if (['json-only', 'ai-only', 'hybrid'].includes(mode)) {
-      this.mode = mode
-      console.log(`Content mode set to: ${mode}`)
-    } else {
-      console.error(`Invalid content mode: ${mode}`)
-    }
+    this.mode = mode
   }
 
   /**
@@ -96,85 +37,158 @@ export class ContentRouter {
   }
 
   /**
-   * Load a scenario into the router
-   * @param {Object} scenarioData - The scenario JSON
-   * @returns {ValidationResult}
+   * Get scene content by ID
+   * @param {string} sceneId - Scene identifier
+   * @param {Object} context - Current game context
+   * @returns {Promise<Object>}
    */
-  loadScenario(scenarioData) {
-    return this.scenarioLoader.loadScenario(scenarioData)
+  async getSceneContent(sceneId, context = {}) {
+    // Try JSON first in hybrid or json-only mode
+    if (this.mode !== 'ai-only') {
+      const jsonScene = this.scenarioLoader.getScene(sceneId)
+      if (jsonScene) {
+        return this._formatScene(jsonScene, 'json')
+      }
+    }
+
+    // Fall back to AI in hybrid or ai-only mode
+    if (this.mode !== 'json-only') {
+      return this._generateScene(sceneId, context)
+    }
+
+    return null
   }
 
   /**
-   * Check if AI is available
-   * @returns {boolean}
+   * Get next scene based on choice
+   * @param {string} choiceId - The choice ID or next scene ID
+   * @param {Object} context - Current game context
+   * @returns {Promise<Object>}
    */
-  isAIAvailable() {
-    return this.nanoGPTClient.isConfigured()
+  async getNextScene(choiceId, context = {}) {
+    return this.getSceneContent(choiceId, context)
   }
 
   /**
-   * Format a JSON scene into SceneContent
-   * @param {Object} scene - The raw scene data
-   * @returns {SceneContent}
+   * Generate scene from custom action (non-streaming)
+   * @param {string} actionText - Player's custom action
+   * @param {Object} context - Current game context
+   * @returns {Promise<Object>}
    */
-  _formatJsonScene(scene) {
+  async generateFromAction(actionText, context = {}) {
+    if (this.mode === 'json-only') {
+      return {
+        id: `custom-${Date.now()}`,
+        description: 'Custom actions require AI mode to be enabled.',
+        choices: [],
+        source: 'error',
+      }
+    }
+
+    const systemPrompt = this.promptBuilder.buildSystemPrompt(context)
+    const userMessage = this.promptBuilder.buildUserMessage(actionText, context)
+
+    const response = await this.nanoGPTClient.chat([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userMessage },
+    ])
+
+    if (response.error) {
+      return {
+        id: `error-${Date.now()}`,
+        description: 'Failed to generate content. Please try again.',
+        choices: [],
+        source: 'error',
+      }
+    }
+
+    return this._parseAIResponse(response.content)
+  }
+
+  /**
+   * Generate scene from custom action with streaming
+   * @param {string} actionText - Player's custom action
+   * @param {Object} context - Current game context
+   * @param {Function} onChunk - Callback for streaming chunks (delta, fullContent)
+   * @returns {Promise<Object>}
+   */
+  async generateFromActionStreaming(actionText, context = {}, onChunk) {
+    if (this.mode === 'json-only') {
+      return {
+        id: `custom-${Date.now()}`,
+        description: 'Custom actions require AI mode to be enabled.',
+        choices: [],
+        source: 'error',
+      }
+    }
+
+    const systemPrompt = this.promptBuilder.buildSystemPrompt(context)
+    const userMessage = this.promptBuilder.buildUserMessage(actionText, context)
+
+    const response = await this.nanoGPTClient.streamChat(
+      [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
+      onChunk
+    )
+
+    if (response.error) {
+      return {
+        id: `error-${Date.now()}`,
+        description: 'Failed to generate content. Please try again.',
+        choices: [],
+        source: 'error',
+      }
+    }
+
+    return this._parseAIResponse(response.content)
+  }
+
+  /**
+   * Generate AI content for a scene
+   * @param {string} sceneId - Scene identifier for context
+   * @param {Object} context - Current game context
+   * @returns {Promise<Object>}
+   */
+  async _generateScene(sceneId, context) {
+    const prompt = `Continue the scene. Scene ID: ${sceneId}`
+    return this.generateFromAction(prompt, context)
+  }
+
+  /**
+   * Format JSON scene to standard structure
+   * @param {Object} scene - Raw scene data
+   * @param {string} source - Content source
+   * @returns {Object}
+   */
+  _formatScene(scene, source = 'json') {
     return {
       id: scene.id,
       location: scene.location || null,
       npc: scene.npc || null,
       npcEmotion: scene.npcEmotion || 'neutral',
       bodyPart: scene.bodyPart || null,
-      description: scene.description,
+      description: scene.description || '',
       choices: scene.choices || [],
-      statChanges: scene.statChanges || {},
-      affinityChanges: scene.affinityChanges || {},
       rollRequired: scene.rollRequired || null,
       eventTrigger: scene.eventRoll || false,
-      source: 'json',
+      statChanges: scene.statChanges || {},
+      affinityChanges: scene.affinityChanges || {},
+      source,
     }
   }
 
   /**
-   * Generate content via AI
-   * @param {string} action - The action to respond to
-   * @param {Object} context - Current game context
-   * @returns {Promise<SceneContent>}
+   * Parse AI response into scene structure
+   * @param {string} content - Raw AI response
+   * @returns {Object}
    */
-  async _generateFromAI(action, context) {
-    const systemPrompt = this.promptBuilder.buildSystemPrompt(context)
-    const userMessage = this.promptBuilder.buildUserMessage(action, context)
-
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userMessage },
-    ]
-
-    const response = await this.nanoGPTClient.chat(messages)
-
-    if (response.error) {
-      console.error('AI generation failed:', response.error)
-      return this._getErrorContent(response.error)
-    }
-
-    return this.promptBuilder.parseAIResponse(response.content)
-  }
-
-  /**
-   * Get error content placeholder
-   * @param {string} message - Error message
-   * @returns {SceneContent}
-   */
-  _getErrorContent(message) {
+  _parseAIResponse(content) {
+    const parsed = this.promptBuilder.parseAIResponse(content)
     return {
-      id: `error-${Date.now()}`,
-      description: `[Error: ${message}]`,
-      npcEmotion: 'neutral',
-      choices: [
-        { id: 'retry', text: 'Try again', type: 'custom' }
-      ],
-      statChanges: {},
-      affinityChanges: {},
-      source: 'error',
+      ...parsed,
+      source: 'ai',
     }
   }
 }

@@ -20,6 +20,7 @@ export class GameEngine {
       diceRoll: [],
       eventTrigger: [],
       stateChange: [],
+      streamChunk: [],
     }
 
     // Subscribe to state changes
@@ -113,6 +114,9 @@ export class GameEngine {
       result.roll = rollResult
       this._emit('diceRoll', rollResult)
 
+      // Apply automatic roll effects
+      this._applyRollEffects(rollResult, result)
+
       // Determine next scene based on roll
       if (rollResult.success) {
         result.nextSceneId = choice.rollRequired.successNext || choice.next
@@ -123,19 +127,23 @@ export class GameEngine {
       result.nextSceneId = choice.next
     }
 
-    // Apply stat changes from choice
+    // Apply stat changes from choice (in addition to roll effects)
     if (choice.statChanges) {
       for (const [stat, delta] of Object.entries(choice.statChanges)) {
         const newValue = this.stateManager.modifyStat(stat, delta)
-        result.statChanges[stat] = { delta, newValue }
+        result.statChanges[stat] = result.statChanges[stat] || { delta: 0, newValue }
+        result.statChanges[stat].delta += delta
+        result.statChanges[stat].newValue = newValue
       }
     }
 
-    // Apply affinity changes from choice
+    // Apply affinity changes from choice (in addition to roll effects)
     if (choice.affinityChanges) {
       for (const [npc, delta] of Object.entries(choice.affinityChanges)) {
         const newValue = this.stateManager.modifyAffinity(npc, delta)
-        result.affinityChanges[npc] = { delta, newValue }
+        result.affinityChanges[npc] = result.affinityChanges[npc] || { delta: 0, newValue }
+        result.affinityChanges[npc].delta += delta
+        result.affinityChanges[npc].newValue = newValue
       }
     }
 
@@ -178,8 +186,8 @@ export class GameEngine {
         this._emit('sceneChange', nextScene)
       }
     } else {
-      // Generate AI continuation
-      const nextScene = await this.contentRouter.generateFromAction(choice.text, this._getContext())
+      // Generate AI continuation with streaming
+      const nextScene = await this._generateWithStreaming(choice.text)
       if (nextScene) {
         this.currentScene = nextScene
         this.stateManager.setCurrentScene(nextScene.id)
@@ -192,7 +200,51 @@ export class GameEngine {
   }
 
   /**
-   * Process a custom player action
+   * Apply automatic effects from a dice roll
+   * @param {Object} rollResult - The dice roll result
+   * @param {Object} result - The choice result to update
+   */
+  _applyRollEffects(rollResult, result) {
+    if (!rollResult.autoEffects) return
+
+    const { statChanges, affinityChange } = rollResult.autoEffects
+    const currentNpc = this.stateManager.getState().currentNpc
+
+    // Apply automatic stat changes
+    if (statChanges) {
+      for (const [stat, delta] of Object.entries(statChanges)) {
+        if (delta !== 0) {
+          const newValue = this.stateManager.modifyStat(stat, delta)
+          result.statChanges[stat] = { delta, newValue, fromRoll: true }
+        }
+      }
+    }
+
+    // Apply automatic affinity change to current NPC
+    if (affinityChange !== 0 && currentNpc) {
+      const newValue = this.stateManager.modifyAffinity(currentNpc, affinityChange)
+      result.affinityChanges[currentNpc] = { delta: affinityChange, newValue, fromRoll: true }
+    }
+
+    // Set flag for critical failure (for narrative purposes)
+    if (rollResult.critical === 'failure') {
+      this.stateManager.setFlag('criticalFailure', true)
+      this.stateManager.setFlag('lastCriticalFailureTurn', this.stateManager.getState().turn)
+    } else {
+      this.stateManager.setFlag('criticalFailure', false)
+    }
+
+    // Set flag for critical success
+    if (rollResult.critical === 'success') {
+      this.stateManager.setFlag('criticalSuccess', true)
+      this.stateManager.setFlag('lastCriticalSuccessTurn', this.stateManager.getState().turn)
+    } else {
+      this.stateManager.setFlag('criticalSuccess', false)
+    }
+  }
+
+  /**
+   * Process a custom player action with streaming
    * @param {string} actionText - Free-form action text
    * @returns {Promise<Object>} - Result with new scene
    */
@@ -216,8 +268,8 @@ export class GameEngine {
       affinityChanges: {},
     })
 
-    // Generate AI response
-    const nextScene = await this.contentRouter.generateFromAction(actionText, this._getContext())
+    // Generate AI response with streaming
+    const nextScene = await this._generateWithStreaming(actionText)
     
     if (nextScene) {
       this.currentScene = nextScene
@@ -240,6 +292,21 @@ export class GameEngine {
     }
 
     return { newScene: nextScene }
+  }
+
+  /**
+   * Generate content with streaming support
+   * @param {string} actionText - The action or prompt
+   * @returns {Promise<Object>} - The generated scene
+   */
+  async _generateWithStreaming(actionText) {
+    return this.contentRouter.generateFromActionStreaming(
+      actionText,
+      this._getContext(),
+      (delta, fullContent) => {
+        this._emit('streamChunk', { delta, fullContent })
+      }
+    )
   }
 
   /**
@@ -305,6 +372,13 @@ export class GameEngine {
     this.listeners.stateChange.push(callback)
     return () => {
       this.listeners.stateChange = this.listeners.stateChange.filter(cb => cb !== callback)
+    }
+  }
+
+  onStreamChunk(callback) {
+    this.listeners.streamChunk.push(callback)
+    return () => {
+      this.listeners.streamChunk = this.listeners.streamChunk.filter(cb => cb !== callback)
     }
   }
 

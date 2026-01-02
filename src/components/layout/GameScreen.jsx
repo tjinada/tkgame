@@ -22,6 +22,7 @@ export function GameScreen({ gameState }) {
     processChoice,
     processCustomAction,
     getToneStyles,
+    streamingContent,
   } = gameState
 
   // Find current NPC data
@@ -80,6 +81,7 @@ export function GameScreen({ gameState }) {
           scene={currentScene}
           toneStyles={toneStyles}
           isLoading={isLoading}
+          streamingContent={streamingContent}
         />
       </div>
 
@@ -88,7 +90,7 @@ export function GameScreen({ gameState }) {
         choices={currentScene?.choices || []}
         onChoiceSelect={handleChoiceSelect}
         onCustomAction={handleCustomAction}
-        disabled={isLoading}
+        disabled={isLoading || !!streamingContent}
         isLoading={isLoading}
       />
     </>

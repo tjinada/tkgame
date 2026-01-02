@@ -16,6 +16,7 @@ export function useGameState() {
   const [pendingRoll, setPendingRoll] = useState(null)
   const [lastEvent, setLastEvent] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [streamingContent, setStreamingContent] = useState('')
 
   // Initialize game engine
   useEffect(() => {
@@ -30,6 +31,7 @@ export function useGameState() {
 
     engine.onSceneChange((scene) => {
       setCurrentScene(scene)
+      setStreamingContent('') // Clear streaming content when scene changes
     })
 
     engine.onDiceRoll((roll) => {
@@ -38,6 +40,10 @@ export function useGameState() {
 
     engine.onEventTrigger((event) => {
       setLastEvent(event)
+    })
+
+    engine.onStreamChunk(({ delta, fullContent }) => {
+      setStreamingContent(fullContent)
     })
 
     setIsInitialized(true)
@@ -55,6 +61,7 @@ export function useGameState() {
     if (!gameEngineRef.current) return
     
     setIsLoading(true)
+    setStreamingContent('')
     try {
       await gameEngineRef.current.startNewGame()
       setIsGameRunning(true)
@@ -71,6 +78,7 @@ export function useGameState() {
     if (!commandManagerRef.current) return
     
     setIsLoading(true)
+    setStreamingContent('')
     try {
       const result = await commandManagerRef.current.executeCommand('continue')
       if (result.success) {
@@ -88,6 +96,7 @@ export function useGameState() {
     if (!commandManagerRef.current) return
     
     setIsLoading(true)
+    setStreamingContent('')
     try {
       const result = await commandManagerRef.current.executeCommand('load', { slotId })
       if (result.success) {
@@ -110,6 +119,7 @@ export function useGameState() {
     if (!gameEngineRef.current || !isGameRunning) return null
     
     setIsLoading(true)
+    setStreamingContent('')
     try {
       const result = await gameEngineRef.current.processChoice(choiceId)
       return result
@@ -122,6 +132,7 @@ export function useGameState() {
     if (!gameEngineRef.current || !isGameRunning) return null
     
     setIsLoading(true)
+    setStreamingContent('')
     try {
       const result = await gameEngineRef.current.processCustomAction(actionText)
       return result
@@ -178,6 +189,9 @@ export function useGameState() {
     activeTone: state?.activeTone || 'Neutral',
     perks: state?.perks || [],
     scars: state?.scars || ['Fresh Meat'],
+
+    // Streaming
+    streamingContent,
 
     // Events
     pendingRoll,
