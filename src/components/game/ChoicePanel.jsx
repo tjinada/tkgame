@@ -46,7 +46,7 @@ export function ChoicePanel({
 
   if (choices.length === 0 && !onCustomAction) {
     return (
-      <div className="p-4 bg-background-secondary rounded-xl">
+      <div className="p-4 bg-background-secondary/60 backdrop-blur-md rounded-xl border border-background-elevated/30">
         <p className="text-center text-text-muted text-sm">
           No choices available
         </p>
@@ -55,7 +55,7 @@ export function ChoicePanel({
   }
 
   return (
-    <div className="space-y-4 p-4 bg-background-secondary rounded-xl">
+    <div className="space-y-4 p-4 bg-background-secondary/60 backdrop-blur-md rounded-xl border border-background-elevated/30">
       <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider">
         Choices
       </h3>
@@ -75,8 +75,8 @@ export function ChoicePanel({
               className={`
                 w-full text-left px-4 py-3 rounded-lg border transition-all
                 ${disabled || isLoading
-                  ? 'bg-background-tertiary/50 border-background-tertiary text-text-muted cursor-not-allowed'
-                  : 'bg-background-tertiary border-background-elevated hover:border-accent-primary hover:bg-background-elevated cursor-pointer'
+                  ? 'bg-background-tertiary/40 border-background-tertiary/50 text-text-muted cursor-not-allowed'
+                  : 'bg-background-tertiary/50 border-background-elevated/50 hover:border-accent-primary hover:bg-background-elevated/60 cursor-pointer'
                 }
               `}
             >
@@ -105,7 +105,7 @@ export function ChoicePanel({
 
       {/* Custom action input */}
       {onCustomAction && (
-        <div className="pt-2 border-t border-background-tertiary">
+        <div className="pt-2 border-t border-background-tertiary/30">
           <div className="flex gap-2">
             <input
               type="text"
@@ -117,8 +117,8 @@ export function ChoicePanel({
               className={`
                 flex-1 px-4 py-2 rounded-lg border focus:outline-none transition-colors
                 ${disabled || isLoading
-                  ? 'bg-background-tertiary/50 border-background-tertiary text-text-muted cursor-not-allowed'
-                  : 'bg-background-tertiary border-background-elevated text-text-primary focus:border-accent-primary'
+                  ? 'bg-background-tertiary/40 border-background-tertiary/50 text-text-muted cursor-not-allowed'
+                  : 'bg-background-tertiary/50 border-background-elevated/50 text-text-primary focus:border-accent-primary placeholder:text-text-muted/50'
                 }
               `}
             />

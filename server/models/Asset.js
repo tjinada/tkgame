@@ -133,6 +133,28 @@ export async function findAsset(category, npcId, assetType) {
   return asset ? asset._id.toString() : null
 }
 
+export async function findAllAssets(category, npcId, assetType) {
+  const db = getDB()
+  const collection = db.collection('assets.files')
+  
+  const query = {
+    'metadata.category': category,
+    'metadata.npcId': npcId,
+    'metadata.assetType': assetType,
+  }
+  
+  const assets = await collection
+    .find(query)
+    .sort({ uploadDate: 1 })
+    .toArray()
+  
+  return assets.map(a => ({
+    id: a._id.toString(),
+    filename: a.filename,
+    uploadedAt: a.uploadDate,
+  }))
+}
+
 export async function findBackgroundAsset(location) {
   const db = getDB()
   const collection = db.collection('assets.files')
@@ -143,6 +165,25 @@ export async function findBackgroundAsset(location) {
   })
   
   return asset ? asset._id.toString() : null
+}
+
+export async function findAllBackgroundAssets(location) {
+  const db = getDB()
+  const collection = db.collection('assets.files')
+  
+  const assets = await collection
+    .find({
+      'metadata.category': 'background',
+      'metadata.location': location,
+    })
+    .sort({ uploadDate: 1 })
+    .toArray()
+  
+  return assets.map(a => ({
+    id: a._id.toString(),
+    filename: a.filename,
+    uploadedAt: a.uploadDate,
+  }))
 }
 
 export async function getSlideshowAssets() {
@@ -179,15 +220,24 @@ export async function getManifest() {
   for (const asset of assets) {
     const { category, npcId, assetType, location } = asset.metadata || {}
     const assetId = asset._id.toString()
+    const filename = asset.filename
     
     if (category === 'portrait' || category === 'bodypart') {
       if (!manifest.npcs[npcId]) {
         manifest.npcs[npcId] = { portraits: {}, bodyparts: {} }
       }
       const key = category === 'portrait' ? 'portraits' : 'bodyparts'
-      manifest.npcs[npcId][key][assetType] = { uploaded: true, assetId }
+      // Support multiple images per asset type (array format)
+      if (!manifest.npcs[npcId][key][assetType]) {
+        manifest.npcs[npcId][key][assetType] = []
+      }
+      manifest.npcs[npcId][key][assetType].push({ assetId, filename })
     } else if (category === 'background') {
-      manifest.backgrounds[location] = { uploaded: true, assetId }
+      // Support multiple images per location (array format)
+      if (!manifest.backgrounds[location]) {
+        manifest.backgrounds[location] = []
+      }
+      manifest.backgrounds[location].push({ assetId, filename })
     } else if (category === 'slideshow') {
       manifest.slideshow.backgrounds.push(assetId)
     }
@@ -202,7 +252,9 @@ export default {
   listAssets,
   deleteAsset,
   findAsset,
+  findAllAssets,
   findBackgroundAsset,
+  findAllBackgroundAssets,
   getSlideshowAssets,
   getManifest,
 }

@@ -117,7 +117,7 @@ export function NarrativePanel({
   
   if (!scene && !streamingContent) {
     return (
-      <div className="flex flex-col h-full bg-background-secondary/80 backdrop-blur-sm rounded-xl overflow-hidden border border-background-elevated/50">
+      <div className="flex flex-col h-full bg-background-secondary/60 backdrop-blur-md rounded-xl overflow-hidden border border-background-elevated/30">
         <div className="flex-1 p-8 overflow-y-auto flex items-center justify-center">
           <div className="text-center">
             <p className="text-text-muted italic text-xl mb-3">
@@ -133,10 +133,10 @@ export function NarrativePanel({
   }
 
   return (
-    <div className="flex flex-col h-full bg-background-secondary/80 backdrop-blur-sm rounded-xl overflow-hidden border border-background-elevated/50">
+    <div className="flex flex-col h-full bg-background-secondary/60 backdrop-blur-md rounded-xl overflow-hidden border border-background-elevated/30">
       {/* Header with location/NPC info */}
       {(scene?.location || scene?.npc) && (
-        <div className="px-6 py-3 border-b border-background-tertiary/50 flex items-center gap-4 bg-background-tertiary/30">
+        <div className="px-6 py-3 border-b border-background-tertiary/30 flex items-center gap-4 bg-background-tertiary/20">
           {scene.location && (
             <span className="text-sm text-text-muted uppercase tracking-wider flex items-center gap-2">
               <span className="text-base">📍</span>

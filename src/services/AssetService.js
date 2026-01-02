@@ -11,27 +11,33 @@ export class AssetService {
    * @param {string} npcId - NPC identifier
    * @param {string} assetType - e.g., 'neutral', 'feet'
    * @param {File} file - The image file
+   * @param {boolean} replaceExisting - For portraits, replace existing (default true)
    * @returns {Promise<AssetRecord>}
    */
-  async uploadAsset(category, npcId, assetType, file) {
+  async uploadAsset(category, npcId, assetType, file, replaceExisting = true) {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('category', category)
     formData.append('npcId', npcId)
     formData.append('assetType', assetType)
+    // Only replace for portraits by default
+    if (category === 'portrait' && replaceExisting) {
+      formData.append('replaceExisting', 'true')
+    }
 
     const result = await apiClient.post('/api/assets/upload', formData)
     
-    // Clear cached URL if exists
+    // Clear cached URLs for this asset type
     const cacheKey = `${category}-${npcId}-${assetType}`
     this.urlCache.delete(cacheKey)
+    this.urlCache.delete(`${cacheKey}-all`)
     
     console.log(`Uploaded asset: ${category}/${npcId}/${assetType}`)
     return result
   }
 
   /**
-   * Upload a scene background
+   * Upload a scene background (allows multiple per location)
    * @param {string} location - Location name
    * @param {File} file - The image file
    * @returns {Promise<AssetRecord>}
@@ -41,11 +47,13 @@ export class AssetService {
     formData.append('file', file)
     formData.append('category', 'background')
     formData.append('location', location)
+    // Note: No replaceExisting - backgrounds support multiple images
 
     const result = await apiClient.post('/api/assets/upload', formData)
     
-    // Clear cached URL
+    // Clear cached URLs
     this.urlCache.delete(`background-${location}`)
+    this.urlCache.delete(`background-${location}-all`)
     
     console.log(`Uploaded background: ${location}`)
     return result
@@ -116,7 +124,7 @@ export class AssetService {
   }
 
   /**
-   * Get asset URL for NPC asset
+   * Get asset URL for NPC asset (first one if multiple exist)
    * @param {string} category - 'portrait' or 'bodypart'
    * @param {string} npcId - NPC identifier
    * @param {string} assetType - e.g., 'neutral', 'feet'
@@ -146,7 +154,41 @@ export class AssetService {
   }
 
   /**
-   * Get URL for background
+   * Get ALL asset URLs for NPC asset type (for slideshow behavior)
+   * @param {string} category - 'portrait' or 'bodypart'
+   * @param {string} npcId - NPC identifier
+   * @param {string} assetType - e.g., 'neutral', 'feet'
+   * @returns {Promise<Array<{id: string, url: string}>>}
+   */
+  async getAllNpcAssetUrls(category, npcId, assetType) {
+    const cacheKey = `${category}-${npcId}-${assetType}-all`
+    
+    // Check cache first
+    if (this.urlCache.has(cacheKey)) {
+      return this.urlCache.get(cacheKey)
+    }
+    
+    try {
+      const result = await apiClient.get(`/api/assets/findall/${category}/${npcId}/${assetType}`)
+      
+      if (!result.assets || result.assets.length === 0) return []
+      
+      const urls = result.assets.map(asset => ({
+        id: asset.id,
+        url: apiClient.getAssetUrl(asset.id),
+        filename: asset.filename,
+      }))
+      
+      this.urlCache.set(cacheKey, urls)
+      return urls
+    } catch (error) {
+      console.error('Error getting all NPC asset URLs:', error)
+      return []
+    }
+  }
+
+  /**
+   * Get URL for background (first one if multiple exist)
    * @param {string} location - Location name
    * @returns {Promise<string|null>}
    */
@@ -168,6 +210,37 @@ export class AssetService {
     } catch (error) {
       console.error('Error getting background URL:', error)
       return null
+    }
+  }
+
+  /**
+   * Get ALL background URLs for a location (for slideshow behavior)
+   * @param {string} location - Location name
+   * @returns {Promise<Array<{id: string, url: string}>>}
+   */
+  async getAllBackgroundUrls(location) {
+    const cacheKey = `background-${location}-all`
+    
+    if (this.urlCache.has(cacheKey)) {
+      return this.urlCache.get(cacheKey)
+    }
+    
+    try {
+      const result = await apiClient.get(`/api/assets/findall/background/${location}`)
+      
+      if (!result.assets || result.assets.length === 0) return []
+      
+      const urls = result.assets.map(asset => ({
+        id: asset.id,
+        url: apiClient.getAssetUrl(asset.id),
+        filename: asset.filename,
+      }))
+      
+      this.urlCache.set(cacheKey, urls)
+      return urls
+    } catch (error) {
+      console.error('Error getting all background URLs:', error)
+      return []
     }
   }
 

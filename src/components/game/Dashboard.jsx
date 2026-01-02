@@ -5,7 +5,7 @@ export function Dashboard({ gameState }) {
   const { stats, affinities, npcs, statConfigs, getAffinityTier, activeTone, scars } = gameState
 
   return (
-    <div className="flex flex-col gap-6 p-4 bg-background-secondary rounded-xl">
+    <div className="flex flex-col gap-6 p-4 bg-background-secondary/70 backdrop-blur-md rounded-xl border border-background-elevated/30">
       {/* Stats Section */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider">

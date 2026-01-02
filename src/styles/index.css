@@ -7,7 +7,7 @@
 /* Base styles */
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-primary);
+  /* NO background-color here - let SlideshowBackground handle it */
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
@@ -159,4 +159,82 @@ body {
 .narrative-line:last-child,
 .dialogue-line:last-child {
   margin-bottom: 0;
+}
+
+/* ================================
+   BODY PART PANEL ANIMATIONS
+   ================================ */
+
+/* Slide-in from right animation */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide-out to right animation */
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.body-part-panel-enter {
+  animation: slideInFromRight 300ms ease-out forwards;
+}
+
+.body-part-panel-exit {
+  animation: slideOutToRight 300ms ease-out forwards;
+}
+
+/* ================================
+   BACKGROUND CROSSFADE
+   ================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.background-crossfade-enter {
+  animation: fadeIn 1500ms ease-in-out forwards;
+}
+
+.background-crossfade-exit {
+  animation: fadeOut 1500ms ease-in-out forwards;
+}
+
+/* ================================
+   SLIDESHOW INDICATORS
+   ================================ */
+
+.slideshow-indicator {
+  transition: all 200ms ease-out;
+}
+
+.slideshow-indicator.active {
+  transform: scale(1.25);
 }

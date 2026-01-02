@@ -8,6 +8,11 @@ export function notifyAssetChange() {
   assetChangeListeners.forEach(listener => listener())
 }
 
+export function subscribeToAssetChanges(callback) {
+  assetChangeListeners.add(callback)
+  return () => assetChangeListeners.delete(callback)
+}
+
 export function useAssets() {
   const [isLoading, setIsLoading] = useState(false)
   const [manifest, setManifest] = useState(null)
@@ -37,7 +42,7 @@ export function useAssets() {
   }, [])
 
   /**
-   * Get URL for an NPC portrait
+   * Get URL for an NPC portrait (first one)
    */
   const getPortraitUrl = useCallback(async (npcId, emotion = 'neutral') => {
     const cacheKey = `portrait-${npcId}-${emotion}`
@@ -48,7 +53,6 @@ export function useAssets() {
 
     const url = await assetService.getNpcAssetUrl('portrait', npcId, emotion)
     
-    // Only cache if we got a URL (don't cache null/missing assets)
     if (url) {
       urlCacheRef.current.set(cacheKey, url)
     }
@@ -56,7 +60,7 @@ export function useAssets() {
   }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   * Get URL for an NPC body part
+   * Get URL for an NPC body part (first one)
    */
   const getBodyPartUrl = useCallback(async (npcId, bodyPart) => {
     const cacheKey = `bodypart-${npcId}-${bodyPart}`
@@ -67,7 +71,6 @@ export function useAssets() {
 
     const url = await assetService.getNpcAssetUrl('bodypart', npcId, bodyPart)
     
-    // Only cache if we got a URL
     if (url) {
       urlCacheRef.current.set(cacheKey, url)
     }
@@ -75,7 +78,25 @@ export function useAssets() {
   }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   * Get URL for a background
+   * Get ALL URLs for an NPC body part (for slideshow)
+   */
+  const getAllBodyPartUrls = useCallback(async (npcId, bodyPart) => {
+    const cacheKey = `bodypart-${npcId}-${bodyPart}-all`
+    
+    if (urlCacheRef.current.has(cacheKey)) {
+      return urlCacheRef.current.get(cacheKey)
+    }
+
+    const urls = await assetService.getAllNpcAssetUrls('bodypart', npcId, bodyPart)
+    
+    if (urls.length > 0) {
+      urlCacheRef.current.set(cacheKey, urls)
+    }
+    return urls
+  }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  /**
+   * Get URL for a background (first one)
    */
   const getBackgroundUrl = useCallback(async (location) => {
     const cacheKey = `background-${location}`
@@ -86,11 +107,28 @@ export function useAssets() {
 
     const url = await assetService.getBackgroundUrl(location)
     
-    // Only cache if we got a URL
     if (url) {
       urlCacheRef.current.set(cacheKey, url)
     }
     return url
+  }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  /**
+   * Get ALL URLs for a background (for slideshow)
+   */
+  const getAllBackgroundUrls = useCallback(async (location) => {
+    const cacheKey = `background-${location}-all`
+    
+    if (urlCacheRef.current.has(cacheKey)) {
+      return urlCacheRef.current.get(cacheKey)
+    }
+
+    const urls = await assetService.getAllBackgroundUrls(location)
+    
+    if (urls.length > 0) {
+      urlCacheRef.current.set(cacheKey, urls)
+    }
+    return urls
   }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
@@ -100,17 +138,19 @@ export function useAssets() {
     if (!manifest) return false
     
     if (category === 'background') {
-      return manifest.backgrounds?.[npcId]?.uploaded || false
+      const bgAssets = manifest.backgrounds?.[npcId]
+      return Array.isArray(bgAssets) ? bgAssets.length > 0 : !!bgAssets?.uploaded
     }
     
     const categoryKey = category === 'portrait' ? 'portraits' : 'bodyparts'
-    return manifest.npcs?.[npcId]?.[categoryKey]?.[assetType]?.uploaded || false
+    const assets = manifest.npcs?.[npcId]?.[categoryKey]?.[assetType]
+    return Array.isArray(assets) ? assets.length > 0 : !!assets?.uploaded
   }, [manifest])
 
   /**
    * Upload an asset
    */
-  const uploadAsset = useCallback(async (category, npcId, assetType, file) => {
+  const uploadAsset = useCallback(async (category, npcId, assetType, file, replaceExisting = true) => {
     setIsLoading(true)
     try {
       if (category === 'background') {
@@ -118,7 +158,7 @@ export function useAssets() {
       } else if (category === 'slideshow') {
         await assetService.uploadSlideshowBackground(npcId, file)
       } else {
-        await assetService.uploadAsset(category, npcId, assetType, file)
+        await assetService.uploadAsset(category, npcId, assetType, file, replaceExisting)
       }
       
       // Clear cache for this asset
@@ -126,10 +166,10 @@ export function useAssets() {
         ? `background-${npcId}` 
         : `${category}-${npcId}-${assetType}`
       urlCacheRef.current.delete(cacheKey)
+      urlCacheRef.current.delete(`${cacheKey}-all`)
       
       await loadManifest()
       
-      // Notify all listeners
       notifyAssetChange()
     } finally {
       setIsLoading(false)
@@ -158,7 +198,9 @@ export function useAssets() {
     isLoading,
     getPortraitUrl,
     getBodyPartUrl,
+    getAllBodyPartUrls,
     getBackgroundUrl,
+    getAllBackgroundUrls,
     hasAsset,
     uploadAsset,
     clearCache,

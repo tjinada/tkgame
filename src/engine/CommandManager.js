@@ -53,13 +53,14 @@ export class CommandManager {
    * Continue from last save
    */
   async continueGame() {
-    // Try auto-save first, then most recent manual save
-    let state = saveSystem.load('auto')
+    // Try auto-save first
+    let state = await saveSystem.load('auto')
     
+    // If no auto-save, try most recent manual save
     if (!state) {
-      const saves = saveSystem.listSaves()
+      const saves = await saveSystem.listSaves()
       if (saves.length > 0) {
-        state = saveSystem.load(saves[0].id)
+        state = await saveSystem.load(saves[0].id)
       }
     }
 
@@ -69,19 +70,21 @@ export class CommandManager {
       return { success: true, action: 'continued' }
     }
 
-    return { success: false, error: 'No save found' }
+    // No save found - start a new game instead
+    console.log('No save found, starting new game')
+    return this.startNewGame()
   }
 
   /**
    * Save game to a slot
    */
-  saveGame(slotId = '1', name = null) {
+  async saveGame(slotId = '1', name = null) {
     if (!this.gameEngine) {
       return { success: false, error: 'No game engine' }
     }
 
     const state = this.gameEngine.getState()
-    const slot = saveSystem.save(slotId, state, name)
+    const slot = await saveSystem.save(slotId, state, name)
     return { success: true, action: 'saved', slot }
   }
 
@@ -89,7 +92,7 @@ export class CommandManager {
    * Load game from a slot
    */
   async loadGame(slotId) {
-    const state = saveSystem.load(slotId)
+    const state = await saveSystem.load(slotId)
     if (!state) {
       return { success: false, error: 'Save not found' }
     }
@@ -104,13 +107,13 @@ export class CommandManager {
   /**
    * Quick save
    */
-  quickSave() {
+  async quickSave() {
     if (!this.gameEngine) {
       return { success: false, error: 'No game engine' }
     }
 
     const state = this.gameEngine.getState()
-    saveSystem.quickSave(state)
+    await saveSystem.quickSave(state)
     return { success: true, action: 'quicksaved' }
   }
 
@@ -118,7 +121,7 @@ export class CommandManager {
    * Quick load
    */
   async quickLoad() {
-    const state = saveSystem.quickLoad()
+    const state = await saveSystem.quickLoad()
     if (!state) {
       return { success: false, error: 'No quick save found' }
     }
@@ -167,16 +170,16 @@ export class CommandManager {
   /**
    * Delete a save
    */
-  deleteSave(slotId) {
-    saveSystem.delete(slotId)
+  async deleteSave(slotId) {
+    await saveSystem.delete(slotId)
     return { success: true, action: 'deleted' }
   }
 
   /**
    * Get list of saves
    */
-  getSaves() {
-    return saveSystem.listSaves()
+  async getSaves() {
+    return await saveSystem.listSaves()
   }
 
   /**

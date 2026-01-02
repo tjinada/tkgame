@@ -34,18 +34,66 @@ export class StateManager {
   constructor(initialState = null) {
     this.state = initialState || getInitialState()
     this.listeners = []
+    
+    // Ensure state has all required properties
+    this._ensureValidState()
+  }
+
+  /**
+   * Ensure state has all required properties with defaults
+   */
+  _ensureValidState() {
+    const defaults = getInitialState()
+    
+    // Ensure stats exist
+    if (!this.state.stats) {
+      this.state.stats = defaults.stats
+    } else {
+      // Ensure all stat keys exist
+      for (const [key, value] of Object.entries(defaults.stats)) {
+        if (this.state.stats[key] === undefined) {
+          this.state.stats[key] = value
+        }
+      }
+    }
+    
+    // Ensure affinities exist
+    if (!this.state.affinities) {
+      this.state.affinities = defaults.affinities
+    } else {
+      // Ensure all affinity keys exist
+      for (const [key, value] of Object.entries(defaults.affinities)) {
+        if (this.state.affinities[key] === undefined) {
+          this.state.affinities[key] = value
+        }
+      }
+    }
+    
+    // Ensure other properties exist
+    if (!this.state.flags) this.state.flags = {}
+    if (!this.state.history) this.state.history = []
+    if (!this.state.perks) this.state.perks = []
+    if (!this.state.scars) this.state.scars = ['Fresh Meat']
+    if (!this.state.activeTone) this.state.activeTone = 'Neutral'
+    if (this.state.chapter === undefined) this.state.chapter = 1
+    if (this.state.turn === undefined) this.state.turn = 0
+    if (!this.state.currentLocation) this.state.currentLocation = 'main_hall'
   }
 
   // Stats
   getStat(statName) {
-    return this.state.stats[statName] ?? 0
+    return this.state.stats?.[statName] ?? 0
   }
 
   modifyStat(statName, delta) {
     const config = configData.stats[statName]
-    if (!config) return
+    if (!config) return 0
 
-    const current = this.state.stats[statName]
+    if (!this.state.stats) {
+      this.state.stats = {}
+    }
+
+    const current = this.state.stats[statName] ?? config.start
     const newValue = Math.max(config.min, Math.min(config.max, current + delta))
     
     this.state.stats[statName] = newValue
@@ -64,10 +112,14 @@ export class StateManager {
 
   // Affinities
   getAffinity(npcId) {
-    return this.state.affinities[npcId] ?? 0
+    return this.state.affinities?.[npcId] ?? 0
   }
 
   modifyAffinity(npcId, delta) {
+    if (!this.state.affinities) {
+      this.state.affinities = {}
+    }
+    
     const current = this.state.affinities[npcId] ?? 0
     const newValue = Math.max(-50, Math.min(100, current + delta))
     
@@ -86,7 +138,7 @@ export class StateManager {
       }
     }
     
-    return AFFINITY_TIERS.find(t => t.tier === 'Neutral')
+    return AFFINITY_TIERS.find(t => t.tier === 'Neutral') || { tier: 'Neutral', effect: '' }
   }
 
   getAllAffinities() {
@@ -95,6 +147,10 @@ export class StateManager {
 
   // History
   addHistoryEntry(entry) {
+    if (!this.state.history) {
+      this.state.history = []
+    }
+    
     this.state.history.push({
       ...entry,
       timestamp: Date.now(),
@@ -103,6 +159,8 @@ export class StateManager {
   }
 
   getHistory(limit = null) {
+    if (!this.state.history) return []
+    
     if (limit) {
       return this.state.history.slice(-limit)
     }
@@ -111,10 +169,14 @@ export class StateManager {
 
   // Flags
   getFlag(flagName) {
-    return this.state.flags[flagName] ?? null
+    return this.state.flags?.[flagName] ?? null
   }
 
   setFlag(flagName, value) {
+    if (!this.state.flags) {
+      this.state.flags = {}
+    }
+    
     this.state.flags[flagName] = value
     this._notifyListeners()
   }
@@ -137,7 +199,7 @@ export class StateManager {
 
   // Turn management
   incrementTurn() {
-    this.state.turn++
+    this.state.turn = (this.state.turn || 0) + 1
     this._notifyListeners()
   }
 
@@ -155,12 +217,20 @@ export class StateManager {
   deserialize(data) {
     try {
       this.state = JSON.parse(data)
+      this._ensureValidState()
       this._notifyListeners()
       return true
     } catch (e) {
       console.error('Failed to deserialize state:', e)
       return false
     }
+  }
+
+  // Load state directly (without JSON parsing)
+  loadState(state) {
+    this.state = state
+    this._ensureValidState()
+    this._notifyListeners()
   }
 
   // Full state access

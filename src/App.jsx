@@ -47,7 +47,7 @@ function App() {
   // Show main menu if game not running
   if (!isGameRunning) {
     return (
-      <div className="min-h-screen bg-background-primary text-white">
+      <div className="relative min-h-screen text-white">
         <SlideshowBackground />
         <MainMenu
           onStartNewGame={startNewGame}
@@ -67,9 +67,9 @@ function App() {
     )
   }
 
-  // Show game screen
+  // Show game screen - NO bg-background-primary here, let slideshow show through
   return (
-    <div className="min-h-screen bg-background-primary text-white">
+    <div className="relative min-h-screen text-white">
       <GameScreen 
         gameState={gameState}
         onAdminClick={() => setIsAdminOpen(true)}

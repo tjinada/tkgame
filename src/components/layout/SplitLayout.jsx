@@ -1,4 +1,12 @@
-export function SplitLayout({ left, right }) {
+/**
+ * Split layout component that adjusts width when body part panel is visible
+ * - Left panel: Portrait + Dashboard (fixed width)
+ * - Center panel: Narrative + Choices (flexible, compresses when body part appears)
+ * - Right panel: Body Part (slides in when active)
+ */
+export function SplitLayout({ left, right, bodyPartPanel = null }) {
+  const hasBodyPartPanel = bodyPartPanel !== null
+
   return (
     <div className="flex flex-1 gap-4 p-4 overflow-hidden">
       {/* Left Panel - Visual + Dashboard */}
@@ -6,10 +14,18 @@ export function SplitLayout({ left, right }) {
         {left}
       </div>
 
-      {/* Right Panel - Narrative + Choices */}
-      <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-hidden">
+      {/* Center Panel - Narrative + Choices */}
+      <div 
+        className={`
+          flex-1 flex flex-col gap-4 min-w-0 overflow-hidden
+          transition-all duration-300 ease-out
+        `}
+      >
         {right}
       </div>
+
+      {/* Right Panel - Body Part (slides in when active) */}
+      {bodyPartPanel}
     </div>
   )
 }

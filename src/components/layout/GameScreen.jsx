@@ -8,7 +8,7 @@ import { DiceModal } from '../game/DiceModal'
 import { GameMenu } from '../menu/GameMenu'
 import { SlideshowBackground } from '../visuals/SlideshowBackground'
 import { CharacterPortrait } from '../visuals/CharacterPortrait'
-import { BodyPartDisplay } from '../visuals/BodyPartDisplay'
+import { BodyPartPanel } from '../visuals/BodyPartPanel'
 
 export function GameScreen({ 
   gameState, 
@@ -59,8 +59,7 @@ export function GameScreen({
   const currentNpcData = npcs?.find(n => n.id === currentNpc)
 
   // Determine what visual to show based on scene
-  const showBodyPart = currentScene?.bodyPart != null
-  const currentBodyPart = currentScene?.bodyPart
+  const currentBodyPart = currentScene?.bodyPart || null
   const currentEmotion = currentScene?.npcEmotion || 'neutral'
 
   // Get tone styles for narrative
@@ -95,30 +94,20 @@ export function GameScreen({
   // Left panel content
   const leftContent = (
     <>
-      {/* Visual display - Portrait or Body Part */}
-      <div className="relative">
-        {showBodyPart && currentBodyPart ? (
-          <BodyPartDisplay
-            npcId={currentNpc}
-            bodyPart={currentBodyPart}
-            npcName={currentNpcData?.name}
-          />
-        ) : (
-          <CharacterPortrait
-            npcId={currentNpc}
-            emotion={currentEmotion}
-            npcName={currentNpcData?.name}
-            showLabel={true}
-          />
-        )}
-      </div>
+      {/* Character Portrait (always visible) */}
+      <CharacterPortrait
+        npcId={currentNpc}
+        emotion={currentEmotion}
+        npcName={currentNpcData?.name}
+        showLabel={true}
+      />
 
       {/* Dashboard */}
       <Dashboard gameState={gameState} />
     </>
   )
 
-  // Right panel content
+  // Right panel content (Narrative + Choices)
   const rightContent = (
     <>
       {/* Narrative Panel */}
@@ -142,21 +131,36 @@ export function GameScreen({
     </>
   )
 
+  // Body Part Panel (slides in from right when active)
+  const bodyPartPanelContent = (
+    <BodyPartPanel
+      npcId={currentNpc}
+      bodyPart={currentBodyPart}
+      npcName={currentNpcData?.name}
+      animationDuration={300}
+    />
+  )
+
   return (
     <div className="relative flex flex-col h-screen">
-      {/* Slideshow Background */}
-      <SlideshowBackground />
+      {/* Location-based Slideshow Background */}
+      <SlideshowBackground location={currentLocation} />
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col h-full">
         <Header 
           chapter={chapter} 
           turn={turn}
+          location={currentLocation}
           onAdminClick={onAdminClick}
           onMenuClick={() => setIsMenuOpen(true)}
           isPaused={isMenuOpen}
         />
-        <SplitLayout left={leftContent} right={rightContent} />
+        <SplitLayout 
+          left={leftContent} 
+          right={rightContent}
+          bodyPartPanel={bodyPartPanelContent}
+        />
       </div>
 
       {/* Dice Roll Modal */}

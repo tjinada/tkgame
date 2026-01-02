@@ -1,10 +1,15 @@
 import { AssetSlot } from './AssetSlot'
 
+/**
+ * Grid of asset slots
+ * - Supports both single-image (portraits) and multi-image (body parts, backgrounds) modes
+ */
 export function AssetGrid({ 
   items = [], 
   columns = 4,
   onUpload,
   onDelete,
+  allowMultiple = false,  // If true, allows multiple images per slot
 }) {
   const gridCols = {
     2: 'grid-cols-2',
@@ -20,10 +25,11 @@ export function AssetGrid({
         <AssetSlot
           key={item.id}
           label={item.label}
-          asset={item.url}
+          assets={item.assets || (item.url ? [{ id: item.id, url: item.url }] : [])}
           onUpload={(file) => onUpload(item.id, file)}
-          onDelete={() => onDelete(item.id)}
+          onDelete={(assetId) => onDelete(item.id, assetId)}
           placeholder={item.placeholder}
+          allowMultiple={allowMultiple}
         />
       ))}
     </div>
