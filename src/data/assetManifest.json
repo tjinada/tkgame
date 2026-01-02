@@ -1,0 +1,175 @@
+{
+  "version": "1.0",
+  "lastUpdated": null,
+  "npcs": {
+    "sandy": {
+      "portraits": {
+        "neutral": { "uploaded": false, "assetId": null },
+        "smirk": { "uploaded": false, "assetId": null },
+        "angry": { "uploaded": false, "assetId": null },
+        "unimpressed": { "uploaded": false, "assetId": null },
+        "mean": { "uploaded": false, "assetId": null },
+        "laugh": { "uploaded": false, "assetId": null },
+        "pleased": { "uploaded": false, "assetId": null },
+        "hostile": { "uploaded": false, "assetId": null },
+        "amused": { "uploaded": false, "assetId": null },
+        "teasing": { "uploaded": false, "assetId": null },
+        "cruel": { "uploaded": false, "assetId": null },
+        "bored": { "uploaded": false, "assetId": null }
+      },
+      "bodyparts": {
+        "feet": { "uploaded": false, "assetId": null },
+        "armpit": { "uploaded": false, "assetId": null },
+        "hands": { "uploaded": false, "assetId": null },
+        "face_closeup": { "uploaded": false, "assetId": null },
+        "torso": { "uploaded": false, "assetId": null },
+        "back": { "uploaded": false, "assetId": null },
+        "legs": { "uploaded": false, "assetId": null },
+        "full_body": { "uploaded": false, "assetId": null }
+      }
+    },
+    "araph": {
+      "portraits": {
+        "neutral": { "uploaded": false, "assetId": null },
+        "smirk": { "uploaded": false, "assetId": null },
+        "angry": { "uploaded": false, "assetId": null },
+        "unimpressed": { "uploaded": false, "assetId": null },
+        "mean": { "uploaded": false, "assetId": null },
+        "laugh": { "uploaded": false, "assetId": null },
+        "pleased": { "uploaded": false, "assetId": null },
+        "hostile": { "uploaded": false, "assetId": null },
+        "amused": { "uploaded": false, "assetId": null },
+        "teasing": { "uploaded": false, "assetId": null },
+        "cruel": { "uploaded": false, "assetId": null },
+        "bored": { "uploaded": false, "assetId": null }
+      },
+      "bodyparts": {
+        "feet": { "uploaded": false, "assetId": null },
+        "armpit": { "uploaded": false, "assetId": null },
+        "hands": { "uploaded": false, "assetId": null },
+        "face_closeup": { "uploaded": false, "assetId": null },
+        "torso": { "uploaded": false, "assetId": null },
+        "back": { "uploaded": false, "assetId": null },
+        "legs": { "uploaded": false, "assetId": null },
+        "full_body": { "uploaded": false, "assetId": null }
+      }
+    },
+    "nancy": {
+      "portraits": {
+        "neutral": { "uploaded": false, "assetId": null },
+        "smirk": { "uploaded": false, "assetId": null },
+        "angry": { "uploaded": false, "assetId": null },
+        "unimpressed": { "uploaded": false, "assetId": null },
+        "mean": { "uploaded": false, "assetId": null },
+        "laugh": { "uploaded": false, "assetId": null },
+        "pleased": { "uploaded": false, "assetId": null },
+        "hostile": { "uploaded": false, "assetId": null },
+        "amused": { "uploaded": false, "assetId": null },
+        "teasing": { "uploaded": false, "assetId": null },
+        "cruel": { "uploaded": false, "assetId": null },
+        "bored": { "uploaded": false, "assetId": null }
+      },
+      "bodyparts": {
+        "feet": { "uploaded": false, "assetId": null },
+        "armpit": { "uploaded": false, "assetId": null },
+        "hands": { "uploaded": false, "assetId": null },
+        "face_closeup": { "uploaded": false, "assetId": null },
+        "torso": { "uploaded": false, "assetId": null },
+        "back": { "uploaded": false, "assetId": null },
+        "legs": { "uploaded": false, "assetId": null },
+        "full_body": { "uploaded": false, "assetId": null }
+      }
+    },
+    "aish": {
+      "portraits": {
+        "neutral": { "uploaded": false, "assetId": null },
+        "smirk": { "uploaded": false, "assetId": null },
+        "angry": { "uploaded": false, "assetId": null },
+        "unimpressed": { "uploaded": false, "assetId": null },
+        "mean": { "uploaded": false, "assetId": null },
+        "laugh": { "uploaded": false, "assetId": null },
+        "pleased": { "uploaded": false, "assetId": null },
+        "hostile": { "uploaded": false, "assetId": null },
+        "amused": { "uploaded": false, "assetId": null },
+        "teasing": { "uploaded": false, "assetId": null },
+        "cruel": { "uploaded": false, "assetId": null },
+        "bored": { "uploaded": false, "assetId": null }
+      },
+      "bodyparts": {
+        "feet": { "uploaded": false, "assetId": null },
+        "armpit": { "uploaded": false, "assetId": null },
+        "hands": { "uploaded": false, "assetId": null },
+        "face_closeup": { "uploaded": false, "assetId": null },
+        "torso": { "uploaded": false, "assetId": null },
+        "back": { "uploaded": false, "assetId": null },
+        "legs": { "uploaded": false, "assetId": null },
+        "full_body": { "uploaded": false, "assetId": null }
+      }
+    },
+    "gaya": {
+      "portraits": {
+        "neutral": { "uploaded": false, "assetId": null },
+        "smirk": { "uploaded": false, "assetId": null },
+        "angry": { "uploaded": false, "assetId": null },
+        "unimpressed": { "uploaded": false, "assetId": null },
+        "mean": { "uploaded": false, "assetId": null },
+        "laugh": { "uploaded": false, "assetId": null },
+        "pleased": { "uploaded": false, "assetId": null },
+        "hostile": { "uploaded": false, "assetId": null },
+        "amused": { "uploaded": false, "assetId": null },
+        "teasing": { "uploaded": false, "assetId": null },
+        "cruel": { "uploaded": false, "assetId": null },
+        "bored": { "uploaded": false, "assetId": null }
+      },
+      "bodyparts": {
+        "feet": { "uploaded": false, "assetId": null },
+        "armpit": { "uploaded": false, "assetId": null },
+        "hands": { "uploaded": false, "assetId": null },
+        "face_closeup": { "uploaded": false, "assetId": null },
+        "torso": { "uploaded": false, "assetId": null },
+        "back": { "uploaded": false, "assetId": null },
+        "legs": { "uploaded": false, "assetId": null },
+        "full_body": { "uploaded": false, "assetId": null }
+      }
+    },
+    "melissa": {
+      "portraits": {
+        "neutral": { "uploaded": false, "assetId": null },
+        "smirk": { "uploaded": false, "assetId": null },
+        "angry": { "uploaded": false, "assetId": null },
+        "unimpressed": { "uploaded": false, "assetId": null },
+        "mean": { "uploaded": false, "assetId": null },
+        "laugh": { "uploaded": false, "assetId": null },
+        "pleased": { "uploaded": false, "assetId": null },
+        "hostile": { "uploaded": false, "assetId": null },
+        "amused": { "uploaded": false, "assetId": null },
+        "teasing": { "uploaded": false, "assetId": null },
+        "cruel": { "uploaded": false, "assetId": null },
+        "bored": { "uploaded": false, "assetId": null }
+      },
+      "bodyparts": {
+        "feet": { "uploaded": false, "assetId": null },
+        "armpit": { "uploaded": false, "assetId": null },
+        "hands": { "uploaded": false, "assetId": null },
+        "face_closeup": { "uploaded": false, "assetId": null },
+        "torso": { "uploaded": false, "assetId": null },
+        "back": { "uploaded": false, "assetId": null },
+        "legs": { "uploaded": false, "assetId": null },
+        "full_body": { "uploaded": false, "assetId": null }
+      }
+    }
+  },
+  "backgrounds": {
+    "main_hall": { "uploaded": false, "assetId": null },
+    "classroom": { "uploaded": false, "assetId": null },
+    "workout_pit": { "uploaded": false, "assetId": null },
+    "chamber": { "uploaded": false, "assetId": null },
+    "dormitory": { "uploaded": false, "assetId": null },
+    "punishment_room": { "uploaded": false, "assetId": null },
+    "garden": { "uploaded": false, "assetId": null },
+    "dungeon": { "uploaded": false, "assetId": null }
+  },
+  "slideshow": {
+    "backgrounds": []
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "npcs": [
+    {
+      "id": "sandy",
+      "name": "Sandy",
+      "title": "Head Mistress",
+      "description": "Eternal domme, narrating with filthy glee",
+      "startingAffinity": 10,
+      "specialties": ["oversight", "narration", "discipline"],
+      "perks": [],
+      "weaknesses": [],
+      "devotedBehavior": "Personal, intense attention with ownership claims"
+    },
+    {
+      "id": "araph",
+      "name": "Araph",
+      "title": "The Tickle Queen",
+      "description": "Blue-haired sadist with sharp nails and wicked laugh",
+      "startingAffinity": 0,
+      "specialties": ["tickling", "feathers", "fingers"],
+      "targetAreas": ["feet", "ribs", "armpits"],
+      "perks": ["Sadistic Monopoly"],
+      "weaknesses": ["Hates being tickled back"],
+      "devotedBehavior": "Pinning for endless tickling, mocking coos, raspberries and nibbles"
+    },
+    {
+      "id": "nancy",
+      "name": "Nancy",
+      "title": "The Foot Goddess",
+      "description": "Tall, athletic, barefoot or combat boots",
+      "startingAffinity": 0,
+      "specialties": ["foot_worship", "trampling", "smothering"],
+      "targetAreas": ["feet", "face"],
+      "perks": ["Foot Dominion"],
+      "weaknesses": [],
+      "devotedBehavior": "Grinding feet harder, prolonged smothering, toe-gagging"
+    },
+    {
+      "id": "aish",
+      "name": "Aish",
+      "title": "The Sweat Sovereign",
+      "description": "Curvy with post-workout glow",
+      "startingAffinity": 0,
+      "specialties": ["sweat_worship", "scent", "body_worship"],
+      "targetAreas": ["armpit", "feet", "back"],
+      "perks": ["Sweat Overlord"],
+      "weaknesses": [],
+      "devotedBehavior": "Extended smothering in sweaty spots, forced swallows"
+    },
+    {
+      "id": "gaya",
+      "name": "Gaya",
+      "title": "The Edging Engineer",
+      "description": "Soft-spoken but ruthless with hands and toys",
+      "startingAffinity": 0,
+      "specialties": ["edging", "denial", "teasing"],
+      "targetAreas": ["full_body"],
+      "perks": ["Edge Mastery"],
+      "weaknesses": ["Praise buys micro-mercy"],
+      "devotedBehavior": "Clinical endless edging, cold whispered denials"
+    },
+    {
+      "id": "melissa",
+      "name": "Melissa",
+      "title": "The Post-Orgasm Punisher",
+      "description": "Milks rare releases then tortures oversensitivity",
+      "startingAffinity": 0,
+      "specialties": ["post_orgasm_torture", "overstimulation"],
+      "targetAreas": ["full_body"],
+      "perks": ["Punishment Claim"],
+      "weaknesses": [],
+      "devotedBehavior": "Harsher POT sessions, slapping, immediate re-edging"
+    }
+  ]
+}

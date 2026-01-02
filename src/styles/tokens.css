@@ -1,0 +1,59 @@
+:root {
+  /* Background colors */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a24;
+  --bg-elevated: #22222e;
+
+  /* Accent colors */
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #ec4899;
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+
+  /* Text colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #c4b5fd;
+
+  /* Stat colors */
+  --stat-obedience: #ef4444;
+  --stat-endurance: #f59e0b;
+  --stat-arousal: #ec4899;
+  --stat-sensitivity: #3b82f6;
+
+  /* Affinity tier colors */
+  --affinity-devoted: #10b981;
+  --affinity-pleased: #22c55e;
+  --affinity-neutral: #6b7280;
+  --affinity-annoyed: #f59e0b;
+  --affinity-hostile: #ef4444;
+  --affinity-enemy: #991b1b;
+
+  /* Font families */
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-narrative: 'Crimson Text', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Effects */
+  --glow-primary: 0 0 20px rgba(139, 92, 246, 0.3);
+  --glow-danger: 0 0 20px rgba(239, 68, 68, 0.3);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}

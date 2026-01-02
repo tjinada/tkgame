@@ -1,0 +1,159 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "name": "Nancy's Bad Mood",
+      "triggerBias": "High Arousal",
+      "description": "Nancy is in a particularly foul mood today...",
+      "effects": { "statChanges": { "obedience": -10 } }
+    },
+    {
+      "id": 2,
+      "name": "Group Foot Worship Mercy",
+      "triggerBias": "Low Endurance",
+      "description": "The group demands worship but shows unexpected mercy...",
+      "effects": {
+        "statChanges": { "endurance": -8 },
+        "conditionalAffinity": { "nancy": 3, "condition": "perfectSubmit" }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Melissa's Tease Skip",
+      "triggerBias": "High Arousal",
+      "description": "Melissa seems distracted, giving you a rare reprieve...",
+      "effects": { "flags": { "freeDefy": true } }
+    },
+    {
+      "id": 4,
+      "name": "Aish's Salt Overload",
+      "triggerBias": "Low Obedience",
+      "description": "Aish has been working out extra hard...",
+      "effects": { "statChanges": { "sensitivity": 10 } }
+    },
+    {
+      "id": 5,
+      "name": "Gaya's Marathon Edge",
+      "triggerBias": "High Arousal",
+      "description": "Gaya has cleared her schedule just for you...",
+      "effects": { "statChanges": { "endurance": -12 } }
+    },
+    {
+      "id": 6,
+      "name": "Rivalry Flare: Melissa + Araph",
+      "triggerBias": "Two Hostile NPCs",
+      "description": "Melissa and Araph's rivalry spills onto you...",
+      "effects": {
+        "statChanges": { "endurance": -15 },
+        "flags": { "forcedPOTCombo": true }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Whispered Weakness",
+      "triggerBias": "Araph Scene",
+      "description": "You overhear something interesting...",
+      "effects": { "flags": { "knowsAraphWeakness": true } }
+    },
+    {
+      "id": 8,
+      "name": "Leaked Soft Spot",
+      "triggerBias": "Gaya Scene",
+      "description": "A slip reveals useful information...",
+      "effects": { "flags": { "knowsGayaWeakness": true } }
+    },
+    {
+      "id": 9,
+      "name": "Sweat Season Spike",
+      "triggerBias": "Aish Lead",
+      "description": "The heat is unbearable today...",
+      "effects": { "flags": { "nextSweatBonus": 20 } }
+    },
+    {
+      "id": 10,
+      "name": "Forced Edge Party",
+      "triggerBias": "Random",
+      "description": "Gaya invites herself to the scene...",
+      "effects": { "flags": { "gayaAutoJoin": true } }
+    },
+    {
+      "id": 11,
+      "name": "Tickle Overload",
+      "triggerBias": "Araph Lead",
+      "description": "Araph is feeling particularly sadistic...",
+      "effects": { "statChanges": { "endurance": -10 } }
+    },
+    {
+      "id": 12,
+      "name": "Sandy's Mercy Window",
+      "triggerBias": "Sandy Affinity > 40",
+      "description": "Sandy seems pleased with you...",
+      "effects": { "flags": { "nextDefyBonus": 5 } }
+    },
+    {
+      "id": 13,
+      "name": "Temporary Ally",
+      "triggerBias": "Random",
+      "description": "Gaya steps in unexpectedly...",
+      "effects": {
+        "affinityChanges": { "gaya": 5 },
+        "flags": { "blockOneTorment": true }
+      }
+    },
+    {
+      "id": 14,
+      "name": "Headmistress Disapproval",
+      "triggerBias": "Sandy Affinity Drop",
+      "description": "Sandy's displeasure is palpable...",
+      "effects": { "statChanges": { "endurance": -10 } }
+    },
+    {
+      "id": 15,
+      "name": "Workout Gang",
+      "triggerBias": "Aish Lead",
+      "description": "The workout group has plans for you...",
+      "effects": { "flags": { "groupSweatWorship": true, "forcedEdge": true } }
+    },
+    {
+      "id": 16,
+      "name": "Post-Orgasm Surprise",
+      "triggerBias": "Melissa Lead",
+      "description": "Melissa has something special planned...",
+      "effects": { "statChanges": { "endurance": -8 } }
+    },
+    {
+      "id": 17,
+      "name": "Pack Bullying",
+      "triggerBias": "3+ Annoyed/Hostile NPCs",
+      "description": "They've decided to gang up on you...",
+      "effects": { "flags": { "allFivePileOn": true } }
+    },
+    {
+      "id": 18,
+      "name": "Sandy's Personal Touch",
+      "triggerBias": "Random",
+      "description": "Sandy takes personal interest...",
+      "effects": { "statChanges": { "endurance": -20 } }
+    },
+    {
+      "id": 19,
+      "name": "Sensitivity Gift",
+      "triggerBias": "High Sandy Affinity",
+      "description": "A gift with strings attached...",
+      "effects": {
+        "statChanges": { "sensitivity": 10 },
+        "affinityChanges": { "sandy": 5 }
+      }
+    },
+    {
+      "id": 20,
+      "name": "Jealous Aish",
+      "triggerBias": "Melissa Scene",
+      "description": "Aish doesn't like being ignored...",
+      "effects": {
+        "statChanges": { "sensitivity": 10 },
+        "affinityChanges": { "aish": -3 }
+      }
+    }
+  ]
+}
