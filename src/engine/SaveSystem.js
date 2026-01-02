@@ -1,6 +1,4 @@
-const SAVE_PREFIX = 'fd-save-'
-const SAVE_INDEX_KEY = 'fd-save-index'
-const MAX_SLOTS = 5
+import { apiClient } from '../services/ApiClient.js'
 
 export class SaveSystem {
   constructor() {
@@ -12,41 +10,74 @@ export class SaveSystem {
    * @param {string} slotId - Slot identifier (1-5 or 'auto')
    * @param {Object} state - Game state to save
    * @param {string} name - Optional save name
-   * @returns {SaveSlot}
+   * @returns {Promise<SaveSlot>}
    */
-  save(slotId, state, name = null) {
+  async save(slotId, state, name = null) {
     const saveData = {
-      id: slotId,
+      slotId,
       name: name || `Save ${slotId}`,
-      timestamp: Date.now(),
+      stats: state.stats,
+      affinities: state.affinities,
+      chapter: state.chapter,
+      turn: state.turn,
+      currentScene: state.currentScene,
+      currentNpc: state.currentNpc,
+      currentLocation: state.currentLocation,
+      flags: state.flags || {},
+      perks: state.perks || [],
+      scars: state.scars || [],
+      history: state.history || [],
+      activeTone: state.activeTone,
+    }
+
+    const result = await apiClient.post('/api/saves', saveData)
+    console.log(`Game saved to slot: ${slotId}`)
+    
+    return {
+      id: slotId,
+      name: saveData.name,
+      timestamp: new Date(result.timestamp),
       chapter: state.chapter,
       turn: state.turn,
       preview: this._generatePreview(state),
-      state: state,
     }
-
-    localStorage.setItem(`${SAVE_PREFIX}${slotId}`, JSON.stringify(saveData))
-    this._updateIndex(slotId, saveData)
-    
-    console.log(`Game saved to slot: ${slotId}`)
-    return this._toSlotInfo(saveData)
   }
 
   /**
    * Load game state from a slot
    * @param {string} slotId - Slot identifier
-   * @returns {Object|null} - Game state or null if not found
+   * @returns {Promise<Object|null>} - Game state or null if not found
    */
-  load(slotId) {
-    const raw = localStorage.getItem(`${SAVE_PREFIX}${slotId}`)
-    if (!raw) return null
-
+  async load(slotId) {
     try {
-      const saveData = JSON.parse(raw)
+      const saveData = await apiClient.get(`/api/saves/${slotId}`)
+      
+      if (!saveData) return null
+      
       console.log(`Game loaded from slot: ${slotId}`)
-      return saveData.state
-    } catch (e) {
-      console.error('Failed to load save:', e)
+      
+      // Return the state object matching the expected format
+      return {
+        stats: saveData.stats,
+        affinities: saveData.affinities,
+        chapter: saveData.chapter,
+        turn: saveData.turn,
+        currentScene: saveData.currentScene,
+        currentNpc: saveData.currentNpc,
+        currentLocation: saveData.currentLocation,
+        flags: saveData.flags || {},
+        perks: saveData.perks || [],
+        scars: saveData.scars || [],
+        history: saveData.history || [],
+        activeTone: saveData.activeTone,
+      }
+    } catch (error) {
+      // Handle 404 and other errors gracefully
+      if (error.message.includes('404') || error.message.includes('not found')) {
+        console.log(`No save found in slot: ${slotId}`)
+        return null
+      }
+      console.error('Failed to load save:', error)
       return null
     }
   }
@@ -55,48 +86,50 @@ export class SaveSystem {
    * Delete a save slot
    * @param {string} slotId - Slot identifier
    */
-  delete(slotId) {
-    localStorage.removeItem(`${SAVE_PREFIX}${slotId}`)
-    this._removeFromIndex(slotId)
-    console.log(`Save deleted: ${slotId}`)
+  async delete(slotId) {
+    try {
+      await apiClient.delete(`/api/saves/${slotId}`)
+      console.log(`Save deleted: ${slotId}`)
+    } catch (error) {
+      if (!error.message.includes('404')) {
+        console.error('Failed to delete save:', error)
+      }
+    }
   }
 
   /**
    * List all save slots
-   * @returns {SaveSlot[]}
+   * @returns {Promise<SaveSlot[]>}
    */
-  listSaves() {
-    const index = this._getIndex()
-    const saves = []
-
-    for (const slotId of Object.keys(index)) {
-      const raw = localStorage.getItem(`${SAVE_PREFIX}${slotId}`)
-      if (raw) {
-        try {
-          const saveData = JSON.parse(raw)
-          saves.push(this._toSlotInfo(saveData))
-        } catch (e) {
-          // Skip corrupted saves
-        }
-      }
+  async listSaves() {
+    try {
+      const saves = await apiClient.get('/api/saves')
+      
+      return saves.map(s => ({
+        id: s.slotId,
+        name: s.name,
+        timestamp: new Date(s.updatedAt),
+        chapter: s.chapter,
+        turn: s.turn,
+        preview: s.preview,
+      }))
+    } catch (error) {
+      console.error('Failed to list saves:', error)
+      return []
     }
-
-    return saves.sort((a, b) => b.timestamp - a.timestamp)
   }
 
   /**
    * Get metadata for a specific save
    * @param {string} slotId - Slot identifier
-   * @returns {SaveSlot|null}
+   * @returns {Promise<SaveSlot|null>}
    */
-  getSaveMetadata(slotId) {
-    const raw = localStorage.getItem(`${SAVE_PREFIX}${slotId}`)
-    if (!raw) return null
-
+  async getSaveMetadata(slotId) {
     try {
-      const saveData = JSON.parse(raw)
-      return this._toSlotInfo(saveData)
-    } catch (e) {
+      const saves = await this.listSaves()
+      return saves.find(s => s.id === slotId) || null
+    } catch (error) {
+      console.error('Failed to get save metadata:', error)
       return null
     }
   }
@@ -104,10 +137,11 @@ export class SaveSystem {
   /**
    * Check if a slot has a save
    * @param {string} slotId - Slot identifier
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
-  hasSave(slotId) {
-    return localStorage.getItem(`${SAVE_PREFIX}${slotId}`) !== null
+  async hasSave(slotId) {
+    const metadata = await this.getSaveMetadata(slotId)
+    return metadata !== null
   }
 
   /**
@@ -115,11 +149,7 @@ export class SaveSystem {
    * @returns {string[]}
    */
   getAvailableSlots() {
-    const slots = []
-    for (let i = 1; i <= MAX_SLOTS; i++) {
-      slots.push(String(i))
-    }
-    return slots
+    return ['1', '2', '3', '4', '5']
   }
 
   /**
@@ -130,10 +160,14 @@ export class SaveSystem {
   enableAutoSave(intervalMs, getState) {
     this.disableAutoSave()
     
-    this.autoSaveInterval = setInterval(() => {
+    this.autoSaveInterval = setInterval(async () => {
       const state = getState()
       if (state && state.turn > 0) {
-        this.save('auto', state, 'Auto Save')
+        try {
+          await this.save('auto', state, 'Auto Save')
+        } catch (error) {
+          console.error('Auto-save failed:', error)
+        }
       }
     }, intervalMs)
     
@@ -152,75 +186,36 @@ export class SaveSystem {
   }
 
   /**
-   * Quick save to slot 1
+   * Quick save to quick slot
    * @param {Object} state - Game state
    */
-  quickSave(state) {
+  async quickSave(state) {
     return this.save('quick', state, 'Quick Save')
   }
 
   /**
-   * Quick load from slot 1
-   * @returns {Object|null}
+   * Quick load from quick slot
+   * @returns {Promise<Object|null>}
    */
-  quickLoad() {
+  async quickLoad() {
     return this.load('quick')
   }
 
   /**
    * Clear all saves
    */
-  clearAllSaves() {
-    const index = this._getIndex()
-    for (const slotId of Object.keys(index)) {
-      localStorage.removeItem(`${SAVE_PREFIX}${slotId}`)
-    }
-    localStorage.removeItem(SAVE_INDEX_KEY)
-    console.log('All saves cleared')
-  }
-
-  // Private methods
-
-  _getIndex() {
-    const raw = localStorage.getItem(SAVE_INDEX_KEY)
-    if (!raw) return {}
+  async clearAllSaves() {
     try {
-      return JSON.parse(raw)
-    } catch (e) {
-      return {}
+      await apiClient.delete('/api/saves')
+      console.log('All saves cleared')
+    } catch (error) {
+      console.error('Failed to clear saves:', error)
     }
-  }
-
-  _updateIndex(slotId, saveData) {
-    const index = this._getIndex()
-    index[slotId] = {
-      timestamp: saveData.timestamp,
-      name: saveData.name,
-    }
-    localStorage.setItem(SAVE_INDEX_KEY, JSON.stringify(index))
-  }
-
-  _removeFromIndex(slotId) {
-    const index = this._getIndex()
-    delete index[slotId]
-    localStorage.setItem(SAVE_INDEX_KEY, JSON.stringify(index))
   }
 
   _generatePreview(state) {
     const location = state.currentLocation?.replace(/_/g, ' ') || 'Unknown'
-    const npc = state.currentNpc || 'None'
-    return `Chapter ${state.chapter}, Turn ${state.turn} - ${location}`
-  }
-
-  _toSlotInfo(saveData) {
-    return {
-      id: saveData.id,
-      name: saveData.name,
-      timestamp: new Date(saveData.timestamp),
-      chapter: saveData.chapter,
-      turn: saveData.turn,
-      preview: saveData.preview,
-    }
+    return `Chapter ${state.chapter || 1}, Turn ${state.turn || 0} - ${location}`
   }
 }
 

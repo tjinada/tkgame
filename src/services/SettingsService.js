@@ -1,3 +1,5 @@
+import { apiClient } from './ApiClient.js'
+
 const SETTINGS_KEY = 'fd-settings'
 
 const defaultSettings = {
@@ -33,8 +35,27 @@ const defaultSettings = {
 
 class SettingsService {
   constructor() {
-    this.settings = this._load()
+    this.settings = { ...defaultSettings }
     this.listeners = []
+    this.initialized = false
+  }
+
+  /**
+   * Initialize settings from server
+   */
+  async init() {
+    if (this.initialized) return
+    
+    try {
+      const serverSettings = await apiClient.get('/api/config/settings')
+      this.settings = { ...defaultSettings, ...serverSettings }
+      this.initialized = true
+    } catch (error) {
+      console.error('Failed to load settings from server:', error)
+      // Fall back to local storage
+      this._loadFromLocalStorage()
+      this.initialized = true
+    }
   }
 
   /**
@@ -54,34 +75,55 @@ class SettingsService {
   /**
    * Set a specific setting
    */
-  set(key, value) {
+  async set(key, value) {
     this.settings[key] = value
-    this._save()
+    this._saveToLocalStorage() // Save locally for fast access
     this._notify()
+    
+    // Sync to server
+    try {
+      await apiClient.put('/api/config/settings', { key, value })
+    } catch (error) {
+      console.error('Failed to sync setting to server:', error)
+    }
   }
 
   /**
    * Update multiple settings at once
    */
-  update(updates) {
+  async update(updates) {
     this.settings = { ...this.settings, ...updates }
-    this._save()
+    this._saveToLocalStorage()
     this._notify()
+    
+    // Sync to server
+    try {
+      await apiClient.put('/api/config/settings', updates)
+    } catch (error) {
+      console.error('Failed to sync settings to server:', error)
+    }
   }
 
   /**
    * Reset to defaults
    */
-  reset() {
+  async reset() {
     this.settings = { ...defaultSettings }
-    this._save()
+    this._saveToLocalStorage()
     this._notify()
+    
+    // Sync to server
+    try {
+      await apiClient.put('/api/config/settings', defaultSettings)
+    } catch (error) {
+      console.error('Failed to reset settings on server:', error)
+    }
   }
 
   /**
    * Reset a specific category
    */
-  resetCategory(category) {
+  async resetCategory(category) {
     const categoryKeys = {
       api: ['apiKey', 'baseUrl', 'model'],
       content: ['contentMode', 'contextMode', 'contextLimit', 'streamResponses'],
@@ -91,11 +133,22 @@ class SettingsService {
     }
 
     const keys = categoryKeys[category] || []
+    const updates = {}
+    
     for (const key of keys) {
       this.settings[key] = defaultSettings[key]
+      updates[key] = defaultSettings[key]
     }
-    this._save()
+    
+    this._saveToLocalStorage()
     this._notify()
+    
+    // Sync to server
+    try {
+      await apiClient.put('/api/config/settings', updates)
+    } catch (error) {
+      console.error('Failed to reset category on server:', error)
+    }
   }
 
   /**
@@ -118,12 +171,15 @@ class SettingsService {
   /**
    * Import settings from JSON
    */
-  import(json) {
+  async import(json) {
     try {
       const imported = JSON.parse(json)
       this.settings = { ...defaultSettings, ...imported }
-      this._save()
+      this._saveToLocalStorage()
       this._notify()
+      
+      // Sync to server
+      await apiClient.put('/api/config/settings', this.settings)
       return true
     } catch (e) {
       console.error('Failed to import settings:', e)
@@ -131,23 +187,22 @@ class SettingsService {
     }
   }
 
-  _load() {
+  _loadFromLocalStorage() {
     try {
       const stored = localStorage.getItem(SETTINGS_KEY)
       if (stored) {
-        return { ...defaultSettings, ...JSON.parse(stored) }
+        this.settings = { ...defaultSettings, ...JSON.parse(stored) }
       }
     } catch (e) {
-      console.error('Failed to load settings:', e)
+      console.error('Failed to load settings from localStorage:', e)
     }
-    return { ...defaultSettings }
   }
 
-  _save() {
+  _saveToLocalStorage() {
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(this.settings))
     } catch (e) {
-      console.error('Failed to save settings:', e)
+      console.error('Failed to save settings to localStorage:', e)
     }
   }
 

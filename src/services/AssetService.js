@@ -1,7 +1,4 @@
-import { get, set, del, keys, clear } from 'idb-keyval'
-
-const ASSET_PREFIX = 'fd-asset-'
-const MANIFEST_KEY = 'fd-asset-manifest'
+import { apiClient } from './ApiClient.js'
 
 export class AssetService {
   constructor() {
@@ -17,28 +14,20 @@ export class AssetService {
    * @returns {Promise<AssetRecord>}
    */
   async uploadAsset(category, npcId, assetType, file) {
-    const assetId = `${ASSET_PREFIX}${category}-${npcId}-${assetType}`
-    
-    const arrayBuffer = await file.arrayBuffer()
-    const record = {
-      id: assetId,
-      category,
-      npcId,
-      assetType,
-      filename: file.name,
-      mimeType: file.type,
-      data: arrayBuffer,
-      uploadedAt: new Date().toISOString(),
-    }
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('category', category)
+    formData.append('npcId', npcId)
+    formData.append('assetType', assetType)
 
-    await set(assetId, record)
-    await this._updateManifest(category, npcId, assetType, assetId)
+    const result = await apiClient.post('/api/assets/upload', formData)
     
     // Clear cached URL if exists
-    this.urlCache.delete(assetId)
+    const cacheKey = `${category}-${npcId}-${assetType}`
+    this.urlCache.delete(cacheKey)
     
-    console.log(`Uploaded asset: ${assetId}`)
-    return record
+    console.log(`Uploaded asset: ${category}/${npcId}/${assetType}`)
+    return result
   }
 
   /**
@@ -48,31 +37,18 @@ export class AssetService {
    * @returns {Promise<AssetRecord>}
    */
   async uploadBackground(location, file) {
-    const assetId = `${ASSET_PREFIX}background-${location}`
-    
-    const arrayBuffer = await file.arrayBuffer()
-    const record = {
-      id: assetId,
-      category: 'background',
-      location,
-      filename: file.name,
-      mimeType: file.type,
-      data: arrayBuffer,
-      uploadedAt: new Date().toISOString(),
-    }
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('category', 'background')
+    formData.append('location', location)
 
-    await set(assetId, record)
+    const result = await apiClient.post('/api/assets/upload', formData)
     
-    // Update manifest
-    const manifest = await this.getManifest()
-    manifest.backgrounds[location] = { uploaded: true, assetId }
-    manifest.lastUpdated = new Date().toISOString()
-    await set(MANIFEST_KEY, manifest)
+    // Clear cached URL
+    this.urlCache.delete(`background-${location}`)
     
-    this.urlCache.delete(assetId)
-    
-    console.log(`Uploaded background: ${assetId}`)
-    return record
+    console.log(`Uploaded background: ${location}`)
+    return result
   }
 
   /**
@@ -82,115 +58,91 @@ export class AssetService {
    * @returns {Promise<AssetRecord>}
    */
   async uploadSlideshowBackground(name, file) {
-    const assetId = `${ASSET_PREFIX}slideshow-${name}-${Date.now()}`
-    
-    const arrayBuffer = await file.arrayBuffer()
-    const record = {
-      id: assetId,
-      category: 'slideshow',
-      name,
-      filename: file.name,
-      mimeType: file.type,
-      data: arrayBuffer,
-      uploadedAt: new Date().toISOString(),
-    }
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('category', 'slideshow')
+    formData.append('assetType', name)
 
-    await set(assetId, record)
+    const result = await apiClient.post('/api/assets/upload', formData)
     
-    // Update manifest
-    const manifest = await this.getManifest()
-    if (!manifest.slideshow.backgrounds.includes(assetId)) {
-      manifest.slideshow.backgrounds.push(assetId)
-    }
-    manifest.lastUpdated = new Date().toISOString()
-    await set(MANIFEST_KEY, manifest)
-    
-    console.log(`Uploaded slideshow background: ${assetId}`)
-    return record
+    console.log(`Uploaded slideshow background: ${name}`)
+    return result
   }
 
   /**
-   * Get an asset by category, npcId, and type
+   * Get asset as Blob (for backwards compatibility with admin panel)
    * @param {string} category - 'portrait' or 'bodypart'
    * @param {string} npcId - NPC identifier
    * @param {string} assetType - e.g., 'neutral', 'feet'
    * @returns {Promise<Blob|null>}
    */
   async getAsset(category, npcId, assetType) {
-    const assetId = `${ASSET_PREFIX}${category}-${npcId}-${assetType}`
-    const record = await get(assetId)
-    
-    if (!record) return null
-    
-    return new Blob([record.data], { type: record.mimeType })
+    try {
+      // Find the asset ID first
+      const result = await apiClient.get(`/api/assets/find/${category}/${npcId}/${assetType}`)
+      
+      if (!result.assetId) return null
+      
+      // Fetch the actual image as blob
+      const response = await fetch(apiClient.getAssetUrl(result.assetId))
+      if (!response.ok) return null
+      
+      return await response.blob()
+    } catch (error) {
+      console.error('Error getting asset:', error)
+      return null
+    }
   }
 
   /**
-   * Get a background by location
+   * Get background as Blob
    * @param {string} location - Location name
    * @returns {Promise<Blob|null>}
    */
   async getBackground(location) {
-    const assetId = `${ASSET_PREFIX}background-${location}`
-    const record = await get(assetId)
-    
-    if (!record) return null
-    
-    return new Blob([record.data], { type: record.mimeType })
-  }
-
-  /**
-   * Get all slideshow backgrounds
-   * @returns {Promise<Array<{id: string, blob: Blob}>>}
-   */
-  async getSlideshowBackgrounds() {
-    const manifest = await this.getManifest()
-    const backgrounds = []
-    
-    for (const assetId of manifest.slideshow.backgrounds) {
-      const record = await get(assetId)
-      if (record) {
-        backgrounds.push({
-          id: assetId,
-          blob: new Blob([record.data], { type: record.mimeType }),
-        })
-      }
+    try {
+      const result = await apiClient.get(`/api/assets/find/background/${location}`)
+      
+      if (!result.assetId) return null
+      
+      const response = await fetch(apiClient.getAssetUrl(result.assetId))
+      if (!response.ok) return null
+      
+      return await response.blob()
+    } catch (error) {
+      console.error('Error getting background:', error)
+      return null
     }
-    
-    return backgrounds
   }
 
   /**
-   * Get a URL for an asset (creates object URL, cached)
-   * @param {string} assetId - The asset ID
-   * @returns {Promise<string|null>}
-   */
-  async getAssetUrl(assetId) {
-    // Check cache first
-    if (this.urlCache.has(assetId)) {
-      return this.urlCache.get(assetId)
-    }
-    
-    const record = await get(assetId)
-    if (!record) return null
-    
-    const blob = new Blob([record.data], { type: record.mimeType })
-    const url = URL.createObjectURL(blob)
-    
-    this.urlCache.set(assetId, url)
-    return url
-  }
-
-  /**
-   * Get URL for NPC asset
+   * Get asset URL for NPC asset
    * @param {string} category - 'portrait' or 'bodypart'
    * @param {string} npcId - NPC identifier
    * @param {string} assetType - e.g., 'neutral', 'feet'
    * @returns {Promise<string|null>}
    */
   async getNpcAssetUrl(category, npcId, assetType) {
-    const assetId = `${ASSET_PREFIX}${category}-${npcId}-${assetType}`
-    return this.getAssetUrl(assetId)
+    const cacheKey = `${category}-${npcId}-${assetType}`
+    
+    // Check cache first
+    if (this.urlCache.has(cacheKey)) {
+      return this.urlCache.get(cacheKey)
+    }
+    
+    try {
+      // Find the asset ID
+      const result = await apiClient.get(`/api/assets/find/${category}/${npcId}/${assetType}`)
+      
+      if (!result.assetId) return null
+      
+      const url = apiClient.getAssetUrl(result.assetId)
+      this.urlCache.set(cacheKey, url)
+      return url
+    } catch (error) {
+      console.error('Error getting NPC asset URL:', error)
+      return null
+    }
   }
 
   /**
@@ -199,23 +151,123 @@ export class AssetService {
    * @returns {Promise<string|null>}
    */
   async getBackgroundUrl(location) {
-    const assetId = `${ASSET_PREFIX}background-${location}`
-    return this.getAssetUrl(assetId)
+    const cacheKey = `background-${location}`
+    
+    if (this.urlCache.has(cacheKey)) {
+      return this.urlCache.get(cacheKey)
+    }
+    
+    try {
+      const result = await apiClient.get(`/api/assets/find/background/${location}`)
+      
+      if (!result.assetId) return null
+      
+      const url = apiClient.getAssetUrl(result.assetId)
+      this.urlCache.set(cacheKey, url)
+      return url
+    } catch (error) {
+      console.error('Error getting background URL:', error)
+      return null
+    }
   }
 
   /**
-   * Delete an asset
+   * Get URL for an asset by ID
    * @param {string} assetId - The asset ID
+   * @returns {string|null}
+   */
+  getAssetUrl(assetId) {
+    return apiClient.getAssetUrl(assetId)
+  }
+
+  /**
+   * Get all slideshow backgrounds
+   * @returns {Promise<Array<{id: string, url: string, blob: Blob}>>}
+   */
+  async getSlideshowBackgrounds() {
+    try {
+      const assets = await apiClient.get('/api/assets/slideshow/list')
+      
+      // Fetch blobs for each asset
+      const results = []
+      for (const asset of assets) {
+        try {
+          const response = await fetch(apiClient.getAssetUrl(asset.id))
+          if (response.ok) {
+            const blob = await response.blob()
+            results.push({
+              id: asset.id,
+              url: apiClient.getAssetUrl(asset.id),
+              blob,
+              filename: asset.filename,
+            })
+          }
+        } catch (e) {
+          console.error(`Error fetching slideshow asset ${asset.id}:`, e)
+        }
+      }
+      
+      return results
+    } catch (error) {
+      console.error('Error getting slideshow backgrounds:', error)
+      return []
+    }
+  }
+
+  /**
+   * Delete an asset by ID
+   * @param {string} assetId - The asset ID (MongoDB ObjectId)
    */
   async deleteAsset(assetId) {
-    // Revoke URL if cached
-    if (this.urlCache.has(assetId)) {
-      URL.revokeObjectURL(this.urlCache.get(assetId))
-      this.urlCache.delete(assetId)
-    }
+    await apiClient.delete(`/api/assets/${assetId}`)
     
-    await del(assetId)
+    // Clear entire cache since we don't know which key this corresponds to
+    this.urlCache.clear()
+    
     console.log(`Deleted asset: ${assetId}`)
+  }
+
+  /**
+   * Delete NPC asset by finding it first
+   * @param {string} category - 'portrait' or 'bodypart'
+   * @param {string} npcId - NPC identifier
+   * @param {string} assetType - e.g., 'neutral', 'feet'
+   */
+  async deleteNpcAsset(category, npcId, assetType) {
+    try {
+      const result = await apiClient.get(`/api/assets/find/${category}/${npcId}/${assetType}`)
+      if (result.assetId) {
+        await this.deleteAsset(result.assetId)
+      }
+    } catch (error) {
+      console.error('Error deleting NPC asset:', error)
+    }
+  }
+
+  /**
+   * Delete background asset
+   * @param {string} location - Location name
+   */
+  async deleteBackgroundAsset(location) {
+    try {
+      const result = await apiClient.get(`/api/assets/find/background/${location}`)
+      if (result.assetId) {
+        await this.deleteAsset(result.assetId)
+      }
+    } catch (error) {
+      console.error('Error deleting background asset:', error)
+    }
+  }
+
+  /**
+   * List assets by category
+   * @param {string} category - Asset category
+   * @param {string} npcId - Optional NPC ID filter
+   * @returns {Promise<Array>}
+   */
+  async listAssets(category, npcId = null) {
+    const query = npcId ? `?npcId=${npcId}` : ''
+    return await apiClient.get(`/api/assets/list/${category}${query}`)
   }
 
   /**
@@ -223,30 +275,46 @@ export class AssetService {
    * @param {string} npcId - NPC identifier
    */
   async clearNpcAssets(npcId) {
-    const allKeys = await keys()
-    const npcKeys = allKeys.filter(k => 
-      typeof k === 'string' && k.includes(`-${npcId}-`)
-    )
-    
-    for (const key of npcKeys) {
-      await this.deleteAsset(key)
+    try {
+      // Get all portrait assets for this NPC
+      const portraits = await this.listAssets('portrait', npcId)
+      for (const asset of portraits) {
+        await this.deleteAsset(asset.id)
+      }
+      
+      // Get all bodypart assets for this NPC
+      const bodyparts = await this.listAssets('bodypart', npcId)
+      for (const asset of bodyparts) {
+        await this.deleteAsset(asset.id)
+      }
+      
+      this.urlCache.clear()
+      console.log(`Cleared all assets for NPC: ${npcId}`)
+    } catch (error) {
+      console.error('Error clearing NPC assets:', error)
     }
-    
-    console.log(`Cleared all assets for NPC: ${npcId}`)
   }
 
   /**
    * Clear all assets
    */
   async clearAllAssets() {
-    // Revoke all cached URLs
-    for (const url of this.urlCache.values()) {
-      URL.revokeObjectURL(url)
+    try {
+      // Get all assets by category and delete them
+      const categories = ['portrait', 'bodypart', 'background', 'slideshow']
+      
+      for (const category of categories) {
+        const assets = await this.listAssets(category)
+        for (const asset of assets) {
+          await this.deleteAsset(asset.id)
+        }
+      }
+      
+      this.urlCache.clear()
+      console.log('Cleared all assets')
+    } catch (error) {
+      console.error('Error clearing all assets:', error)
     }
-    this.urlCache.clear()
-    
-    await clear()
-    console.log('Cleared all assets')
   }
 
   /**
@@ -254,16 +322,17 @@ export class AssetService {
    * @returns {Promise<AssetManifest>}
    */
   async getManifest() {
-    const manifest = await get(MANIFEST_KEY)
-    if (manifest) return manifest
-    
-    // Return default manifest structure
-    return {
-      version: '1.0',
-      lastUpdated: null,
-      npcs: {},
-      backgrounds: {},
-      slideshow: { backgrounds: [] },
+    try {
+      return await apiClient.get('/api/assets/manifest/all')
+    } catch (error) {
+      console.error('Error getting manifest:', error)
+      return {
+        version: '1.0',
+        lastUpdated: null,
+        npcs: {},
+        backgrounds: {},
+        slideshow: { backgrounds: [] },
+      }
     }
   }
 
@@ -272,32 +341,22 @@ export class AssetService {
    * @returns {Promise<SlideshowConfig>}
    */
   async getSlideshowConfig() {
-    const manifest = await this.getManifest()
+    const backgrounds = await this.getSlideshowBackgrounds()
     return {
-      enabled: manifest.slideshow.backgrounds.length > 0,
+      enabled: backgrounds.length > 0,
       interval: 10000,
       transition: 'crossfade',
       transitionDuration: 1500,
       shuffle: false,
-      backgrounds: manifest.slideshow.backgrounds,
+      backgrounds: backgrounds.map(b => b.id),
     }
   }
 
   /**
-   * Update manifest entry
+   * Clear URL cache
    */
-  async _updateManifest(category, npcId, assetType, assetId) {
-    const manifest = await this.getManifest()
-    
-    if (!manifest.npcs[npcId]) {
-      manifest.npcs[npcId] = { portraits: {}, bodyparts: {} }
-    }
-    
-    const categoryKey = category === 'portrait' ? 'portraits' : 'bodyparts'
-    manifest.npcs[npcId][categoryKey][assetType] = { uploaded: true, assetId }
-    manifest.lastUpdated = new Date().toISOString()
-    
-    await set(MANIFEST_KEY, manifest)
+  clearCache() {
+    this.urlCache.clear()
   }
 }
 

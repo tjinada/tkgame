@@ -30,7 +30,7 @@ export function AssetManagerTab() {
             newNpcAssets[`portrait_${emotion}`] = URL.createObjectURL(blob)
           }
         } catch (e) {
-          console.error(`Error loading portrait ${emotion}:`, e)
+          // Asset doesn't exist, that's OK
         }
       }
       
@@ -42,7 +42,7 @@ export function AssetManagerTab() {
             newNpcAssets[`bodypart_${part}`] = URL.createObjectURL(blob)
           }
         } catch (e) {
-          console.error(`Error loading bodypart ${part}:`, e)
+          // Asset doesn't exist, that's OK
         }
       }
       
@@ -57,7 +57,7 @@ export function AssetManagerTab() {
             newBackgrounds[location] = URL.createObjectURL(blob)
           }
         } catch (e) {
-          console.error(`Error loading background ${location}:`, e)
+          // Background doesn't exist, that's OK
         }
       }
       setBackgrounds(newBackgrounds)
@@ -71,6 +71,7 @@ export function AssetManagerTab() {
         })))
       } catch (e) {
         console.error('Error loading slideshow:', e)
+        setSlideshowImages([])
       }
     } finally {
       setIsLoading(false)
@@ -101,8 +102,7 @@ export function AssetManagerTab() {
   }
 
   const handlePortraitDelete = async (emotion) => {
-    const assetId = `fd-asset-portrait-${selectedNpc}-${emotion}`
-    await assetService.deleteAsset(assetId)
+    await assetService.deleteNpcAsset('portrait', selectedNpc, emotion)
     await loadAssets()
   }
 
@@ -113,8 +113,7 @@ export function AssetManagerTab() {
   }
 
   const handleBodyPartDelete = async (part) => {
-    const assetId = `fd-asset-bodypart-${selectedNpc}-${part}`
-    await assetService.deleteAsset(assetId)
+    await assetService.deleteNpcAsset('bodypart', selectedNpc, part)
     await loadAssets()
   }
 
@@ -125,8 +124,7 @@ export function AssetManagerTab() {
   }
 
   const handleBackgroundDelete = async (location) => {
-    const assetId = `fd-asset-background-${location}`
-    await assetService.deleteAsset(assetId)
+    await assetService.deleteBackgroundAsset(location)
     await loadAssets()
   }
 

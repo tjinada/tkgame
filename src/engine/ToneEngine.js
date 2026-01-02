@@ -15,6 +15,12 @@ export class ToneEngine {
     if (!this.stateManager) return ['Neutral']
 
     const state = this.stateManager.getState()
+    
+    // Guard against undefined state
+    if (!state || !state.stats || !state.affinities) {
+      return ['Neutral']
+    }
+    
     const activeTones = []
 
     for (const rule of TONE_RULES) {
@@ -134,47 +140,54 @@ export class ToneEngine {
    * @returns {boolean}
    */
   _checkTriggers(triggers, state) {
+    // Guard against undefined state properties
+    if (!state || !state.stats || !state.affinities) {
+      return false
+    }
+    
+    const { stats, affinities, flags = {} } = state
+    
     for (const trigger of triggers) {
       if (trigger === 'default') return true
 
       // Parse trigger conditions
       if (trigger.includes('sandyAffinity > ')) {
         const threshold = parseInt(trigger.split('> ')[1])
-        if (state.affinities.sandy > threshold) return true
+        if ((affinities.sandy || 0) > threshold) return true
       }
 
       if (trigger.includes('endurance < ')) {
         const threshold = parseInt(trigger.split('< ')[1])
-        if (state.stats.endurance < threshold) return true
+        if ((stats.endurance || 0) < threshold) return true
       }
 
       if (trigger.includes('arousal > ')) {
         const threshold = parseInt(trigger.split('> ')[1])
-        if (state.stats.arousal > threshold) return true
+        if ((stats.arousal || 0) > threshold) return true
       }
 
       if (trigger.includes('obedience < ')) {
         const threshold = parseInt(trigger.split('< ')[1])
-        if (state.stats.obedience < threshold) return true
+        if ((stats.obedience || 0) < threshold) return true
       }
 
-      if (trigger === 'defiance' && state.flags.recentDefiance) return true
-      if (trigger === 'perfectSubmit' && state.flags.perfectSubmit) return true
-      if (trigger === 'mercyEvent' && state.flags.mercyEvent) return true
-      if (trigger === 'groupScene' && state.flags.groupScene) return true
-      if (trigger === 'bullyingEvent' && state.flags.bullyingEvent) return true
-      if (trigger === 'hesitation' && state.flags.hesitation) return true
-      if (trigger === 'collapse' && state.stats.endurance <= 0) return true
+      if (trigger === 'defiance' && flags.recentDefiance) return true
+      if (trigger === 'perfectSubmit' && flags.perfectSubmit) return true
+      if (trigger === 'mercyEvent' && flags.mercyEvent) return true
+      if (trigger === 'groupScene' && flags.groupScene) return true
+      if (trigger === 'bullyingEvent' && flags.bullyingEvent) return true
+      if (trigger === 'hesitation' && flags.hesitation) return true
+      if (trigger === 'collapse' && (stats.endurance || 0) <= 0) return true
 
       // Count hostile NPCs
       if (trigger.includes('hostileCount >= ')) {
         const threshold = parseInt(trigger.split('>= ')[1])
-        const hostileCount = Object.values(state.affinities).filter(a => a < -30).length
+        const hostileCount = Object.values(affinities).filter(a => (a || 0) < -30).length
         if (hostileCount >= threshold) return true
       }
 
       if (trigger === 'enemyNpcs') {
-        const enemyCount = Object.values(state.affinities).filter(a => a < -50).length
+        const enemyCount = Object.values(affinities).filter(a => (a || 0) < -50).length
         if (enemyCount > 0) return true
       }
     }
