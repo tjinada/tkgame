@@ -5,7 +5,8 @@ import { Button } from '../../ui/Button'
 import { AssetGrid } from '../assets/AssetGrid'
 import { SlideshowManager } from '../assets/SlideshowManager'
 import { assetService } from '../../../services/AssetService'
-import { Trash2 } from 'lucide-react'
+import { notifyAssetChange } from '../../../hooks/useAssets'
+import { Trash2, RefreshCw } from 'lucide-react'
 import npcsData from '../../../data/npcs.json'
 import configData from '../../../data/config.json'
 
@@ -97,49 +98,131 @@ export function AssetManagerTab() {
 
   const handlePortraitUpload = async (emotion, file) => {
     console.log('Uploading portrait:', emotion, file.name)
+    
+    // Immediately show the uploaded file (optimistic update)
+    const tempUrl = URL.createObjectURL(file)
+    setNpcAssets(prev => ({
+      ...prev,
+      [`portrait_${emotion}`]: tempUrl
+    }))
+    
+    // Upload to server
     await assetService.uploadAsset('portrait', selectedNpc, emotion, file)
-    await loadAssets()
+    
+    // Notify game screen to refresh
+    notifyAssetChange()
   }
 
   const handlePortraitDelete = async (emotion) => {
+    // Immediately remove from UI (optimistic update)
+    setNpcAssets(prev => {
+      const newAssets = { ...prev }
+      if (newAssets[`portrait_${emotion}`]) {
+        URL.revokeObjectURL(newAssets[`portrait_${emotion}`])
+        delete newAssets[`portrait_${emotion}`]
+      }
+      return newAssets
+    })
+    
     await assetService.deleteNpcAsset('portrait', selectedNpc, emotion)
-    await loadAssets()
+    notifyAssetChange()
   }
 
   const handleBodyPartUpload = async (part, file) => {
     console.log('Uploading body part:', part, file.name)
+    
+    // Immediately show the uploaded file (optimistic update)
+    const tempUrl = URL.createObjectURL(file)
+    setNpcAssets(prev => ({
+      ...prev,
+      [`bodypart_${part}`]: tempUrl
+    }))
+    
     await assetService.uploadAsset('bodypart', selectedNpc, part, file)
-    await loadAssets()
+    notifyAssetChange()
   }
 
   const handleBodyPartDelete = async (part) => {
+    // Immediately remove from UI (optimistic update)
+    setNpcAssets(prev => {
+      const newAssets = { ...prev }
+      if (newAssets[`bodypart_${part}`]) {
+        URL.revokeObjectURL(newAssets[`bodypart_${part}`])
+        delete newAssets[`bodypart_${part}`]
+      }
+      return newAssets
+    })
+    
     await assetService.deleteNpcAsset('bodypart', selectedNpc, part)
-    await loadAssets()
+    notifyAssetChange()
   }
 
   const handleBackgroundUpload = async (location, file) => {
     console.log('Uploading background:', location, file.name)
+    
+    // Immediately show the uploaded file (optimistic update)
+    const tempUrl = URL.createObjectURL(file)
+    setBackgrounds(prev => ({
+      ...prev,
+      [location]: tempUrl
+    }))
+    
     await assetService.uploadBackground(location, file)
-    await loadAssets()
+    notifyAssetChange()
   }
 
   const handleBackgroundDelete = async (location) => {
+    // Immediately remove from UI (optimistic update)
+    setBackgrounds(prev => {
+      const newBackgrounds = { ...prev }
+      if (newBackgrounds[location]) {
+        URL.revokeObjectURL(newBackgrounds[location])
+        delete newBackgrounds[location]
+      }
+      return newBackgrounds
+    })
+    
     await assetService.deleteBackgroundAsset(location)
-    await loadAssets()
+    notifyAssetChange()
   }
 
   const handleSlideshowAdd = async (file) => {
     console.log('Adding slideshow image:', file.name)
-    await assetService.uploadSlideshowBackground(`slide_${Date.now()}`, file)
-    await loadAssets()
+    
+    // Immediately show the uploaded file (optimistic update)
+    const tempId = `temp_${Date.now()}`
+    const tempUrl = URL.createObjectURL(file)
+    setSlideshowImages(prev => [...prev, { id: tempId, url: tempUrl }])
+    
+    // Upload and get real ID
+    const result = await assetService.uploadSlideshowBackground(`slide_${Date.now()}`, file)
+    
+    // Update with real ID
+    setSlideshowImages(prev => prev.map(img => 
+      img.id === tempId ? { ...img, id: result.id } : img
+    ))
+    
+    notifyAssetChange()
   }
 
   const handleSlideshowRemove = async (index) => {
     const image = slideshowImages[index]
-    if (image?.id) {
+    
+    // Immediately remove from UI
+    setSlideshowImages(prev => {
+      const newImages = [...prev]
+      if (newImages[index]?.url) {
+        URL.revokeObjectURL(newImages[index].url)
+      }
+      newImages.splice(index, 1)
+      return newImages
+    })
+    
+    if (image?.id && !image.id.startsWith('temp_')) {
       await assetService.deleteAsset(image.id)
-      await loadAssets()
     }
+    
+    notifyAssetChange()
   }
 
   const handleSlideshowReorder = (fromIndex, toIndex) => {
@@ -151,15 +234,21 @@ export function AssetManagerTab() {
 
   const handleClearNpcAssets = async () => {
     if (confirm(`Clear all assets for ${selectedNpc}?`)) {
+      // Clear UI immediately
+      setNpcAssets({})
       await assetService.clearNpcAssets(selectedNpc)
-      await loadAssets()
+      notifyAssetChange()
     }
   }
 
   const handleClearAllAssets = async () => {
     if (confirm('Clear ALL assets? This cannot be undone.')) {
+      // Clear UI immediately
+      setNpcAssets({})
+      setBackgrounds({})
+      setSlideshowImages([])
       await assetService.clearAllAssets()
-      await loadAssets()
+      notifyAssetChange()
     }
   }
 
@@ -195,8 +284,17 @@ export function AssetManagerTab() {
         
         {/* Global Actions */}
         <div className="flex justify-between items-center">
-          <div className="text-sm text-text-muted">
-            {isLoading && 'Loading assets...'}
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={loadAssets}
+              disabled={isLoading}
+            >
+              <RefreshCw size={16} className={`mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+            {isLoading && <span className="text-sm text-text-muted">Loading assets...</span>}
           </div>
           <Button variant="danger" onClick={handleClearAllAssets}>
             <Trash2 size={16} className="mr-2" />

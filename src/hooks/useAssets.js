@@ -1,14 +1,34 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { assetService } from '../services/AssetService'
 
+// Global event emitter for asset changes
+const assetChangeListeners = new Set()
+
+export function notifyAssetChange() {
+  assetChangeListeners.forEach(listener => listener())
+}
+
 export function useAssets() {
   const [isLoading, setIsLoading] = useState(false)
   const [manifest, setManifest] = useState(null)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
   const urlCacheRef = useRef(new Map())
 
   // Load manifest on mount
   useEffect(() => {
     loadManifest()
+  }, [])
+
+  // Listen for asset changes from other components (e.g., admin panel)
+  useEffect(() => {
+    const handleAssetChange = () => {
+      clearCache()
+      loadManifest()
+      setRefreshTrigger(prev => prev + 1)
+    }
+    
+    assetChangeListeners.add(handleAssetChange)
+    return () => assetChangeListeners.delete(handleAssetChange)
   }, [])
 
   const loadManifest = useCallback(async () => {
@@ -27,11 +47,13 @@ export function useAssets() {
     }
 
     const url = await assetService.getNpcAssetUrl('portrait', npcId, emotion)
+    
+    // Only cache if we got a URL (don't cache null/missing assets)
     if (url) {
       urlCacheRef.current.set(cacheKey, url)
     }
     return url
-  }, [])
+  }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Get URL for an NPC body part
@@ -44,11 +66,13 @@ export function useAssets() {
     }
 
     const url = await assetService.getNpcAssetUrl('bodypart', npcId, bodyPart)
+    
+    // Only cache if we got a URL
     if (url) {
       urlCacheRef.current.set(cacheKey, url)
     }
     return url
-  }, [])
+  }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Get URL for a background
@@ -61,11 +85,13 @@ export function useAssets() {
     }
 
     const url = await assetService.getBackgroundUrl(location)
+    
+    // Only cache if we got a URL
     if (url) {
       urlCacheRef.current.set(cacheKey, url)
     }
     return url
-  }, [])
+  }, [refreshTrigger]) // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Check if an asset exists
@@ -94,7 +120,17 @@ export function useAssets() {
       } else {
         await assetService.uploadAsset(category, npcId, assetType, file)
       }
+      
+      // Clear cache for this asset
+      const cacheKey = category === 'background' 
+        ? `background-${npcId}` 
+        : `${category}-${npcId}-${assetType}`
+      urlCacheRef.current.delete(cacheKey)
+      
       await loadManifest()
+      
+      // Notify all listeners
+      notifyAssetChange()
     } finally {
       setIsLoading(false)
     }
@@ -104,11 +140,18 @@ export function useAssets() {
    * Clear URL cache (call when assets change)
    */
   const clearCache = useCallback(() => {
-    for (const url of urlCacheRef.current.values()) {
-      URL.revokeObjectURL(url)
-    }
     urlCacheRef.current.clear()
+    assetService.clearCache()
   }, [])
+
+  /**
+   * Force refresh all assets
+   */
+  const refresh = useCallback(() => {
+    clearCache()
+    loadManifest()
+    setRefreshTrigger(prev => prev + 1)
+  }, [clearCache, loadManifest])
 
   return {
     manifest,
@@ -119,6 +162,7 @@ export function useAssets() {
     hasAsset,
     uploadAsset,
     clearCache,
+    refresh,
     refreshManifest: loadManifest,
   }
 }

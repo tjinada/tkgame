@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAssets } from '../../hooks/useAssets'
-import placeholderPortrait from '../../assets/placeholders/portrait.svg'
 
 export function CharacterPortrait({ 
   npcId, 
@@ -8,12 +7,12 @@ export function CharacterPortrait({
   npcName = '',
   showLabel = true,
 }) {
-  const { getPortraitUrl } = useAssets()
+  const { getPortraitUrl, manifest } = useAssets()
   const [portraitUrl, setPortraitUrl] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
 
-  useEffect(() => {
+  const loadPortrait = useCallback(async () => {
     if (!npcId) {
       setPortraitUrl(null)
       setIsLoading(false)
@@ -23,15 +22,21 @@ export function CharacterPortrait({
     setIsLoading(true)
     setHasError(false)
     
-    getPortraitUrl(npcId, emotion).then(url => {
+    try {
+      const url = await getPortraitUrl(npcId, emotion)
       setPortraitUrl(url)
-      setIsLoading(false)
-    }).catch(() => {
+    } catch (e) {
       setPortraitUrl(null)
-      setIsLoading(false)
       setHasError(true)
-    })
+    } finally {
+      setIsLoading(false)
+    }
   }, [npcId, emotion, getPortraitUrl])
+
+  // Reload when npcId, emotion, or manifest changes
+  useEffect(() => {
+    loadPortrait()
+  }, [loadPortrait, manifest])
 
   const hasPortrait = portraitUrl !== null
 
