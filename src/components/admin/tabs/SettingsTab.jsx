@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useSettings } from '../../../hooks/useSettings'
+import { progressionService } from '../../../services/ProgressionService'
 import { Button, Input, Select } from '../../ui'
-import { RotateCcw, Download, Upload, Sparkles, User, Users, Sliders, Heart, Gamepad2, Eye, Bug, Server, BookOpen, Zap } from 'lucide-react'
+import { RotateCcw, Download, Upload, Sparkles, User, Users, Sliders, Heart, Gamepad2, Eye, Bug, Server, BookOpen, Zap, TrendingUp } from 'lucide-react'
 
 // Sub-tab configuration
 const SUB_TABS = [
   { id: 'api', label: 'API', icon: Server },
+  { id: 'progression', label: 'Progression', icon: TrendingUp },
   { id: 'basic', label: 'Basic Style', icon: Sparkles },
   { id: 'narrative', label: 'Narrative', icon: BookOpen },
   { id: 'player', label: 'Player', icon: User },
@@ -111,6 +113,8 @@ export function SettingsTab() {
     switch (activeSubTab) {
       case 'api':
         return <ApiSettings settings={settings} onChange={handleChange} onReset={() => handleResetCategory('api')} />
+      case 'progression':
+        return <ProgressionSettings settings={settings} onChange={handleChange} onReset={() => handleResetCategory('progression')} />
       case 'basic':
         return <BasicStyleSettings settings={settings} onChange={handleChange} onReset={() => handleResetCategory('aiBasic')} />
       case 'narrative':
@@ -275,6 +279,292 @@ function ApiSettings({ settings, onChange, onReset }) {
           <span className="text-text-primary">Enable streaming responses</span>
         </label>
       </div>
+    </div>
+  )
+}
+
+function ProgressionSettings({ settings, onChange, onReset }) {
+  const [progression, setProgression] = useState(null)
+  const [definitions, setDefinitions] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [saveSlotId, setSaveSlotId] = useState('')
+
+  // Load definitions on mount
+  useEffect(() => {
+    async function loadDefinitions() {
+      try {
+        const defs = await progressionService.getDefinitions()
+        setDefinitions(defs)
+      } catch (err) {
+        console.warn('Could not load progression definitions:', err)
+      }
+    }
+    loadDefinitions()
+  }, [])
+
+  // Load progression when saveSlotId changes
+  const loadProgression = async () => {
+    if (!saveSlotId) {
+      setProgression(null)
+      setLoading(false)
+      return
+    }
+    
+    setLoading(true)
+    setError(null)
+    try {
+      const prog = await progressionService.getProgression(saveSlotId)
+      setProgression(prog)
+    } catch (err) {
+      setError('Failed to load progression: ' + err.message)
+      setProgression(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAdvanceStage = async () => {
+    if (!saveSlotId) return
+    try {
+      const result = await progressionService.advanceStage(saveSlotId, true)
+      if (result.success) {
+        alert(`Advanced from ${result.previousStage} to ${result.newStage}!`)
+        await loadProgression()
+      } else {
+        alert('Failed: ' + result.error)
+      }
+    } catch (err) {
+      alert('Error: ' + err.message)
+    }
+  }
+
+  const handleSetTransitionMode = async (mode) => {
+    if (!saveSlotId) return
+    try {
+      await progressionService.setStageTransitionMode(saveSlotId, mode)
+      await loadProgression()
+    } catch (err) {
+      alert('Error: ' + err.message)
+    }
+  }
+
+  const handleResetProgression = async () => {
+    if (!saveSlotId) return
+    if (!confirm('Reset all progression for this save slot?')) return
+    try {
+      await progressionService.createProgression(saveSlotId)
+      await loadProgression()
+      alert('Progression reset!')
+    } catch (err) {
+      alert('Error: ' + err.message)
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader title="Progression System" onReset={onReset} />
+      
+      {/* Save Slot Selector */}
+      <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-4">
+        <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Load Progression Data</h4>
+        
+        <div className="flex gap-2">
+          <Input
+            label="Save Slot ID"
+            value={saveSlotId}
+            onChange={(e) => setSaveSlotId(e.target.value)}
+            placeholder="Enter save slot ID to inspect"
+            className="flex-1"
+          />
+          <Button variant="primary" size="sm" onClick={loadProgression} className="self-end">
+            Load
+          </Button>
+        </div>
+        
+        {error && (
+          <p className="text-sm text-stat-obedience">{error}</p>
+        )}
+      </div>
+
+      {/* Progression Display */}
+      {progression && (
+        <>
+          {/* Stage Info */}
+          <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-4">
+            <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Current Stage</h4>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-text-muted">Stage</label>
+                <p className="text-lg font-semibold text-accent-primary capitalize">{progression.stage}</p>
+              </div>
+              <div>
+                <label className="text-xs text-text-muted">Day</label>
+                <p className="text-lg font-semibold text-text-primary">{progression.dayNumber}</p>
+              </div>
+              <div>
+                <label className="text-xs text-text-muted">Max Intensity</label>
+                <p className="text-lg font-semibold text-stat-arousal">{progression.maxIntensity}/10</p>
+              </div>
+              <div>
+                <label className="text-xs text-text-muted">Transition Mode</label>
+                <p className="text-lg font-semibold text-text-primary capitalize">{progression.stageTransitionMode}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <Button variant="secondary" size="sm" onClick={handleAdvanceStage}>
+                Force Advance Stage
+              </Button>
+              <Button 
+                variant={progression.stageTransitionMode === 'milestone' ? 'primary' : 'secondary'} 
+                size="sm" 
+                onClick={() => handleSetTransitionMode('milestone')}
+              >
+                Milestone Mode
+              </Button>
+              <Button 
+                variant={progression.stageTransitionMode === 'automatic' ? 'primary' : 'secondary'} 
+                size="sm" 
+                onClick={() => handleSetTransitionMode('automatic')}
+              >
+                Auto Mode
+              </Button>
+            </div>
+          </div>
+
+          {/* Experience Levels */}
+          <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-4">
+            <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Fetish Experience</h4>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {Object.entries(progression.experiences || {}).map(([fetish, data]) => (
+                <div key={fetish} className="p-2 bg-background-secondary rounded">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-text-primary capitalize">{fetish.replace(/([A-Z])/g, ' $1').trim()}</span>
+                    <span className={`text-sm font-semibold ${
+                      data.level === 0 ? 'text-text-muted' :
+                      data.level < 3 ? 'text-stat-endurance' :
+                      data.level < 5 ? 'text-accent-primary' :
+                      'text-stat-arousal'
+                    }`}>
+                      {data.level}/5
+                    </span>
+                  </div>
+                  <div className="mt-1 h-1.5 bg-background-tertiary rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-accent-primary transition-all" 
+                      style={{ width: `${(data.level / 5) * 100}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-text-muted mt-1">{data.totalExposures} exposures</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* NPC Familiarity */}
+          <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-4">
+            <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">NPC Familiarity</h4>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {Object.entries(progression.npcFamiliarity || {}).map(([npc, data]) => (
+                <div key={npc} className="p-2 bg-background-secondary rounded flex justify-between items-center">
+                  <span className="text-sm text-text-primary capitalize">{npc}</span>
+                  <span className="text-sm text-text-muted">{data.encounters} encounters</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Milestones */}
+          <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-4">
+            <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Milestones</h4>
+            
+            <div className="space-y-2">
+              {Object.entries(progression.milestones || {}).map(([id, milestone]) => (
+                <div key={id} className={`p-2 rounded flex items-center justify-between ${
+                  milestone.completed ? 'bg-accent-success/20' : 'bg-background-secondary'
+                }`}>
+                  <div>
+                    <span className={`text-sm font-medium ${
+                      milestone.completed ? 'text-accent-success' : 'text-text-primary'
+                    }`}>
+                      {milestone.name}
+                    </span>
+                    <p className="text-xs text-text-muted">{milestone.description}</p>
+                  </div>
+                  {milestone.completed ? (
+                    <span className="text-xs text-accent-success">✓ Turn {milestone.turn}</span>
+                  ) : (
+                    <span className="text-xs text-text-muted">Incomplete</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Streaks */}
+          <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-4">
+            <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Current Streaks</h4>
+            
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="text-xs text-text-muted">Submissions</label>
+                <p className="text-lg font-semibold text-accent-success">{progression.streaks?.submissions || 0}</p>
+              </div>
+              <div>
+                <label className="text-xs text-text-muted">Defiances</label>
+                <p className="text-lg font-semibold text-stat-obedience">{progression.streaks?.defiances || 0}</p>
+              </div>
+              <div>
+                <label className="text-xs text-text-muted">Successful Defiances</label>
+                <p className="text-lg font-semibold text-stat-endurance">{progression.streaks?.successfulDefiances || 0}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Reset Button */}
+          <div className="flex justify-end">
+            <Button variant="danger" size="sm" onClick={handleResetProgression}>
+              <RotateCcw size={14} className="mr-1" /> Reset All Progression
+            </Button>
+          </div>
+        </>
+      )}
+
+      {!progression && !loading && saveSlotId && (
+        <div className="p-8 text-center text-text-muted">
+          No progression data found for this save slot.
+        </div>
+      )}
+
+      {!saveSlotId && (
+        <div className="p-8 text-center text-text-muted">
+          Enter a save slot ID above to view and manage progression data.
+        </div>
+      )}
+
+      {/* Stage Definitions Reference */}
+      {definitions && (
+        <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-4">
+          <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Stage Definitions</h4>
+          
+          <div className="space-y-2">
+            {Object.entries(definitions.stages || {}).map(([id, stage]) => (
+              <div key={id} className="p-2 bg-background-secondary rounded">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-text-primary capitalize">{id}</span>
+                  <span className="text-xs text-text-muted">Max Intensity: {stage.maxIntensity}</span>
+                </div>
+                <p className="text-xs text-text-muted">{stage.description}</p>
+                <p className="text-xs text-text-muted">Unlocks: Day {stage.minDay}+</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

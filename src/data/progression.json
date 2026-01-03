@@ -1,0 +1,270 @@
+{
+  "stages": {
+    "initiation": {
+      "order": 1,
+      "maxIntensity": 3,
+      "minDay": 1,
+      "minTurn": 0,
+      "name": "Initiation",
+      "description": "Fresh meat - learning the basics",
+      "allowedContent": [
+        "Single NPC scenes",
+        "Light bondage",
+        "Basic humiliation",
+        "Introduction to fetishes"
+      ],
+      "restrictedContent": [
+        "Group scenes (3+ NPCs)",
+        "Extreme intensity",
+        "Complex multi-fetish scenes"
+      ]
+    },
+    "training": {
+      "order": 2,
+      "maxIntensity": 5,
+      "minDay": 7,
+      "minTurn": 50,
+      "name": "Training",
+      "description": "Established slave - regular sessions",
+      "allowedContent": [
+        "Two NPC scenes",
+        "Moderate bondage",
+        "Extended sessions",
+        "Deeper fetish exploration"
+      ],
+      "restrictedContent": [
+        "Full group scenes",
+        "Extreme punishment",
+        "All fetishes combined"
+      ]
+    },
+    "advanced": {
+      "order": 3,
+      "maxIntensity": 8,
+      "minDay": 21,
+      "minTurn": 150,
+      "name": "Advanced",
+      "description": "Experienced - intense scenes unlocked",
+      "allowedContent": [
+        "Group scenes (3-4 NPCs)",
+        "Heavy bondage",
+        "Extended torture",
+        "Most fetish combinations"
+      ],
+      "restrictedContent": [
+        "All five Queens at once",
+        "Maximum intensity scenes"
+      ]
+    },
+    "veteran": {
+      "order": 4,
+      "maxIntensity": 10,
+      "minDay": 45,
+      "minTurn": 300,
+      "name": "Veteran",
+      "description": "Seasoned veteran - nothing off limits",
+      "allowedContent": [
+        "All content unlocked",
+        "All five Queens",
+        "Maximum intensity",
+        "Any fetish combination"
+      ],
+      "restrictedContent": []
+    }
+  },
+  "fetishTypes": [
+    {
+      "id": "tickling",
+      "name": "Tickling",
+      "description": "Tickle torture using fingers, feathers, and tools",
+      "associatedNpcs": ["araph"],
+      "keywords": ["tickl", "feather", "squirm", "giggle", "laugh", "writhe"]
+    },
+    {
+      "id": "footWorship",
+      "name": "Foot Worship",
+      "description": "Worship of feet, boots, and soles",
+      "associatedNpcs": ["nancy"],
+      "keywords": ["foot", "feet", "boot", "sole", "toe", "heel", "lick", "worship"]
+    },
+    {
+      "id": "sweatWorship",
+      "name": "Sweat Worship",
+      "description": "Worship of sweaty body parts and scents",
+      "associatedNpcs": ["aish"],
+      "keywords": ["sweat", "armpit", "musk", "scent", "smell", "salty", "post-workout"]
+    },
+    {
+      "id": "edging",
+      "name": "Edging",
+      "description": "Prolonged teasing and orgasm denial",
+      "associatedNpcs": ["gaya"],
+      "keywords": ["edge", "denial", "orgasm", "tease", "stroke", "brink", "almost"]
+    },
+    {
+      "id": "postOrgasmTorture",
+      "name": "Post-Orgasm Torture",
+      "description": "Continued stimulation after release",
+      "associatedNpcs": ["melissa"],
+      "keywords": ["oversensitive", "post-orgasm", "after", "torture", "milk", "sensitive"]
+    },
+    {
+      "id": "bondage",
+      "name": "Bondage",
+      "description": "Restraints, ropes, and helplessness",
+      "associatedNpcs": [],
+      "keywords": ["bound", "tied", "restrain", "rope", "chain", "cuff", "helpless", "immobile"]
+    },
+    {
+      "id": "humiliation",
+      "name": "Humiliation",
+      "description": "Verbal degradation and shame",
+      "associatedNpcs": ["sandy"],
+      "keywords": ["pathetic", "worthless", "worm", "maggot", "disgust", "shame", "humiliat"]
+    },
+    {
+      "id": "trampling",
+      "name": "Trampling",
+      "description": "Being stepped on and crushed",
+      "associatedNpcs": ["nancy"],
+      "keywords": ["trample", "step", "stomp", "crush", "stand on"]
+    },
+    {
+      "id": "smothering",
+      "name": "Smothering",
+      "description": "Face sitting and breath control",
+      "associatedNpcs": ["aish"],
+      "keywords": ["smother", "suffocate", "face", "breath", "sit on"]
+    },
+    {
+      "id": "groupScenes",
+      "name": "Group Scenes",
+      "description": "Multiple NPCs in one scene",
+      "associatedNpcs": [],
+      "keywords": ["all of them", "together", "gang", "surround", "circle"]
+    },
+    {
+      "id": "pissPlay",
+      "name": "Piss Play",
+      "description": "Golden showers and related activities",
+      "associatedNpcs": [],
+      "keywords": ["piss", "urine", "golden", "wet"]
+    }
+  ],
+  "milestones": {
+    "first_session": {
+      "name": "First Session",
+      "description": "Completed first scene with any NPC",
+      "stageUnlock": null,
+      "automatic": true
+    },
+    "first_punishment": {
+      "name": "First Punishment",
+      "description": "Received first punishment for defiance",
+      "stageUnlock": null,
+      "automatic": false
+    },
+    "met_all_queens": {
+      "name": "Met All Queens",
+      "description": "Had at least one encounter with each of the five Queens",
+      "stageUnlock": "training",
+      "automatic": true
+    },
+    "first_devoted_npc": {
+      "name": "First Devoted",
+      "description": "Reached Devoted tier (+50 affinity) with any NPC",
+      "stageUnlock": "advanced",
+      "automatic": true
+    },
+    "survived_group_scene": {
+      "name": "Group Survival",
+      "description": "Survived a scene with 3+ NPCs",
+      "stageUnlock": "advanced",
+      "automatic": false
+    },
+    "experienced_all_fetishes": {
+      "name": "Full Curriculum",
+      "description": "Experienced all fetish types at least once",
+      "stageUnlock": "veteran",
+      "automatic": true
+    },
+    "reached_enemy": {
+      "name": "Made an Enemy",
+      "description": "Dropped to Enemy tier (-50 affinity) with any NPC",
+      "stageUnlock": null,
+      "automatic": true
+    },
+    "perfect_submission_streak": {
+      "name": "Perfect Submission",
+      "description": "Submitted 10 times in a row without defiance",
+      "stageUnlock": null,
+      "automatic": true
+    },
+    "successful_defiance_streak": {
+      "name": "Bold Defiance",
+      "description": "Successfully defied 3 times in a row",
+      "stageUnlock": null,
+      "automatic": true
+    }
+  },
+  "intensityScale": {
+    "1": {
+      "name": "Minimal",
+      "description": "Single light activity",
+      "example": "Nancy makes TJ kiss her foot once"
+    },
+    "2": {
+      "name": "Light",
+      "description": "Single moderate activity",
+      "example": "Extended foot worship session"
+    },
+    "3": {
+      "name": "Moderate",
+      "description": "Single intense activity",
+      "example": "Forced foot worship with verbal humiliation"
+    },
+    "4": {
+      "name": "Elevated",
+      "description": "Two activities combined",
+      "example": "Foot worship + light bondage"
+    },
+    "5": {
+      "name": "Intense",
+      "description": "Two intense activities",
+      "example": "Edging + verbal humiliation marathon"
+    },
+    "6": {
+      "name": "High",
+      "description": "Three activities",
+      "example": "Tickling + foot worship + bondage"
+    },
+    "7": {
+      "name": "Severe",
+      "description": "Group involvement begins",
+      "example": "Two NPCs combining their specialties"
+    },
+    "8": {
+      "name": "Extreme",
+      "description": "Intense group scene",
+      "example": "Three NPCs, multiple fetishes"
+    },
+    "9": {
+      "name": "Maximum",
+      "description": "Full group assault",
+      "example": "Four+ NPCs, sustained torment"
+    },
+    "10": {
+      "name": "Absolute",
+      "description": "Everything unleashed",
+      "example": "All five Queens, all fetishes, no mercy"
+    }
+  },
+  "experienceLevels": {
+    "0": { "name": "Unexperienced", "description": "Never encountered this fetish" },
+    "1": { "name": "Introduced", "description": "First exposure, still learning" },
+    "2": { "name": "Familiar", "description": "Had a few sessions, knows what to expect" },
+    "3": { "name": "Experienced", "description": "Regular exposure, building tolerance" },
+    "4": { "name": "Seasoned", "description": "Extensive experience, hardened" },
+    "5": { "name": "Mastered", "description": "Complete familiarity, nothing surprises" }
+  }
+}

@@ -1,5 +1,6 @@
 import configData from '../data/config.json'
 import npcsData from '../data/npcs.json'
+import { progressionSystem } from './ProgressionSystem.js'
 
 const AFFINITY_TIERS = configData.affinityTiers
 
@@ -27,6 +28,9 @@ function getInitialState() {
     perks: [],
     scars: ['Fresh Meat'],
     activeTone: 'Neutral',
+    // Progression reference (actual data in MongoDB)
+    progressionInitialized: false,
+    saveSlotId: null,
   }
 }
 
@@ -78,6 +82,93 @@ export class StateManager {
     if (this.state.chapter === undefined) this.state.chapter = 1
     if (this.state.turn === undefined) this.state.turn = 0
     if (!this.state.currentLocation) this.state.currentLocation = 'main_hall'
+    if (this.state.progressionInitialized === undefined) this.state.progressionInitialized = false
+  }
+
+  // Progression System Integration
+  
+  /**
+   * Initialize progression system for a save slot
+   * @param {string} saveSlotId
+   * @returns {Promise<Object>}
+   */
+  async initializeProgression(saveSlotId) {
+    this.state.saveSlotId = saveSlotId
+    const progression = await progressionSystem.initialize(saveSlotId)
+    this.state.progressionInitialized = true
+    this._notifyListeners()
+    return progression
+  }
+
+  /**
+   * Reset progression for new game
+   * @param {string} saveSlotId
+   * @returns {Promise<Object>}
+   */
+  async resetProgression(saveSlotId) {
+    this.state.saveSlotId = saveSlotId
+    const progression = await progressionSystem.reset(saveSlotId)
+    this.state.progressionInitialized = true
+    this._notifyListeners()
+    return progression
+  }
+
+  /**
+   * Get current progression state
+   * @returns {Object|null}
+   */
+  getProgression() {
+    return progressionSystem.getProgression()
+  }
+
+  /**
+   * Get progression context for AI prompts
+   * @returns {Object}
+   */
+  getProgressionContext() {
+    return progressionSystem.buildContextForPrompt()
+  }
+
+  /**
+   * Check if intensity is allowed by current stage
+   * @param {number} intensity
+   * @returns {boolean}
+   */
+  isIntensityAllowed(intensity) {
+    return progressionSystem.isIntensityAllowed(intensity)
+  }
+
+  /**
+   * Get maximum allowed intensity
+   * @returns {number}
+   */
+  getMaxIntensity() {
+    return progressionSystem.getMaxIntensity()
+  }
+
+  /**
+   * Get current stage
+   * @returns {Object}
+   */
+  getCurrentStage() {
+    return progressionSystem.getCurrentStage()
+  }
+
+  /**
+   * Get save slot ID
+   * @returns {string|null}
+   */
+  getSaveSlotId() {
+    return this.state.saveSlotId
+  }
+
+  /**
+   * Set save slot ID
+   * @param {string} saveSlotId
+   */
+  setSaveSlotId(saveSlotId) {
+    this.state.saveSlotId = saveSlotId
+    this._notifyListeners()
   }
 
   // Stats

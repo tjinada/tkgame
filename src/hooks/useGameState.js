@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { GameEngine } from '../engine/GameEngine'
 import { CommandManager } from '../engine/CommandManager'
 import { saveSystem } from '../engine/SaveSystem'
+import { progressionSystem } from '../engine/ProgressionSystem'
 import npcsData from '../data/npcs.json'
 import configData from '../data/config.json'
 
@@ -130,6 +131,9 @@ export function useGameState() {
   const [lastEvent, setLastEvent] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [streamingContent, setStreamingContent] = useState('')
+  const [progression, setProgression] = useState(null)
+  const [lastMilestone, setLastMilestone] = useState(null)
+  const [lastStageAdvance, setLastStageAdvance] = useState(null)
 
   // Initialize game engine
   useEffect(() => {
@@ -163,6 +167,26 @@ export function useGameState() {
       setStreamingContent(dedupedContent)
     })
 
+    // Progression event subscriptions
+    engine.onProgressionUpdate((results) => {
+      if (results) {
+        // Fetch fresh progression data
+        refreshProgression()
+      }
+    })
+
+    engine.onMilestoneCompleted((milestone) => {
+      setLastMilestone(milestone)
+      // Auto-clear after 5 seconds
+      setTimeout(() => setLastMilestone(null), 5000)
+    })
+
+    engine.onStageAdvanced((stageInfo) => {
+      setLastStageAdvance(stageInfo)
+      // Auto-clear after 5 seconds
+      setTimeout(() => setLastStageAdvance(null), 5000)
+    })
+
     setIsInitialized(true)
 
     return () => {
@@ -172,6 +196,20 @@ export function useGameState() {
 
   const npcs = useMemo(() => npcsData.npcs, [])
   const statConfigs = useMemo(() => configData.stats, [])
+
+  // Refresh progression data from backend
+  const refreshProgression = useCallback(async () => {
+    if (!gameEngineRef.current) return
+    const saveSlotId = gameEngineRef.current.stateManager.getSaveSlotId()
+    if (!saveSlotId) return
+    
+    try {
+      const prog = await progressionSystem.getProgression()
+      setProgression(prog)
+    } catch (error) {
+      console.warn('Failed to fetch progression:', error)
+    }
+  }, [])
 
   // Game actions
   const startNewGame = useCallback(async () => {
@@ -184,12 +222,15 @@ export function useGameState() {
       setIsGameRunning(true)
       setState(gameEngineRef.current.getState())
       
+      // Fetch initial progression
+      await refreshProgression()
+      
       // Enable auto-save
       saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [refreshProgression])
 
   // Start a specific scenario by ID
   const startScenario = useCallback(async (scenarioId) => {
@@ -202,12 +243,15 @@ export function useGameState() {
       setIsGameRunning(true)
       setState(gameEngineRef.current.getState())
       
+      // Fetch initial progression
+      await refreshProgression()
+      
       // Enable auto-save
       saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [refreshProgression])
 
   // Start with a scenario object directly
   const startWithScenario = useCallback(async (scenarioData) => {
@@ -220,12 +264,15 @@ export function useGameState() {
       setIsGameRunning(true)
       setState(gameEngineRef.current.getState())
       
+      // Fetch initial progression
+      await refreshProgression()
+      
       // Enable auto-save
       saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [refreshProgression])
 
   // Start a new AI-only game (no JSON scenario)
   const startAIOnlyGame = useCallback(async () => {
@@ -238,12 +285,15 @@ export function useGameState() {
       setIsGameRunning(true)
       setState(gameEngineRef.current.getState())
       
+      // Fetch initial progression
+      await refreshProgression()
+      
       // Enable auto-save
       saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [refreshProgression])
 
   // Get available scenarios from localStorage
   const getAvailableScenarios = useCallback(() => {
@@ -261,13 +311,17 @@ export function useGameState() {
       if (result.success) {
         setIsGameRunning(true)
         setState(gameEngineRef.current.getState())
+        
+        // Fetch progression
+        await refreshProgression()
+        
         saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
       }
       return result
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [refreshProgression])
 
   const loadGame = useCallback(async (slotId) => {
     if (!commandManagerRef.current) return
@@ -279,13 +333,17 @@ export function useGameState() {
       if (result.success) {
         setIsGameRunning(true)
         setState(gameEngineRef.current.getState())
+        
+        // Fetch progression
+        await refreshProgression()
+        
         saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
       }
       return result
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [refreshProgression])
 
   const saveGame = useCallback((slotId, name) => {
     if (!commandManagerRef.current) return
@@ -448,6 +506,11 @@ export function useGameState() {
     perks: state?.perks || [],
     scars: state?.scars || ['Fresh Meat'],
 
+    // Progression
+    progression,
+    lastMilestone,
+    lastStageAdvance,
+
     // Streaming
     streamingContent,
 
@@ -473,6 +536,7 @@ export function useGameState() {
     processCustomAction,
     clearPendingRoll,
     clearLastEvent,
+    refreshProgression,
 
     // Getters
     getStat,

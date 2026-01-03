@@ -1,8 +1,9 @@
 import { StatBar } from '../ui/StatBar'
 import { AffinityBadge } from '../ui/AffinityBadge'
+import { ProgressionPanel } from './ProgressionPanel'
 
 export function Dashboard({ gameState }) {
-  const { stats, affinities, npcs, statConfigs, getAffinityTier, activeTone, scars } = gameState
+  const { stats, affinities, npcs, statConfigs, getAffinityTier, activeTone, scars, progression, lastMilestone, lastStageAdvance } = gameState
 
   return (
     <div className="flex flex-col gap-6 p-4 bg-background-secondary/70 backdrop-blur-md rounded-xl border border-background-elevated/30">
@@ -43,6 +44,13 @@ export function Dashboard({ gameState }) {
           ))}
         </div>
       </div>
+
+      {/* Progression Section */}
+      <ProgressionPanel 
+        progression={progression}
+        lastMilestone={lastMilestone}
+        lastStageAdvance={lastStageAdvance}
+      />
 
       {/* Status Section */}
       <div className="space-y-2">

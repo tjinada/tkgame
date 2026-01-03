@@ -3,6 +3,7 @@ import { DiceSystem } from './DiceSystem'
 import { EventSystem } from './EventSystem'
 import { ToneEngine } from './ToneEngine'
 import { ContentRouter } from '../content/ContentRouter'
+import { progressionSystem } from './ProgressionSystem.js'
 import { debugLog } from '../components/admin/tabs/DebugTab'
 import sampleScenario from '../data/scenarios/sample.json'
 
@@ -25,6 +26,9 @@ export class GameEngine {
       eventTrigger: [],
       stateChange: [],
       streamChunk: [],
+      progressionUpdate: [],
+      milestoneCompleted: [],
+      stageAdvanced: [],
     }
 
     // Subscribe to state changes
@@ -172,10 +176,21 @@ export class GameEngine {
   /**
    * Start a new game with a specific scenario
    * @param {Object} scenarioData - The scenario JSON data
+   * @param {string} saveSlotId - Optional save slot ID for progression tracking
    */
-  async startWithScenario(scenarioData) {
+  async startWithScenario(scenarioData, saveSlotId = null) {
     this.stateManager.reset()
     this.eventSystem.clearHistory()
+    
+    // Initialize progression system
+    const slotId = saveSlotId || `save_${Date.now()}`
+    this.stateManager.setSaveSlotId(slotId)
+    try {
+      await this.stateManager.resetProgression(slotId)
+      debugLog.game('Progression system initialized', { saveSlotId: slotId })
+    } catch (error) {
+      debugLog.error('Failed to initialize progression', error.message)
+    }
     
     // Store current scenario reference
     this.currentScenario = scenarioData
@@ -242,10 +257,21 @@ export class GameEngine {
 
   /**
    * Start a new game with pure AI generation (no JSON scenarios)
+   * @param {string} saveSlotId - Optional save slot ID for progression tracking
    */
-  async startAIOnlyGame() {
+  async startAIOnlyGame(saveSlotId = null) {
     this.stateManager.reset()
     this.eventSystem.clearHistory()
+    
+    // Initialize progression system
+    const slotId = saveSlotId || `save_${Date.now()}`
+    this.stateManager.setSaveSlotId(slotId)
+    try {
+      await this.stateManager.resetProgression(slotId)
+      debugLog.game('Progression system initialized', { saveSlotId: slotId })
+    } catch (error) {
+      debugLog.error('Failed to initialize progression', error.message)
+    }
     
     // Set content router to AI-only mode
     this.contentRouter.setMode('ai-only')
@@ -312,6 +338,18 @@ export class GameEngine {
    */
   async continueGame(savedState) {
     this.stateManager.deserialize(JSON.stringify(savedState))
+    
+    // Initialize progression system if we have a save slot ID
+    const saveSlotId = savedState.saveSlotId || savedState.slotId
+    if (saveSlotId) {
+      this.stateManager.setSaveSlotId(saveSlotId)
+      try {
+        await this.stateManager.initializeProgression(saveSlotId)
+        debugLog.game('Progression loaded', { saveSlotId })
+      } catch (error) {
+        debugLog.error('Failed to load progression', error.message)
+      }
+    }
     
     // Try to load the scenario that was being played
     const scenarioId = savedState.currentScenarioId
@@ -464,6 +502,16 @@ export class GameEngine {
       bodyPart: this.currentScene.bodyPart || null,
       sceneType: this._inferSceneType(this.currentScene),
     })
+
+    // Process progression tracking
+    const progressionResults = await this._processProgression(
+      this.currentScene,
+      choice,
+      result.roll
+    )
+    if (progressionResults) {
+      result.progression = progressionResults
+    }
 
     // Handle END scene
     if (result.nextSceneId === 'END') {
@@ -647,6 +695,13 @@ export class GameEngine {
     // Generate AI response with streaming
     const nextScene = await this._generateWithStreaming(actionText)
     
+    // Process progression tracking for current scene before moving to next
+    const progressionResults = await this._processProgression(
+      this.currentScene,
+      { text: actionText, type: 'custom' },
+      null
+    )
+    
     if (nextScene) {
       // Generate hybrid choices with scene context
       const { available, locked, sceneContext } = this.contentRouter.generateHybridChoices(
@@ -686,7 +741,7 @@ export class GameEngine {
       this._emit('sceneChange', nextScene)
     }
 
-    return { newScene: nextScene }
+    return { newScene: nextScene, progression: progressionResults }
   }
 
   /**
@@ -786,6 +841,27 @@ export class GameEngine {
     }
   }
 
+  onProgressionUpdate(callback) {
+    this.listeners.progressionUpdate.push(callback)
+    return () => {
+      this.listeners.progressionUpdate = this.listeners.progressionUpdate.filter(cb => cb !== callback)
+    }
+  }
+
+  onMilestoneCompleted(callback) {
+    this.listeners.milestoneCompleted.push(callback)
+    return () => {
+      this.listeners.milestoneCompleted = this.listeners.milestoneCompleted.filter(cb => cb !== callback)
+    }
+  }
+
+  onStageAdvanced(callback) {
+    this.listeners.stageAdvanced.push(callback)
+    return () => {
+      this.listeners.stageAdvanced = this.listeners.stageAdvanced.filter(cb => cb !== callback)
+    }
+  }
+
   // Private methods
 
   _emit(event, data) {
@@ -801,6 +877,8 @@ export class GameEngine {
 
   _getContext() {
     const state = this.stateManager.getState()
+    const progressionContext = this.stateManager.getProgressionContext()
+    
     return {
       stats: state.stats,
       affinities: state.affinities,
@@ -809,6 +887,77 @@ export class GameEngine {
       activeTone: state.activeTone,
       history: state.history,
       flags: state.flags,
+      // Progression data for AI context
+      progression: progressionContext,
+    }
+  }
+
+  /**
+   * Process progression tracking after a scene
+   * @param {Object} scene - The completed scene
+   * @param {Object} choice - The player's choice
+   * @param {Object} rollResult - Dice roll result if any
+   * @returns {Promise<Object>} Progression update results
+   */
+  async _processProgression(scene, choice, rollResult) {
+    if (!this.stateManager.getSaveSlotId()) {
+      debugLog.game('Progression tracking skipped - no save slot')
+      return null
+    }
+
+    try {
+      const state = this.stateManager.getState()
+      
+      // Process turn through progression system
+      const results = await progressionSystem.processTurn(
+        scene,
+        choice,
+        rollResult,
+        state
+      )
+
+      if (!results) return null
+
+      // Emit progression update event
+      this._emit('progressionUpdate', results)
+
+      // Emit individual milestone events
+      for (const milestone of results.milestonesCompleted || []) {
+        debugLog.game('Milestone completed', milestone)
+        this._emit('milestoneCompleted', milestone)
+      }
+
+      // Emit stage advancement event
+      if (results.stageAdvanced) {
+        debugLog.game('Stage advanced', results.stageAdvanced)
+        this._emit('stageAdvanced', results.stageAdvanced)
+      }
+
+      // Log fetish level ups
+      for (const levelUp of results.fetishLevelUps || []) {
+        debugLog.game('Fetish level up', levelUp)
+      }
+
+      // Check for first session milestone on turn 1
+      if (state.turn === 1) {
+        await progressionSystem.recordFirstSession(state.turn)
+      }
+
+      // Check for first punishment if this was a failed defiance
+      if (choice?.type === 'defy' && rollResult && !rollResult.success) {
+        await progressionSystem.recordFirstPunishment(state.turn)
+      }
+
+      // Check for group scene milestone
+      const npcCount = scene.npcs?.length || (scene.npc ? 1 : 0)
+      if (npcCount >= 3) {
+        await progressionSystem.recordGroupScene(state.turn, npcCount)
+      }
+
+      return results
+    } catch (error) {
+      debugLog.error('Progression tracking failed', error.message)
+      return null
     }
   }
 

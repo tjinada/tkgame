@@ -9,6 +9,7 @@ import savesRouter from './routes/saves.js'
 import configRouter from './routes/config.js'
 import scenariosRouter from './routes/scenarios.js'
 import chatRouter from './routes/chat.js'
+import progressionRouter from './routes/progression.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -24,6 +25,7 @@ app.use('/api/saves', savesRouter)
 app.use('/api/config', configRouter)
 app.use('/api/scenarios', scenariosRouter)
 app.use('/api/chat', chatRouter)
+app.use('/api/progression', progressionRouter)
 
 // Health check
 app.get('/api/health', (req, res) => {
