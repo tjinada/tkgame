@@ -11,69 +11,235 @@ export class PromptBuilder {
   }
 
   /**
-   * Build AI behavior instructions based on settings
+   * Build comprehensive AI behavior instructions based on ALL settings
    * @returns {string}
    */
   _buildBehaviorInstructions() {
-    const settings = settingsService.getAll()
-    const instructions = []
+    const s = settingsService.getAll()
+    const sections = []
 
-    // Humiliation level
+    // === NARRATIVE STYLE ===
+    const narrativeInstructions = []
+    
+    // POV
+    if (s.aiPov === 'sandy-first') {
+      narrativeInstructions.push('Write from Sandy\'s first-person POV: "I circle you slowly...", "I grab your chin..."')
+    } else if (s.aiPov === 'narrator-third') {
+      narrativeInstructions.push('Write in third person: "Sandy circles him slowly...", "She grabs his chin..."')
+    }
+    
+    // Tense
+    if (s.aiTense === 'present') {
+      narrativeInstructions.push('Use PRESENT tense: "She grabs", "You whimper"')
+    } else if (s.aiTense === 'past') {
+      narrativeInstructions.push('Use PAST tense: "She grabbed", "You whimpered"')
+    }
+    
+    // Prose style
+    const proseMap = {
+      poetic: 'Use POETIC prose - flowery language, rich metaphors, atmospheric descriptions.',
+      balanced: 'Use balanced prose - mix of description and action.',
+      direct: 'Use DIRECT prose - punchy, action-focused, minimal flourish.',
+    }
+    if (proseMap[s.aiProseStyle]) narrativeInstructions.push(proseMap[s.aiProseStyle])
+    
+    // Detail level
+    const detailMap = {
+      minimal: 'Keep sensory details MINIMAL - focus on key moments only.',
+      moderate: 'Include MODERATE sensory detail.',
+      vivid: 'Include VIVID sensory details - smells, textures, temperatures, sounds.',
+    }
+    if (detailMap[s.aiDetailLevel]) narrativeInstructions.push(detailMap[s.aiDetailLevel])
+    
+    // Pacing
+    const pacingMap = {
+      'slow-burn': 'SLOW BURN pacing - extended buildup, savor each moment.',
+      moderate: 'MODERATE pacing.',
+      rapid: 'RAPID pacing - quick escalation, intense action.',
+    }
+    if (pacingMap[s.aiPacing]) narrativeInstructions.push(pacingMap[s.aiPacing])
+    
+    // Escalation
+    if (s.aiEscalation === 'gradual') {
+      narrativeInstructions.push('GRADUAL escalation - slowly build intensity.')
+    } else if (s.aiEscalation === 'sudden') {
+      narrativeInstructions.push('SUDDEN escalation - unexpected intensity spikes.')
+    }
+    
+    if (narrativeInstructions.length > 0) {
+      sections.push('=== NARRATIVE STYLE ===\n' + narrativeInstructions.join('\n'))
+    }
+
+    // === TONE & INTENSITY ===
+    const toneInstructions = []
+    
+    // Humiliation
     const humiliationMap = {
-      none: 'Do NOT include any humiliation or degradation.',
-      mild: 'Include light teasing and mild embarrassment only.',
-      moderate: 'Include moderate verbal degradation and humiliation.',
-      heavy: 'Emphasize heavy humiliation, degradation, and psychological dominance.',
-      extreme: 'Maximize humiliation - constant degradation, personal insults, emphasize worthlessness.',
+      none: 'NO humiliation or degradation.',
+      mild: 'MILD humiliation - light teasing, gentle embarrassment.',
+      moderate: 'MODERATE humiliation - regular verbal degradation.',
+      heavy: 'HEAVY humiliation - constant mockery, degrading language.',
+      extreme: 'EXTREME humiliation - relentless cruelty, personal insults, emphasize worthlessness.',
     }
-    if (humiliationMap[settings.aiHumiliationLevel]) {
-      instructions.push(`HUMILIATION: ${humiliationMap[settings.aiHumiliationLevel]}`)
-    }
-
-    // Swearing level
+    if (humiliationMap[s.aiHumiliationLevel]) toneInstructions.push(humiliationMap[s.aiHumiliationLevel])
+    
+    // Swearing
     const swearingMap = {
-      none: 'Do NOT use any profanity or swear words.',
-      mild: 'Use minimal profanity - occasional "damn" or "hell" only.',
-      moderate: 'Use moderate profanity naturally in dialogue.',
-      heavy: 'Use heavy profanity freely - crude, vulgar language throughout.',
+      none: 'NO profanity or swearing.',
+      mild: 'MILD profanity only - occasional damn/hell.',
+      moderate: 'MODERATE profanity - natural swearing.',
+      heavy: 'HEAVY profanity - crude, vulgar language freely.',
     }
-    if (swearingMap[settings.aiSwearingLevel]) {
-      instructions.push(`PROFANITY: ${swearingMap[settings.aiSwearingLevel]}`)
-    }
-
-    // Response length
-    const lengthMap = {
-      short: 'Keep responses SHORT: 100-200 words maximum.',
-      medium: 'Keep responses MEDIUM length: 200-400 words.',
-      long: 'Write LONG detailed responses: 400-600 words.',
-    }
-    if (lengthMap[settings.aiResponseLength]) {
-      instructions.push(`LENGTH: ${lengthMap[settings.aiResponseLength]}`)
-    }
-
-    // Conversational style
-    const styleMap = {
-      narrative: 'Focus on DESCRIPTIVE NARRATIVE - rich descriptions, actions, atmosphere. Minimal dialogue.',
-      balanced: 'Balance narrative description with character dialogue.',
-      conversational: 'Focus on DIALOGUE - lots of spoken lines, character interactions, verbal exchanges.',
-    }
-    if (styleMap[settings.aiConversationalStyle]) {
-      instructions.push(`STYLE: ${styleMap[settings.aiConversationalStyle]}`)
-    }
-
+    if (swearingMap[s.aiSwearingLevel]) toneInstructions.push(swearingMap[s.aiSwearingLevel])
+    
     // Intensity
     const intensityMap = {
-      gentle: 'Keep scenes GENTLE - soft domination, more teasing than torment.',
-      moderate: 'MODERATE intensity - balance of control and cruelty.',
-      intense: 'INTENSE scenes - strong domination, serious torment, no holding back.',
-      brutal: 'BRUTAL intensity - merciless, relentless, maximum cruelty and dominance.',
+      gentle: 'GENTLE intensity - soft domination, teasing over torment.',
+      moderate: 'MODERATE intensity.',
+      intense: 'INTENSE - serious domination, no holding back.',
+      brutal: 'BRUTAL intensity - merciless, maximum cruelty.',
     }
-    if (intensityMap[settings.aiIntensity]) {
-      instructions.push(`INTENSITY: ${intensityMap[settings.aiIntensity]}`)
+    if (intensityMap[s.aiIntensity]) toneInstructions.push(intensityMap[s.aiIntensity])
+    
+    // Response length
+    const lengthMap = {
+      short: 'Response length: SHORT (100-200 words).',
+      medium: 'Response length: MEDIUM (200-400 words).',
+      long: 'Response length: LONG (400-600 words).',
+    }
+    if (lengthMap[s.aiResponseLength]) toneInstructions.push(lengthMap[s.aiResponseLength])
+    
+    // Style
+    const styleMap = {
+      narrative: 'Focus on DESCRIPTIVE NARRATIVE over dialogue.',
+      balanced: 'BALANCE narrative and dialogue.',
+      conversational: 'Focus on DIALOGUE - lots of spoken lines.',
+    }
+    if (styleMap[s.aiConversationalStyle]) toneInstructions.push(styleMap[s.aiConversationalStyle])
+    
+    if (toneInstructions.length > 0) {
+      sections.push('=== TONE & INTENSITY ===\n' + toneInstructions.join('\n'))
     }
 
+    // === PLAYER TREATMENT ===
+    const playerInstructions = []
+    
+    // Mercy
+    const mercyMap = {
+      never: 'NEVER show mercy - no breaks, no kindness.',
+      rare: 'RARELY show mercy - very occasional.',
+      occasional: 'OCCASIONALLY show mercy - sometimes.',
+    }
+    if (mercyMap[s.aiMercyFrequency]) playerInstructions.push(mercyMap[s.aiMercyFrequency])
+    
+    // Player names
+    if (s.aiPlayerNames) {
+      playerInstructions.push(`Call the player: ${s.aiPlayerNames}`)
+    }
+    
+    // Resistance
+    const resistanceMap = {
+      hopeless: 'Player resistance is HOPELESS - defiance always fails.',
+      difficult: 'Player resistance is DIFFICULT - rarely succeeds.',
+      possible: 'Player resistance is POSSIBLE - sometimes works.',
+    }
+    if (resistanceMap[s.aiResistanceSuccess]) playerInstructions.push(resistanceMap[s.aiResistanceSuccess])
+    
+    // Player voice
+    const voiceMap = {
+      silent: 'Player is mostly SILENT - minimal dialogue.',
+      reactive: 'Player is REACTIVE - responds when prompted.',
+      vocal: 'Player is VOCAL - lots of player dialogue.',
+    }
+    if (voiceMap[s.aiPlayerVoice]) playerInstructions.push(voiceMap[s.aiPlayerVoice])
+    
+    if (playerInstructions.length > 0) {
+      sections.push('=== PLAYER TREATMENT ===\n' + playerInstructions.join('\n'))
+    }
+
+    // === NPC BEHAVIOR ===
+    const npcInstructions = []
+    
+    // Mood
+    const moodMap = {
+      sadistic: 'NPCs are SADISTIC - cruel enjoyment of suffering.',
+      playful: 'NPCs are PLAYFUL - teasing, amused by torment.',
+      cold: 'NPCs are COLD - clinical, detached cruelty.',
+      random: 'NPC mood VARIES by scene.',
+    }
+    if (moodMap[s.aiNpcMood]) npcInstructions.push(moodMap[s.aiNpcMood])
+    
+    // Collaboration
+    const collabMap = {
+      solo: 'Usually SINGLE NPC per scene.',
+      pairs: 'Often PAIRS of NPCs together.',
+      'group-friendly': 'MULTIPLE NPCs often appear together.',
+    }
+    if (collabMap[s.aiCollaboration]) npcInstructions.push(collabMap[s.aiCollaboration])
+    
+    // Affection
+    const affectionMap = {
+      none: 'NO affection - pure domination.',
+      twisted: 'TWISTED "caring" - cruel concern.',
+      possessive: 'POSSESSIVE - "You belong to ME."',
+    }
+    if (affectionMap[s.aiAffectionStyle]) npcInstructions.push(affectionMap[s.aiAffectionStyle])
+    
+    // Mockery
+    const mockeryMap = {
+      cruel: 'CRUEL mockery - harsh, cutting insults.',
+      teasing: 'TEASING mockery - playful ridicule.',
+      dismissive: 'DISMISSIVE mockery - bored contempt.',
+    }
+    if (mockeryMap[s.aiMockeryStyle]) npcInstructions.push(mockeryMap[s.aiMockeryStyle])
+    
+    if (npcInstructions.length > 0) {
+      sections.push('=== NPC BEHAVIOR ===\n' + npcInstructions.join('\n'))
+    }
+
+    // === CONTENT BALANCE ===
+    const balanceInstructions = []
+    
+    // Pain vs Pleasure (0-100 slider)
+    if (s.aiPainVsPleasure <= 25) {
+      balanceInstructions.push('Focus on PLEASURE - arousal, teasing, edging.')
+    } else if (s.aiPainVsPleasure >= 75) {
+      balanceInstructions.push('Focus on PAIN - suffering, torment, endurance.')
+    } else {
+      balanceInstructions.push('BALANCE pain and pleasure.')
+    }
+    
+    // Physical vs Psychological
+    if (s.aiPhysicalVsPsychological <= 25) {
+      balanceInstructions.push('Focus on PSYCHOLOGICAL - mind games, humiliation, fear.')
+    } else if (s.aiPhysicalVsPsychological >= 75) {
+      balanceInstructions.push('Focus on PHYSICAL - body torment, sensations.')
+    } else {
+      balanceInstructions.push('BALANCE physical and psychological.')
+    }
+    
+    // Action vs Dialogue
+    if (s.aiActionVsDialogue <= 25) {
+      balanceInstructions.push('Heavy on DIALOGUE - verbal exchanges.')
+    } else if (s.aiActionVsDialogue >= 75) {
+      balanceInstructions.push('Heavy on ACTION - physical descriptions.')
+    }
+    
+    // Sensory focus
+    const senses = s.aiSensoryFocus || []
+    if (senses.length > 0) {
+      balanceInstructions.push(`Emphasize senses: ${senses.join(', ')}`)
+    }
+    
+    if (balanceInstructions.length > 0) {
+      sections.push('=== CONTENT BALANCE ===\n' + balanceInstructions.join('\n'))
+    }
+
+    // === KINK SPECIFICS ===
+    const kinkInstructions = []
+    
     // Fetish focus
-    const fetishFocus = settings.aiFetishFocus || []
+    const fetishFocus = s.aiFetishFocus || []
     if (fetishFocus.length > 0) {
       const fetishLabels = {
         tickling: 'tickling/tickle torture',
@@ -82,14 +248,132 @@ export class PromptBuilder {
         edging: 'edging/orgasm denial',
         pot: 'post-orgasm torture',
         bondage: 'bondage/restraints',
-        verbal: 'verbal humiliation/degradation',
+        verbal: 'verbal humiliation',
       }
       const focused = fetishFocus.map(f => fetishLabels[f] || f).join(', ')
-      instructions.push(`FETISH FOCUS: Emphasize these fetishes when appropriate: ${focused}`)
+      kinkInstructions.push(`FETISH FOCUS: ${focused}`)
+    }
+    
+    // Tickle tools
+    const tickleTools = s.aiTickleTools || []
+    if (tickleTools.length > 0) {
+      kinkInstructions.push(`Tickle tools: ${tickleTools.join(', ')}`)
+    }
+    
+    // Tickle spots
+    const tickleSpots = s.aiTickleSpots || []
+    if (tickleSpots.length > 0) {
+      kinkInstructions.push(`Tickle targets: ${tickleSpots.join(', ')}`)
+    }
+    
+    // Foot condition
+    const footCondition = s.aiFootCondition || []
+    if (footCondition.length > 0) {
+      kinkInstructions.push(`Foot condition: ${footCondition.join(', ')}`)
+    }
+    
+    // Footwear
+    const footwear = s.aiFootwear || []
+    if (footwear.length > 0) {
+      kinkInstructions.push(`Footwear preferences: ${footwear.join(', ')}`)
+    }
+    
+    // Bondage
+    const bondageMap = {
+      none: 'NO bondage - player can move freely.',
+      light: 'LIGHT bondage - some restraints.',
+      heavy: 'HEAVY bondage - tightly bound.',
+      inescapable: 'INESCAPABLE bondage - completely helpless.',
+    }
+    if (bondageMap[s.aiBondageLevel]) kinkInstructions.push(bondageMap[s.aiBondageLevel])
+    
+    if (kinkInstructions.length > 0) {
+      sections.push('=== KINK SPECIFICS ===\n' + kinkInstructions.join('\n'))
     }
 
-    return instructions.length > 0 
-      ? '\n=== BEHAVIOR SETTINGS ===\n' + instructions.join('\n') + '\n'
+    // === GAME MECHANICS ===
+    const mechanicsInstructions = []
+    
+    // Choice count
+    if (s.aiChoiceCount) {
+      mechanicsInstructions.push(`Provide exactly ${s.aiChoiceCount} choices per response.`)
+    }
+    
+    // Roll difficulty
+    const difficultyMap = {
+      easy: 'Set EASY DCs (8-12).',
+      normal: 'Set NORMAL DCs (10-15).',
+      hard: 'Set HARD DCs (14-18).',
+      brutal: 'Set BRUTAL DCs (16-20).',
+    }
+    if (difficultyMap[s.aiRollDifficulty]) mechanicsInstructions.push(difficultyMap[s.aiRollDifficulty])
+    
+    // Stat changes
+    const statRateMap = {
+      slow: 'Make SMALL stat changes (±1-5).',
+      normal: 'Make NORMAL stat changes (±3-10).',
+      fast: 'Make LARGE stat changes (±5-15).',
+    }
+    if (statRateMap[s.aiStatChangeRate]) mechanicsInstructions.push(statRateMap[s.aiStatChangeRate])
+    
+    if (mechanicsInstructions.length > 0) {
+      sections.push('=== GAME MECHANICS ===\n' + mechanicsInstructions.join('\n'))
+    }
+
+    // === IMMERSION ===
+    const immersionInstructions = []
+    
+    // Inner thoughts
+    const thoughtsMap = {
+      none: 'NO player inner thoughts.',
+      occasional: 'Include OCCASIONAL player inner thoughts.',
+      frequent: 'Include FREQUENT player inner thoughts and reactions.',
+    }
+    if (thoughtsMap[s.aiInnerThoughts]) immersionInstructions.push(thoughtsMap[s.aiInnerThoughts])
+    
+    // Environmental detail
+    const envMap = {
+      minimal: 'MINIMAL environmental description.',
+      moderate: 'MODERATE environmental detail.',
+      rich: 'RICH environmental descriptions - atmosphere, setting details.',
+    }
+    if (envMap[s.aiEnvironmentalDetail]) immersionInstructions.push(envMap[s.aiEnvironmentalDetail])
+    
+    // Sound descriptions
+    if (s.aiSoundDescriptions) {
+      immersionInstructions.push('Include SOUND descriptions ("her laugh echoes...", "the crack of her palm...").')
+    }
+    
+    // Time awareness
+    if (s.aiTimeAwareness) {
+      immersionInstructions.push('Include TIME references ("hours pass...", "as night falls...").')
+    }
+    
+    // Continuity
+    const continuityMap = {
+      loose: 'LOOSE continuity - each scene fairly fresh.',
+      moderate: 'MODERATE continuity.',
+      strict: 'STRICT continuity - reference past events.',
+    }
+    if (continuityMap[s.aiContinuity]) immersionInstructions.push(continuityMap[s.aiContinuity])
+    
+    // NPC consistency
+    if (s.aiNpcConsistency === 'strict') {
+      immersionInstructions.push('Keep NPCs STRICTLY consistent with their profiles.')
+    }
+    
+    // Surprise events
+    if (s.aiSurpriseEvents) {
+      immersionInstructions.push('Occasionally include SURPRISE twists or unexpected events.')
+    }
+    
+    if (immersionInstructions.length > 0) {
+      sections.push('=== IMMERSION ===\n' + immersionInstructions.join('\n'))
+    }
+
+    // Combine all sections
+    return sections.length > 0 
+      ? '\n' + sections.join('\n\n') + '\n'
       : ''
   }
 
@@ -100,6 +384,7 @@ export class PromptBuilder {
    */
   buildSystemPrompt(context) {
     const { stats, affinities, currentNpc, currentLocation, activeTone, flags } = context
+    const settings = settingsService.getAll()
 
     const npcProfiles = this.npcs.map(npc => {
       const affinity = affinities[npc.id] || 0
@@ -112,8 +397,11 @@ export class PromptBuilder {
     // Check for critical flags
     const criticalContext = this._getCriticalContext(flags)
     
-    // Get behavior settings
+    // Get comprehensive behavior settings
     const behaviorInstructions = this._buildBehaviorInstructions()
+    
+    // Choice count
+    const choiceCount = settings.aiChoiceCount || 4
 
     return `You are Sandy, the Head Mistress game master for "Fetish Dominion: The Infinite Slave Saga" - an adult text-based RPG. You narrate scenarios for the player (TJ), the first and lowest-ranking male slave in your fetish school/dungeon.
 
@@ -157,7 +445,7 @@ You MUST format your narrative using these markers:
 
 Provide your response as JSON:
 {
-  "description": "YOUR FORMATTED NARRATIVE HERE (200-400 words, using the *narrative* and dialogue format above)",
+  "description": "YOUR FORMATTED NARRATIVE HERE (using the *narrative* and dialogue format above)",
   "npc": "sandy|araph|nancy|aish|gaya|melissa",
   "npcEmotion": "neutral|smirk|angry|pleased|cruel|amused|bored|hostile|teasing",
   "location": "main_hall|classroom|workout_pit|chamber|dormitory|punishment_room|garden|dungeon",
@@ -165,18 +453,19 @@ Provide your response as JSON:
   "choices": [
     {"id": "1", "text": "Choice description", "type": "submit"},
     {"id": "2", "text": "Choice with roll", "type": "defy", "rollRequired": {"dc": 15, "stat": "obedience"}},
-    {"id": "3", "text": "Another choice", "type": "observe"}
+    ...
   ],
   "statChanges": {"obedience": 5, "arousal": 10},
   "affinityChanges": {"sandy": 3}
 }
 
+Provide exactly ${choiceCount} choices.
 IMPORTANT: Set "bodyPart" when the scene focuses on a specific body part (e.g. feet during foot worship, armpit during sweat scenes). Use null when no specific focus.
 
 Types: submit, defy, observe, beg, custom
 Stats for rolls: obedience, endurance, arousal, sensitivity
 
-STYLE: Dark, gothic aesthetic. Casual, profane language. No mercy, no romance - only domination.`
+STYLE: Dark, gothic aesthetic. No romance - only domination.`
   }
 
   /**
@@ -204,27 +493,66 @@ Generate the opening scene with vivid description and give TJ his first choices.
    */
   buildUserMessage(action, context) {
     const { history } = context
-    const recentHistory = this._trimHistory(history)
+    
+    // Build history context based on mode
+    const historyContext = this._buildHistoryContext(history)
+    
+    return `${historyContext}
 
-    let message = ''
+PLAYER ACTION: ${action}
 
-    if (recentHistory.length > 0) {
-      message += 'RECENT HISTORY:\n'
-      for (const entry of recentHistory) {
-        message += `- Turn ${entry.turn}: ${entry.description?.substring(0, 100)}... Player: "${entry.choice}" (${entry.outcome})\n`
-      }
-      message += '\n'
-    }
-
-    message += `PLAYER ACTION: "${action}"\n\nRespond with the JSON format specified. Remember to use *asterisks* for narrative and plain text for dialogue.`
-
-    return message
+Continue the scene based on this action. Remember to use *asterisks* for narrative and plain text for dialogue.`
   }
 
   /**
-   * Parse AI response into structured content
+   * Build history context based on mode
+   * @param {Array} history - Game history
+   * @returns {string}
+   */
+  _buildHistoryContext(history) {
+    if (!history || history.length === 0) {
+      return 'This is the beginning of the game.'
+    }
+
+    let relevantHistory = []
+    
+    switch (this.contextMode) {
+      case 'full-chapter':
+        relevantHistory = history
+        break
+      case 'last-n-turns':
+        relevantHistory = history.slice(-this.contextLimit)
+        break
+      case 'token-budget':
+        // Simple approximation: ~4 chars per token
+        let tokenCount = 0
+        for (let i = history.length - 1; i >= 0; i--) {
+          const entry = history[i]
+          const entryTokens = (entry.description?.length || 0) / 4
+          if (tokenCount + entryTokens > this.contextLimit) break
+          relevantHistory.unshift(entry)
+          tokenCount += entryTokens
+        }
+        break
+      default:
+        relevantHistory = history.slice(-10)
+    }
+
+    if (relevantHistory.length === 0) {
+      return 'This is the beginning of the game.'
+    }
+
+    const summaries = relevantHistory.map(h => 
+      `Turn ${h.turn}: ${h.choice} → ${h.outcome || 'resolved'}`
+    ).join('\n')
+
+    return `RECENT HISTORY:\n${summaries}`
+  }
+
+  /**
+   * Parse AI response into scene content
    * @param {string} response - Raw AI response
-   * @returns {SceneContent}
+   * @returns {Object}
    */
   parseAIResponse(response) {
     try {
@@ -265,18 +593,21 @@ Generate the opening scene with vivid description and give TJ his first choices.
   }
 
   /**
-   * Get default choices for fallback
+   * Get default choices when AI fails to provide them
+   * @returns {Array}
    */
   _getDefaultChoices() {
     return [
-      { id: '1', text: 'Submit and obey', type: 'submit' },
+      { id: '1', text: 'Submit obediently', type: 'submit' },
       { id: '2', text: 'Hesitate nervously', type: 'observe' },
-      { id: '3', text: 'Resist (risky)', type: 'defy', rollRequired: { dc: 15, stat: 'obedience' } },
+      { id: '3', text: 'Try to resist', type: 'defy', rollRequired: { dc: 15, stat: 'obedience' } },
     ]
   }
 
   /**
-   * Get affinity tier name
+   * Get affinity tier from value
+   * @param {number} affinity - Affinity value
+   * @returns {string}
    */
   _getAffinityTier(affinity) {
     if (affinity >= 50) return 'Devoted'
@@ -288,81 +619,45 @@ Generate the opening scene with vivid description and give TJ his first choices.
   }
 
   /**
-   * Get critical context from flags
-   */
-  _getCriticalContext(flags) {
-    if (!flags) return ''
-    
-    let context = ''
-    
-    if (flags.criticalFailure) {
-      context += '\n⚠️ CRITICAL FAILURE JUST OCCURRED - The player just rolled a natural 1. Deliver SEVERE punishment and humiliation. Be merciless.'
-    }
-    
-    if (flags.criticalSuccess) {
-      context += '\n✨ CRITICAL SUCCESS JUST OCCURRED - The player just rolled a natural 20. Acknowledge their rare moment of competence, but do not show mercy.'
-    }
-    
-    return context
-  }
-
-  /**
-   * Set context mode
-   * @param {string} mode - Context mode
-   */
-  setContextMode(mode) {
-    this.contextMode = mode
-  }
-
-  /**
-   * Set context limit
-   * @param {number} limit - Max entries to include
-   */
-  setContextLimit(limit) {
-    this.contextLimit = limit
-  }
-
-  /**
-   * Trim history based on context mode
-   * @param {Array} history - Full history
-   * @returns {Array}
-   */
-  _trimHistory(history) {
-    if (!history || history.length === 0) return []
-
-    switch (this.contextMode) {
-      case 'last-n-turns':
-        return history.slice(-this.contextLimit)
-      
-      case 'full-chapter':
-        // For now, just return last 20 entries max
-        return history.slice(-20)
-      
-      case 'token-budget':
-        // Simple implementation: estimate ~100 tokens per entry
-        const maxEntries = Math.floor(this.contextLimit / 100)
-        return history.slice(-maxEntries)
-      
-      default:
-        return history.slice(-10)
-    }
-  }
-
-  /**
-   * Get tone-specific guidelines
-   * @param {string} tone - Active tone
+   * Get tone guidelines for the current tone
+   * @param {string} tone - Current tone
    * @returns {string}
    */
   _getToneGuidelines(tone) {
     const guidelines = {
-      Soft: 'Use gentle, teasing language. Encouragement mixed with light mockery. "Good boy" energy. Still dominant, but less harsh.',
-      Neutral: 'Standard domination tone. Clear commands, moderate intensity. Balance of cruelty and control.',
-      Aggressive: 'Sharp, snappy orders. No patience for hesitation. Threatening undertones. Quick to punish.',
-      Swearing: 'Heavy profanity. Raw, crude language. Degrading terms used freely. Explicit and vulgar.',
-      Humiliating: 'Maximum degradation. Personal insults. Emphasize worthlessness and pathetic nature. Psychological cruelty.',
+      Soft: 'Tone is SOFT - gentle teasing, encouraging submission, occasional praise.',
+      Neutral: 'Tone is NEUTRAL - standard domination, firm but measured.',
+      Aggressive: 'Tone is AGGRESSIVE - harsh commands, quick temper, physical emphasis.',
+      Swearing: 'Tone includes HEAVY SWEARING - crude language, vulgar insults.',
+      Humiliating: 'Tone is HUMILIATING - constant mockery, personal degradation, emphasize worthlessness.',
     }
-
     return guidelines[tone] || guidelines.Neutral
+  }
+
+  /**
+   * Get critical context from flags
+   * @param {Object} flags - Game flags
+   * @returns {string}
+   */
+  _getCriticalContext(flags) {
+    if (!flags) return ''
+    
+    const context = []
+    
+    if (flags.criticalFailure) {
+      context.push('CRITICAL FAILURE just occurred - emphasize harsh consequences!')
+    }
+    if (flags.criticalSuccess) {
+      context.push('CRITICAL SUCCESS just occurred - acknowledge surprising competence.')
+    }
+    if (flags.knowsAraphWeakness) {
+      context.push('Player knows Araph\'s weakness (she hates being tickled back).')
+    }
+    if (flags.knowsGayaWeakness) {
+      context.push('Player knows Gaya\'s weakness (praise buys micro-mercy).')
+    }
+    
+    return context.length > 0 ? '\nCRITICAL CONTEXT:\n' + context.join('\n') : ''
   }
 }
 

@@ -8,9 +8,9 @@ export function SplitLayout({ left, right, bodyPartPanel = null }) {
   const hasBodyPartPanel = bodyPartPanel !== null
 
   return (
-    <div className="flex flex-1 gap-4 p-4 overflow-hidden">
+    <div className="flex flex-1 gap-6 p-4 overflow-hidden">
       {/* Left Panel - Visual + Dashboard */}
-      <div className="w-80 flex-shrink-0 flex flex-col gap-4 overflow-y-auto">
+      <div className="w-72 flex-shrink-0 flex flex-col gap-4 overflow-y-auto">
         {left}
       </div>
 

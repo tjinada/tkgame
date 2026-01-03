@@ -98,7 +98,7 @@ function NarrativeBlock({ content, index }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.4 }}
-      className="text-slate-300 italic leading-[1.9] text-[1.05rem] mb-5"
+      className="text-slate-300 italic leading-[2] text-[1.1rem] mb-6"
     >
       {content}
     </motion.p>
@@ -114,9 +114,9 @@ function DialogueBlock({ content, index }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.4 }}
-      className="my-5 pl-5 border-l-[3px] border-purple-500/60"
+      className="my-6 pl-5 border-l-[3px] border-purple-500/60"
     >
-      <p className="text-white font-medium leading-[1.8] text-[1.1rem]">
+      <p className="text-white font-medium leading-[1.9] text-[1.15rem]">
         {content}
       </p>
     </motion.div>
@@ -187,7 +187,7 @@ export function NarrativePanel({
       )}
 
       {/* Narrative content */}
-      <div className="flex-1 px-8 py-6 overflow-y-auto">
+      <div className="flex-1 px-6 py-6 overflow-y-auto">
         {isLoading && !streamingContent ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
@@ -196,7 +196,7 @@ export function NarrativePanel({
             </div>
           </div>
         ) : (
-          <div className="max-w-2xl">
+          <div className="pr-4">
             {blocks.map((block, index) => (
               block.type === 'dialogue' ? (
                 <DialogueBlock 

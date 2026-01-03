@@ -1,6 +1,4 @@
-import { apiClient } from './ApiClient.js'
-
-const SETTINGS_KEY = 'fd-settings'
+const STORAGE_KEY = 'fd-settings'
 
 const defaultSettings = {
   // API Settings
@@ -14,7 +12,11 @@ const defaultSettings = {
   contextLimit: 10,
   streamResponses: true,
   
-  // AI Behavior Settings
+  // ===================
+  // AI BEHAVIOR SETTINGS
+  // ===================
+  
+  // -- Basic Style --
   aiHumiliationLevel: 'moderate', // 'none', 'mild', 'moderate', 'heavy', 'extreme'
   aiSwearingLevel: 'moderate', // 'none', 'mild', 'moderate', 'heavy'
   aiResponseLength: 'medium', // 'short', 'medium', 'long'
@@ -22,7 +24,68 @@ const defaultSettings = {
   aiIntensity: 'moderate', // 'gentle', 'moderate', 'intense', 'brutal'
   aiFetishFocus: [], // array of: 'tickling', 'feet', 'sweat', 'edging', 'pot', 'bondage', 'verbal'
   
-  // Visual Settings
+  // -- Narrative Style --
+  aiPov: 'sandy-first', // 'sandy-first', 'narrator-third'
+  aiTense: 'present', // 'present', 'past'
+  aiProseStyle: 'balanced', // 'poetic', 'balanced', 'direct'
+  aiDetailLevel: 'moderate', // 'minimal', 'moderate', 'vivid'
+  
+  // -- Scene Pacing --
+  aiPacing: 'moderate', // 'slow-burn', 'moderate', 'rapid'
+  aiEscalation: 'gradual', // 'gradual', 'sudden'
+  
+  // -- Player Treatment --
+  aiMercyFrequency: 'rare', // 'never', 'rare', 'occasional'
+  aiPlayerNames: 'worm, slave, maggot, pathetic toy', // comma-separated
+  aiResistanceSuccess: 'difficult', // 'hopeless', 'difficult', 'possible'
+  aiPlayerVoice: 'reactive', // 'silent', 'reactive', 'vocal'
+  
+  // -- NPC Behavior --
+  aiNpcMood: 'sadistic', // 'sadistic', 'playful', 'cold', 'random'
+  aiCollaboration: 'solo', // 'solo', 'pairs', 'group-friendly'
+  aiAffectionStyle: 'none', // 'none', 'twisted', 'possessive'
+  aiMockeryStyle: 'cruel', // 'cruel', 'teasing', 'dismissive'
+  
+  // -- Content Balance (sliders 0-100) --
+  aiPainVsPleasure: 70, // 0 = all pleasure, 100 = all pain
+  aiPhysicalVsPsychological: 50, // 0 = all psychological, 100 = all physical
+  aiActionVsDialogue: 50, // 0 = all dialogue, 100 = all action
+  
+  // -- Sensory Focus --
+  aiSensoryFocus: ['touch', 'sound'], // 'touch', 'smell', 'taste', 'sound', 'sight'
+  
+  // -- Tickle Specifics --
+  aiTickleTools: ['fingers', 'nails'], // 'fingers', 'feathers', 'brushes', 'electric', 'nails', 'tongue'
+  aiTickleSpots: ['feet', 'ribs', 'armpits'], // 'feet', 'ribs', 'armpits', 'neck', 'thighs', 'stomach', 'sides', 'knees'
+  
+  // -- Foot Specifics --
+  aiFootCondition: ['sweaty', 'barefoot'], // 'sweaty', 'clean', 'dirty', 'smelly'
+  aiFootwear: ['heels', 'barefoot'], // 'heels', 'boots', 'flats', 'barefoot', 'stockings', 'socks'
+  
+  // -- Bondage --
+  aiBondageLevel: 'light', // 'none', 'light', 'heavy', 'inescapable'
+  
+  // -- Game Mechanics --
+  aiChoiceCount: 4, // 3, 4, 5
+  aiRollDifficulty: 'normal', // 'easy', 'normal', 'hard', 'brutal'
+  aiStatChangeRate: 'normal', // 'slow', 'normal', 'fast'
+  aiEventFrequency: 'normal', // 'rare', 'normal', 'frequent'
+  
+  // -- Immersion --
+  aiInnerThoughts: 'occasional', // 'none', 'occasional', 'frequent'
+  aiEnvironmentalDetail: 'moderate', // 'minimal', 'moderate', 'rich'
+  aiSoundDescriptions: true,
+  aiTimeAwareness: false,
+  
+  // -- Advanced --
+  aiCreativity: 0.8, // 0.1 to 1.0 (temperature)
+  aiContinuity: 'moderate', // 'loose', 'moderate', 'strict'
+  aiNpcConsistency: 'strict', // 'strict', 'flexible'
+  aiSurpriseEvents: true,
+  
+  // ===================
+  // VISUAL SETTINGS
+  // ===================
   enableBackgrounds: true,
   enablePortraits: true,
   enableDiceAnimation: true,
@@ -45,25 +108,50 @@ class SettingsService {
   constructor() {
     this.settings = { ...defaultSettings }
     this.listeners = []
-    this.initialized = false
+    this.load()
   }
 
   /**
-   * Initialize settings from server
+   * Load settings from localStorage
    */
-  async init() {
-    if (this.initialized) return
-    
+  load() {
     try {
-      const serverSettings = await apiClient.get('/api/config/settings')
-      this.settings = { ...defaultSettings, ...serverSettings }
-      this.initialized = true
-    } catch (error) {
-      console.error('Failed to load settings from server:', error)
-      // Fall back to local storage
-      this._loadFromLocalStorage()
-      this.initialized = true
+      const stored = localStorage.getItem(STORAGE_KEY)
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        // Merge with defaults to handle new settings
+        this.settings = { ...defaultSettings, ...parsed }
+      }
+    } catch (e) {
+      console.error('Failed to load settings:', e)
     }
+  }
+
+  /**
+   * Save settings to localStorage
+   */
+  save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.settings))
+      this._notify()
+    } catch (e) {
+      console.error('Failed to save settings:', e)
+    }
+  }
+
+  /**
+   * Get a single setting value
+   */
+  get(key) {
+    return this.settings[key] ?? defaultSettings[key]
+  }
+
+  /**
+   * Set a single setting value
+   */
+  set(key, value) {
+    this.settings[key] = value
+    this.save()
   }
 
   /**
@@ -74,99 +162,71 @@ class SettingsService {
   }
 
   /**
-   * Get a specific setting
-   */
-  get(key) {
-    return this.settings[key]
-  }
-
-  /**
-   * Set a specific setting
-   */
-  async set(key, value) {
-    this.settings[key] = value
-    this._saveToLocalStorage() // Save locally for fast access
-    this._notify()
-    
-    // Sync to server
-    try {
-      await apiClient.put('/api/config/settings', { key, value })
-    } catch (error) {
-      console.error('Failed to sync setting to server:', error)
-    }
-  }
-
-  /**
    * Update multiple settings at once
    */
-  async update(updates) {
+  update(updates) {
     this.settings = { ...this.settings, ...updates }
-    this._saveToLocalStorage()
-    this._notify()
-    
-    // Sync to server
-    try {
-      await apiClient.put('/api/config/settings', updates)
-    } catch (error) {
-      console.error('Failed to sync settings to server:', error)
-    }
+    this.save()
   }
 
   /**
-   * Reset to defaults
+   * Reset all settings to defaults
    */
-  async reset() {
+  resetAll() {
     this.settings = { ...defaultSettings }
-    this._saveToLocalStorage()
-    this._notify()
-    
-    // Sync to server
-    try {
-      await apiClient.put('/api/config/settings', defaultSettings)
-    } catch (error) {
-      console.error('Failed to reset settings on server:', error)
-    }
+    this.save()
   }
 
   /**
-   * Reset a specific category
+   * Reset a category of settings
    */
   async resetCategory(category) {
     const categoryKeys = {
       api: ['apiKey', 'baseUrl', 'model'],
       content: ['contentMode', 'contextMode', 'contextLimit', 'streamResponses'],
-      aiBehavior: ['aiHumiliationLevel', 'aiSwearingLevel', 'aiResponseLength', 'aiConversationalStyle', 'aiIntensity', 'aiFetishFocus'],
+      aiBasic: ['aiHumiliationLevel', 'aiSwearingLevel', 'aiResponseLength', 'aiConversationalStyle', 'aiIntensity', 'aiFetishFocus'],
+      aiNarrative: ['aiPov', 'aiTense', 'aiProseStyle', 'aiDetailLevel', 'aiPacing', 'aiEscalation'],
+      aiPlayer: ['aiMercyFrequency', 'aiPlayerNames', 'aiResistanceSuccess', 'aiPlayerVoice'],
+      aiNpc: ['aiNpcMood', 'aiCollaboration', 'aiAffectionStyle', 'aiMockeryStyle'],
+      aiBalance: ['aiPainVsPleasure', 'aiPhysicalVsPsychological', 'aiActionVsDialogue', 'aiSensoryFocus'],
+      aiKinks: ['aiTickleTools', 'aiTickleSpots', 'aiFootCondition', 'aiFootwear', 'aiBondageLevel'],
+      aiMechanics: ['aiChoiceCount', 'aiRollDifficulty', 'aiStatChangeRate', 'aiEventFrequency'],
+      aiImmersion: ['aiInnerThoughts', 'aiEnvironmentalDetail', 'aiSoundDescriptions', 'aiTimeAwareness'],
+      aiAdvanced: ['aiCreativity', 'aiContinuity', 'aiNpcConsistency', 'aiSurpriseEvents'],
       visual: ['enableBackgrounds', 'enablePortraits', 'enableDiceAnimation', 'enableEffects'],
       slideshow: ['enableSlideshow', 'slideshowInterval', 'slideshowTransition', 'slideshowTransitionDuration', 'slideshowShuffle'],
       debug: ['debugOverlay', 'logApiCalls', 'logDiceRolls'],
     }
 
-    const keys = categoryKeys[category] || []
-    const updates = {}
-    
-    for (const key of keys) {
-      this.settings[key] = defaultSettings[key]
-      updates[key] = defaultSettings[key]
-    }
-    
-    this._saveToLocalStorage()
-    this._notify()
-    
-    // Sync to server
-    try {
-      await apiClient.put('/api/config/settings', updates)
-    } catch (error) {
-      console.error('Failed to reset category on server:', error)
+    const keys = categoryKeys[category]
+    if (keys) {
+      for (const key of keys) {
+        this.settings[key] = defaultSettings[key]
+      }
+      this.save()
     }
   }
 
   /**
-   * Subscribe to changes
+   * Subscribe to settings changes
    */
   subscribe(callback) {
     this.listeners.push(callback)
     return () => {
-      this.listeners = this.listeners.filter(l => l !== callback)
+      this.listeners = this.listeners.filter(cb => cb !== callback)
+    }
+  }
+
+  /**
+   * Notify all listeners of changes
+   */
+  _notify() {
+    for (const callback of this.listeners) {
+      try {
+        callback(this.settings)
+      } catch (e) {
+        console.error('Settings listener error:', e)
+      }
     }
   }
 
@@ -180,51 +240,20 @@ class SettingsService {
   /**
    * Import settings from JSON
    */
-  async import(json) {
+  import(json) {
     try {
-      const imported = JSON.parse(json)
-      this.settings = { ...defaultSettings, ...imported }
-      this._saveToLocalStorage()
-      this._notify()
-      
-      // Sync to server
-      await apiClient.put('/api/config/settings', this.settings)
+      const parsed = JSON.parse(json)
+      this.settings = { ...defaultSettings, ...parsed }
+      this.save()
       return true
     } catch (e) {
       console.error('Failed to import settings:', e)
       return false
     }
   }
-
-  _loadFromLocalStorage() {
-    try {
-      const stored = localStorage.getItem(SETTINGS_KEY)
-      if (stored) {
-        this.settings = { ...defaultSettings, ...JSON.parse(stored) }
-      }
-    } catch (e) {
-      console.error('Failed to load settings from localStorage:', e)
-    }
-  }
-
-  _saveToLocalStorage() {
-    try {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(this.settings))
-    } catch (e) {
-      console.error('Failed to save settings to localStorage:', e)
-    }
-  }
-
-  _notify() {
-    for (const callback of this.listeners) {
-      try {
-        callback(this.settings)
-      } catch (e) {
-        console.error('Error in settings listener:', e)
-      }
-    }
-  }
 }
 
+// Singleton instance
 export const settingsService = new SettingsService()
+
 export default settingsService

@@ -58,14 +58,14 @@ export function BodyPartPanel({
   return (
     <div 
       className={`
-        w-80 flex-shrink-0 transform transition-transform ease-out
+        w-96 flex-shrink-0 transform transition-transform ease-out
         ${isAnimatingOut ? 'translate-x-full' : 'translate-x-0'}
       `}
       style={{ 
         transitionDuration: `${animationDuration}ms`,
       }}
     >
-      <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-background-secondary">
+      <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-background-secondary">
         {/* Image or placeholder */}
         {isLoading ? (
           <div className="absolute inset-0 flex items-center justify-center bg-background-secondary">
