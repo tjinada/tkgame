@@ -1,15 +1,21 @@
 import { ScenarioLoader } from './ScenarioLoader'
 import { NanoGPTClient } from './NanoGPTClient'
 import { PromptBuilder } from './PromptBuilder'
+import { ChoiceGenerator } from '../engine/ChoiceGenerator'
+import { settingsService } from '../services/SettingsService'
 
 export class ContentRouter {
   constructor(options = {}) {
     this.scenarioLoader = options.scenarioLoader || new ScenarioLoader()
     this.nanoGPTClient = options.nanoGPTClient || new NanoGPTClient()
     this.promptBuilder = options.promptBuilder || new PromptBuilder()
+    this.choiceGenerator = options.choiceGenerator || new ChoiceGenerator()
     
     // Modes: 'json-only', 'ai-only', 'hybrid'
     this.mode = options.mode || 'hybrid'
+    
+    // Whether to use the hybrid choice system
+    this.useHybridChoices = options.useHybridChoices !== false
   }
 
   /**
@@ -190,6 +196,62 @@ export class ContentRouter {
       ...parsed,
       source: 'ai',
     }
+  }
+
+  /**
+   * Generate hybrid choices by combining engine-generated and AI choices
+   * @param {Object} context - Current game context
+   * @param {Array} aiChoices - Choices from AI response (optional)
+   * @param {string} sceneDescription - Scene description for context detection
+   * @returns {Object} - { available: [], locked: [], sceneContext: string }
+   */
+  generateHybridChoices(context, aiChoices = [], sceneDescription = '') {
+    const settings = settingsService.getAll()
+    const choiceBalance = settings.choiceBalance ?? 50
+    
+    // If balance is 100% AI, skip engine generation entirely
+    if (choiceBalance === 100) {
+      return {
+        available: (aiChoices || []).map((choice, index) => ({
+          ...choice,
+          id: choice.id || `ai-${index + 1}`,
+          isAIGenerated: true,
+          archetype: this.choiceGenerator._inferArchetype(choice),
+        })),
+        locked: [],
+        sceneContext: this.choiceGenerator.detectSceneContext(context, sceneDescription),
+      }
+    }
+    
+    // Generate engine choices with scene context awareness
+    const { available: engineChoices, locked, sceneContext, engineCount, aiCount } = 
+      this.choiceGenerator.generate(context, sceneDescription)
+
+    // If balance is 0% AI, return only engine choices
+    if (choiceBalance === 0 || aiCount === 0) {
+      return {
+        available: engineChoices,
+        locked,
+        sceneContext,
+      }
+    }
+
+    // Merge with AI wild cards
+    const merged = this.choiceGenerator.mergeWithAIChoices(engineChoices, aiChoices, aiCount)
+
+    return {
+      available: merged,
+      locked,
+      sceneContext,
+    }
+  }
+
+  /**
+   * Enable or disable hybrid choice system
+   * @param {boolean} enabled
+   */
+  setHybridChoices(enabled) {
+    this.useHybridChoices = enabled
   }
 }
 

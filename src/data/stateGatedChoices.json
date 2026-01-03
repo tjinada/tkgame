@@ -1,0 +1,139 @@
+{
+  "choices": [
+    {
+      "id": "collapse",
+      "archetype": "ENDURE",
+      "conditions": {
+        "stats": { "endurance": { "max": 15 } }
+      },
+      "text": "I... I can't take anymore...",
+      "label": "Collapse",
+      "effects": { 
+        "stats": { "endurance": -10 },
+        "flags": { "collapsed": true }
+      },
+      "consequenceHint": "Ends scene, triggers event"
+    },
+    {
+      "id": "reversal_araph",
+      "archetype": "RESIST",
+      "conditions": {
+        "flags": { "knowsAraphWeakness": true },
+        "currentNpc": "araph"
+      },
+      "text": "What if I tickled YOU instead?",
+      "label": "Reversal Attempt",
+      "rollRequired": { "dc": 18, "stat": "obedience", "inverted": true },
+      "consequenceHint": "High risk, high reward"
+    },
+    {
+      "id": "beg_release",
+      "archetype": "GROVEL",
+      "conditions": {
+        "stats": { "arousal": { "min": 75 } }
+      },
+      "text": "Please... I need release... I'll do anything...",
+      "label": "Desperate Plea",
+      "rollRequired": { "dc": 16, "stat": "obedience" },
+      "consequenceHint": "Variable, risk of denial"
+    },
+    {
+      "id": "call_favor_sandy",
+      "archetype": "NEGOTIATE",
+      "conditions": {
+        "flags": { "sandyOwesFavor": true },
+        "currentNpc": "sandy"
+      },
+      "text": "You said you'd remember what I did. I'm asking now.",
+      "label": "Call In Favor",
+      "effects": { 
+        "flags": { "sandyOwesFavor": false }
+      },
+      "consequenceHint": "One-time use"
+    },
+    {
+      "id": "praise_gaya",
+      "archetype": "NEGOTIATE",
+      "conditions": {
+        "flags": { "knowsGayaWeakness": true },
+        "currentNpc": "gaya"
+      },
+      "text": "You're... so skilled at this. No one else could...",
+      "label": "Praise Her Skill",
+      "rollRequired": { "dc": 10, "stat": "obedience" },
+      "consequenceHint": "May buy mercy"
+    },
+    {
+      "id": "broken_submission",
+      "archetype": "SUBMIT",
+      "conditions": {
+        "stats": { "obedience": { "min": 80 } }
+      },
+      "text": "Yes... whatever you want... always...",
+      "label": "Broken Submission",
+      "effects": {
+        "stats": { "obedience": 5 }
+      },
+      "consequenceHint": "Deep submission"
+    },
+    {
+      "id": "desperate_endurance",
+      "archetype": "ENDURE",
+      "conditions": {
+        "stats": { 
+          "endurance": { "min": 16, "max": 30 },
+          "arousal": { "min": 60 }
+        }
+      },
+      "text": "Hold on... just hold on...",
+      "label": "Desperate Focus",
+      "rollRequired": { "dc": 14, "stat": "endurance" },
+      "consequenceHint": "May preserve endurance"
+    },
+    {
+      "id": "sensitivity_overload",
+      "archetype": "SUBMIT",
+      "conditions": {
+        "stats": { "sensitivity": { "min": 80 } }
+      },
+      "text": "Every touch is... too much... please...",
+      "label": "Overwhelmed",
+      "effects": {
+        "stats": { "arousal": 10 }
+      },
+      "consequenceHint": "Intense reaction"
+    },
+    {
+      "id": "defiant_despite_odds",
+      "archetype": "RESIST",
+      "conditions": {
+        "stats": { "obedience": { "max": 25 } }
+      },
+      "text": "I won't break. Not today.",
+      "label": "Stubborn Defiance",
+      "rollRequired": { "dc": 16, "stat": "endurance" },
+      "consequenceHint": "Risky but preserves dignity"
+    },
+    {
+      "id": "exploit_rivalry",
+      "archetype": "DISTRACT",
+      "conditions": {
+        "flags": { "knowsRivalry": true }
+      },
+      "text": "Doesn't [other NPC] do this better?",
+      "label": "Exploit Rivalry",
+      "rollRequired": { "dc": 15, "stat": "obedience" },
+      "consequenceHint": "May redirect anger"
+    }
+  ],
+  "lockHints": {
+    "knowsAraphWeakness": "Discover Araph's weakness",
+    "knowsGayaWeakness": "Discover Gaya's soft spot",
+    "sandyOwesFavor": "Earn a favor from Sandy",
+    "knowsRivalry": "Learn about NPC rivalries",
+    "arousal": "Arousal {threshold}",
+    "endurance": "Endurance {threshold}",
+    "obedience": "Obedience {threshold}",
+    "sensitivity": "Sensitivity {threshold}"
+  }
+}

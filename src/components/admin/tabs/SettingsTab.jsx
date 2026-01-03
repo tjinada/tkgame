@@ -677,22 +677,108 @@ function KinkSettings({ settings, onChange, onReset }) {
 }
 
 function MechanicsSettings({ settings, onChange, onReset }) {
+  // Calculate current counts for display
+  const choiceBalance = settings.choiceBalance ?? 50
+  const totalChoiceMax = settings.totalChoiceMax ?? 6
+  const engineChoiceMax = settings.engineChoiceMax ?? 4
+  const aiChoiceMax = settings.aiChoiceMax ?? 4
+  
+  const aiRatio = choiceBalance / 100
+  const engineRatio = 1 - aiRatio
+  
+  let displayAiCount = Math.round(totalChoiceMax * aiRatio)
+  let displayEngineCount = Math.round(totalChoiceMax * engineRatio)
+  
+  displayAiCount = Math.min(displayAiCount, aiChoiceMax)
+  displayEngineCount = Math.min(displayEngineCount, engineChoiceMax)
+  
+  if (choiceBalance === 0) {
+    displayAiCount = 0
+    displayEngineCount = Math.min(engineChoiceMax, totalChoiceMax)
+  } else if (choiceBalance === 100) {
+    displayEngineCount = 0
+    displayAiCount = Math.min(aiChoiceMax, totalChoiceMax)
+  } else {
+    displayAiCount = Math.max(displayAiCount, 1)
+    displayEngineCount = Math.max(displayEngineCount, 1)
+  }
+  
   return (
     <div className="space-y-6">
       <SectionHeader title="Game Mechanics" onReset={onReset} />
       
+      {/* Choice Generation Section */}
+      <div className="p-4 bg-background-tertiary/50 rounded-lg space-y-6">
+        <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Choice Generation</h4>
+        
+        <div>
+          <label className="block text-sm font-medium text-text-primary mb-2">Engine vs AI Balance</label>
+          <p className="text-xs text-text-muted mb-3">Controls the source of choices. Engine choices are context-aware archetypes, AI choices are dynamically generated.</p>
+          <div className="flex items-center gap-4">
+            <span className="text-xs text-text-muted w-20">All Engine</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={choiceBalance}
+              onChange={(e) => onChange('choiceBalance', parseInt(e.target.value))}
+              className="flex-1 h-2 bg-background-tertiary rounded-lg appearance-none cursor-pointer accent-accent-primary"
+            />
+            <span className="text-xs text-text-muted w-16 text-right">All AI</span>
+            <span className="text-sm text-text-primary w-12 text-right">{choiceBalance}%</span>
+          </div>
+          <div className="mt-2 flex items-center justify-center gap-4 text-xs">
+            <span className="px-2 py-1 bg-stat-obedience/20 text-stat-obedience rounded">Engine: ~{displayEngineCount}</span>
+            <span className="px-2 py-1 bg-accent-primary/20 text-accent-primary rounded">AI: ~{displayAiCount}</span>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-1">Total Max</label>
+            <input
+              type="number"
+              min={3}
+              max={8}
+              value={totalChoiceMax}
+              onChange={(e) => onChange('totalChoiceMax', Math.min(8, Math.max(3, parseInt(e.target.value) || 6)))}
+              className="w-full px-3 py-2 bg-background-tertiary border border-background-elevated rounded-lg text-text-primary text-sm"
+            />
+            <p className="text-xs text-text-muted mt-1">Total choices shown</p>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-1">Engine Max</label>
+            <input
+              type="number"
+              min={0}
+              max={8}
+              value={engineChoiceMax}
+              onChange={(e) => onChange('engineChoiceMax', Math.min(8, Math.max(0, parseInt(e.target.value) || 4)))}
+              className="w-full px-3 py-2 bg-background-tertiary border border-background-elevated rounded-lg text-text-primary text-sm"
+            />
+            <p className="text-xs text-text-muted mt-1">Max from templates</p>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-1">AI Max</label>
+            <input
+              type="number"
+              min={0}
+              max={8}
+              value={aiChoiceMax}
+              onChange={(e) => onChange('aiChoiceMax', Math.min(8, Math.max(0, parseInt(e.target.value) || 4)))}
+              className="w-full px-3 py-2 bg-background-tertiary border border-background-elevated rounded-lg text-text-primary text-sm"
+            />
+            <p className="text-xs text-text-muted mt-1">Max from AI</p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Other Mechanics */}
       <div className="grid gap-4 p-4 bg-background-tertiary/50 rounded-lg">
-        <Select
-          label="Choice Count"
-          value={settings.aiChoiceCount?.toString()}
-          onChange={(e) => onChange('aiChoiceCount', parseInt(e.target.value))}
-          options={[
-            { value: '3', label: '3 choices per turn' },
-            { value: '4', label: '4 choices per turn' },
-            { value: '5', label: '5 choices per turn' },
-          ]}
-        />
-
+        <h4 className="text-sm font-semibold text-text-primary border-b border-background-elevated pb-2">Dice & Stats</h4>
+        
         <Select
           label="Roll Difficulty"
           value={settings.aiRollDifficulty}

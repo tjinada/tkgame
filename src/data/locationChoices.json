@@ -1,0 +1,87 @@
+{
+  "main_hall": {
+    "choices": [
+      {
+        "archetype": "DISTRACT",
+        "text": "Point at something across the hall.",
+        "label": "Misdirect",
+        "rollRequired": { "dc": 14, "stat": "obedience" },
+        "consequenceHint": "May backfire"
+      }
+    ]
+  },
+  "classroom": {
+    "choices": [
+      {
+        "archetype": "NEGOTIATE",
+        "text": "Ask if this is part of the lesson.",
+        "label": "Question",
+        "rollRequired": { "dc": 12, "stat": "obedience" },
+        "consequenceHint": "Variable"
+      }
+    ]
+  },
+  "workout_pit": {
+    "choices": [
+      {
+        "archetype": "ENDURE",
+        "text": "Focus on the burn, not the torment.",
+        "label": "Compartmentalize",
+        "consequenceHint": "Neutral"
+      }
+    ]
+  },
+  "chamber": {
+    "choices": [
+      {
+        "archetype": "ENDURE",
+        "text": "Go limp and conserve your strength.",
+        "label": "Play Dead",
+        "consequenceHint": "May reduce intensity"
+      }
+    ]
+  },
+  "dormitory": {
+    "choices": [
+      {
+        "archetype": "NEGOTIATE",
+        "text": "Isn't this supposed to be rest time?",
+        "label": "Appeal to Rules",
+        "rollRequired": { "dc": 15, "stat": "obedience" },
+        "consequenceHint": "Unlikely"
+      }
+    ]
+  },
+  "punishment_room": {
+    "choices": [
+      {
+        "archetype": "SUBMIT",
+        "text": "Assume the position without being told.",
+        "label": "Anticipate",
+        "effects": { "stats": { "obedience": 3 } },
+        "consequenceHint": "Likely: +Affinity"
+      }
+    ]
+  },
+  "garden": {
+    "choices": [
+      {
+        "archetype": "DISTRACT",
+        "text": "Comment on the flowers.",
+        "label": "Small Talk",
+        "rollRequired": { "dc": 13, "stat": "obedience" },
+        "consequenceHint": "May backfire"
+      }
+    ]
+  },
+  "dungeon": {
+    "choices": [
+      {
+        "archetype": "ENDURE",
+        "text": "Focus on the cold stone, not the pain.",
+        "label": "Grounding",
+        "consequenceHint": "Neutral"
+      }
+    ]
+  }
+}

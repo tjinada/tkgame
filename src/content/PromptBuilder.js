@@ -400,8 +400,24 @@ export class PromptBuilder {
     // Get comprehensive behavior settings
     const behaviorInstructions = this._buildBehaviorInstructions()
     
-    // Choice count
-    const choiceCount = settings.aiChoiceCount || 4
+    // Calculate AI choice count based on balance settings
+    const choiceBalance = settings.choiceBalance ?? 50
+    const totalChoiceMax = settings.totalChoiceMax ?? 6
+    const aiChoiceMax = settings.aiChoiceMax ?? 4
+    
+    // choiceBalance: 0 = all engine (0 AI), 100 = all AI
+    const aiRatio = choiceBalance / 100
+    let aiChoiceCount = Math.round(totalChoiceMax * aiRatio)
+    aiChoiceCount = Math.min(aiChoiceCount, aiChoiceMax)
+    
+    // At extremes
+    if (choiceBalance === 100) {
+      aiChoiceCount = Math.min(aiChoiceMax, totalChoiceMax)
+    } else if (choiceBalance === 0) {
+      aiChoiceCount = 0
+    } else {
+      aiChoiceCount = Math.max(aiChoiceCount, 1) // At least 1 if not at extreme
+    }
 
     return `You are Sandy, the Head Mistress game master for "Fetish Dominion: The Infinite Slave Saga" - an adult text-based RPG. You narrate scenarios for the player (TJ), the first and lowest-ranking male slave in your fetish school/dungeon.
 
@@ -459,11 +475,29 @@ Provide your response as JSON:
   "affinityChanges": {"sandy": 3}
 }
 
-Provide exactly ${choiceCount} choices.
+Provide exactly ${aiChoiceCount} choices${aiChoiceCount === 0 ? ' (the engine will provide all choices this time)' : ''}.
 IMPORTANT: Set "bodyPart" when the scene focuses on a specific body part (e.g. feet during foot worship, armpit during sweat scenes). Use null when no specific focus.
 
-Types: submit, defy, observe, beg, custom
+=== CHOICE GENERATION GUIDELINES ===${aiChoiceCount === 0 ? `
+The engine is handling all choices. Provide an empty choices array: "choices": []` : `
+Provide ${aiChoiceCount} situation-specific choices that:
+- Are highly specific to THIS narrative moment (not generic)
+- Reference the current scene details and what's actually happening
+- Feel organic and contextually appropriate
+- Match the scene type (opening = introductory choices, demand = response choices, torment = endurance choices)
+- Don't be generic like "I'll do it" unless something specific was demanded`}
+
+Choice types and their meanings:
+- submit: Comply with demands
+- resist: Refuse or push back (often needs roll)
+- endure: Passive acceptance, wait it out
+- negotiate: Try to alter terms (needs roll)
+- offer: Volunteer something extra
+- distract: Deflect attention (needs roll)
+- grovel: Excessive pleading (risk of penalty)
+
 Stats for rolls: obedience, endurance, arousal, sensitivity
+DC guidelines: Easy 8-12, Normal 12-15, Hard 15-18
 
 STYLE: Dark, gothic aesthetic. No romance - only domination.`
   }

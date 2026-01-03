@@ -1,0 +1,216 @@
+{
+  "archetypes": {
+    "SUBMIT": {
+      "baseLabel": "Submit",
+      "defaultEffects": { "obedience": 3 },
+      "consequenceHint": "Likely: +Obedience, +Affinity",
+      "affinityVariants": {
+        "hostile": { "textTemplate": "Fine. Whatever.", "label": "Bitter Compliance" },
+        "annoyed": { "textTemplate": "...Yes.", "label": "Reluctant" },
+        "neutral": { "textTemplate": "I'll do it.", "label": "Comply" },
+        "pleased": { "textTemplate": "Of course.", "label": "Willing" },
+        "devoted": { "textTemplate": "Anything for you.", "label": "Eager" }
+      }
+    },
+    "RESIST": {
+      "baseLabel": "Resist",
+      "defaultEffects": {},
+      "consequenceHint": "Risk: Punishment, -Affinity",
+      "affinityVariants": {
+        "hostile": { "textTemplate": "Go to hell.", "label": "Defiance" },
+        "annoyed": { "textTemplate": "No.", "label": "Refusal" },
+        "neutral": { "textTemplate": "I'd rather not.", "label": "Decline" },
+        "pleased": { "textTemplate": "I... can't do this one.", "label": "Hesitant" },
+        "devoted": { "textTemplate": "Please, not this...", "label": "Apologetic" }
+      }
+    },
+    "ENDURE": {
+      "baseLabel": "Endure",
+      "defaultEffects": {},
+      "consequenceHint": "Neutral, preserve strength",
+      "textTemplate": "Just... get through it...",
+      "label": "Endure"
+    },
+    "NEGOTIATE": {
+      "baseLabel": "Negotiate",
+      "defaultRollDC": 12,
+      "defaultEffects": {},
+      "consequenceHint": "Variable outcome"
+    },
+    "OFFER": {
+      "baseLabel": "Offer",
+      "defaultEffects": { "sensitivity": 3 },
+      "consequenceHint": "Likely: ++Affinity, +Sensitivity"
+    },
+    "DISTRACT": {
+      "baseLabel": "Distract",
+      "defaultRollDC": 14,
+      "defaultEffects": {},
+      "consequenceHint": "May backfire"
+    },
+    "GROVEL": {
+      "baseLabel": "Grovel",
+      "defaultEffects": {},
+      "consequenceHint": "Risk: Over-groveling penalty",
+      "riskOverGrovel": true
+    },
+    "OBSERVE": {
+      "baseLabel": "Observe",
+      "defaultEffects": {},
+      "consequenceHint": "Neutral, gather information",
+      "textTemplate": "Wait and observe",
+      "label": "Observe"
+    }
+  },
+  
+  "sceneContexts": {
+    "opening": {
+      "description": "First meeting, introduction, arrival - no demands made yet",
+      "engineWeight": 0.3,
+      "preferAI": true,
+      "allowedArchetypes": ["SUBMIT", "NEGOTIATE", "OBSERVE"],
+      "choices": [
+        {
+          "archetype": "SUBMIT",
+          "text": "Kneel immediately and lower your eyes",
+          "label": "Show Respect",
+          "consequenceHint": "Likely: +Affinity"
+        },
+        {
+          "archetype": "OBSERVE",
+          "text": "Wait silently, gauge the situation",
+          "label": "Observe",
+          "consequenceHint": "Neutral"
+        },
+        {
+          "archetype": "NEGOTIATE",
+          "text": "Ask what is expected of you",
+          "label": "Seek Guidance",
+          "rollRequired": { "dc": 10, "stat": "obedience" },
+          "consequenceHint": "Shows initiative"
+        }
+      ]
+    },
+    "demand": {
+      "description": "NPC has made a clear demand or command",
+      "engineWeight": 0.7,
+      "preferAI": false,
+      "allowedArchetypes": ["SUBMIT", "RESIST", "NEGOTIATE", "ENDURE", "GROVEL"],
+      "choices": []
+    },
+    "torment": {
+      "description": "Active torture, punishment, or intense scene",
+      "engineWeight": 0.6,
+      "preferAI": false,
+      "allowedArchetypes": ["ENDURE", "GROVEL", "NEGOTIATE", "SUBMIT"],
+      "choices": [
+        {
+          "archetype": "ENDURE",
+          "text": "Clench your jaw and bear it",
+          "label": "Endure",
+          "consequenceHint": "Preserves dignity"
+        }
+      ]
+    },
+    "tease": {
+      "description": "Light teasing, verbal play, not intense physical",
+      "engineWeight": 0.5,
+      "preferAI": true,
+      "allowedArchetypes": ["SUBMIT", "RESIST", "NEGOTIATE", "OFFER", "GROVEL"],
+      "choices": []
+    },
+    "worship": {
+      "description": "Foot worship, sweat worship, body worship scenes",
+      "engineWeight": 0.6,
+      "preferAI": false,
+      "allowedArchetypes": ["SUBMIT", "OFFER", "ENDURE", "NEGOTIATE"],
+      "choices": [
+        {
+          "archetype": "OFFER",
+          "text": "Worship more eagerly than asked",
+          "label": "Show Devotion",
+          "consequenceHint": "Likely: ++Affinity"
+        }
+      ]
+    },
+    "edging": {
+      "description": "Edging, denial, arousal control scenes",
+      "engineWeight": 0.6,
+      "preferAI": false,
+      "allowedArchetypes": ["ENDURE", "GROVEL", "NEGOTIATE", "SUBMIT"],
+      "choices": [
+        {
+          "archetype": "ENDURE",
+          "text": "Focus on anything else, fight the sensation",
+          "label": "Mental Resistance",
+          "rollRequired": { "dc": 14, "stat": "endurance" },
+          "consequenceHint": "May reduce arousal"
+        },
+        {
+          "archetype": "GROVEL",
+          "text": "Beg desperately for release",
+          "label": "Desperate Plea",
+          "rollRequired": { "dc": 16, "stat": "obedience" },
+          "consequenceHint": "Risk: Denial"
+        }
+      ]
+    },
+    "aftermath": {
+      "description": "Post-scene, recovery, between activities",
+      "engineWeight": 0.4,
+      "preferAI": true,
+      "allowedArchetypes": ["SUBMIT", "NEGOTIATE", "OBSERVE"],
+      "choices": [
+        {
+          "archetype": "SUBMIT",
+          "text": "Thank them for the experience",
+          "label": "Show Gratitude",
+          "consequenceHint": "Likely: +Affinity"
+        },
+        {
+          "archetype": "OBSERVE",
+          "text": "Catch your breath and recover",
+          "label": "Rest",
+          "consequenceHint": "May restore endurance"
+        }
+      ]
+    },
+    "transition": {
+      "description": "Moving between locations, waiting",
+      "engineWeight": 0.3,
+      "preferAI": true,
+      "allowedArchetypes": ["OBSERVE", "SUBMIT", "NEGOTIATE"],
+      "choices": [
+        {
+          "archetype": "OBSERVE",
+          "text": "Follow silently",
+          "label": "Comply",
+          "consequenceHint": "Neutral"
+        }
+      ]
+    },
+    "group": {
+      "description": "Multiple NPCs present",
+      "engineWeight": 0.5,
+      "preferAI": true,
+      "allowedArchetypes": ["SUBMIT", "ENDURE", "DISTRACT", "GROVEL"],
+      "choices": [
+        {
+          "archetype": "DISTRACT",
+          "text": "Try to pit them against each other",
+          "label": "Exploit Rivalry",
+          "rollRequired": { "dc": 16, "stat": "obedience" },
+          "consequenceHint": "High risk"
+        }
+      ]
+    }
+  },
+  
+  "config": {
+    "maxChoices": 6,
+    "minChoices": 3,
+    "alwaysIncludeSubmit": true,
+    "alwaysIncludeAlternative": true,
+    "defaultSceneContext": "demand"
+  }
+}

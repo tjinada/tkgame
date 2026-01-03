@@ -1,0 +1,155 @@
+{
+  "sandy": {
+    "specialty": "oversight",
+    "choices": [
+      {
+        "archetype": "NEGOTIATE",
+        "text": "Headmistress, might I serve you directly instead?",
+        "label": "Request Transfer",
+        "rollRequired": { "dc": 14, "stat": "obedience" },
+        "consequenceHint": "Variable"
+      },
+      {
+        "archetype": "OFFER",
+        "text": "I'll take double punishment if it pleases you.",
+        "label": "Sacrifice",
+        "effects": { "stats": { "endurance": -5 } },
+        "consequenceHint": "Likely: +Affinity, -Endurance"
+      },
+      {
+        "archetype": "GROVEL",
+        "text": "I exist only to serve this school.",
+        "label": "Devotion",
+        "consequenceHint": "Risk: Over-groveling"
+      }
+    ]
+  },
+  "araph": {
+    "specialty": "tickling",
+    "choices": [
+      {
+        "archetype": "NEGOTIATE",
+        "text": "Not there—anywhere but there!",
+        "label": "Redirect",
+        "rollRequired": { "dc": 12, "stat": "obedience" },
+        "consequenceHint": "Variable"
+      },
+      {
+        "archetype": "ENDURE",
+        "text": "Bite your lip and try not to laugh.",
+        "label": "Suppress",
+        "rollRequired": { "dc": 13, "stat": "endurance" },
+        "consequenceHint": "May preserve composure"
+      },
+      {
+        "archetype": "OFFER",
+        "text": "My armpits are more sensitive...",
+        "label": "Offer Worse",
+        "effects": { "stats": { "sensitivity": 5 } },
+        "consequenceHint": "Likely: +Affinity, +Sensitivity"
+      }
+    ]
+  },
+  "nancy": {
+    "specialty": "feet",
+    "choices": [
+      {
+        "archetype": "OFFER",
+        "text": "Kiss her feet before she demands it.",
+        "label": "Anticipate",
+        "effects": { "stats": { "obedience": 3 } },
+        "consequenceHint": "Likely: +Affinity, +Obedience"
+      },
+      {
+        "archetype": "NEGOTIATE",
+        "text": "Could I massage them instead of...?",
+        "label": "Alternative",
+        "rollRequired": { "dc": 11, "stat": "obedience" },
+        "consequenceHint": "Variable"
+      },
+      {
+        "archetype": "SUBMIT",
+        "text": "Open your mouth for her toes.",
+        "label": "Accept",
+        "effects": { "stats": { "obedience": 5 } },
+        "consequenceHint": "Likely: +Obedience, +Affinity"
+      }
+    ]
+  },
+  "aish": {
+    "specialty": "sweat",
+    "choices": [
+      {
+        "archetype": "ENDURE",
+        "text": "Breathe through your mouth and endure.",
+        "label": "Cope",
+        "consequenceHint": "Neutral"
+      },
+      {
+        "archetype": "OFFER",
+        "text": "I'll clean everywhere... thoroughly.",
+        "label": "Volunteer",
+        "effects": { "stats": { "sensitivity": 3, "obedience": 3 } },
+        "consequenceHint": "Likely: +Affinity"
+      },
+      {
+        "archetype": "NEGOTIATE",
+        "text": "Can I have water after?",
+        "label": "Bargain",
+        "rollRequired": { "dc": 13, "stat": "obedience" },
+        "consequenceHint": "Variable"
+      }
+    ]
+  },
+  "gaya": {
+    "specialty": "edging",
+    "choices": [
+      {
+        "archetype": "ENDURE",
+        "text": "Think of something else—anything else.",
+        "label": "Distract Self",
+        "rollRequired": { "dc": 14, "stat": "endurance" },
+        "consequenceHint": "May reduce arousal"
+      },
+      {
+        "archetype": "NEGOTIATE",
+        "text": "What if I count for you?",
+        "label": "Participate",
+        "rollRequired": { "dc": 12, "stat": "obedience" },
+        "consequenceHint": "Variable"
+      },
+      {
+        "archetype": "GROVEL",
+        "text": "I'll be good forever, just please...",
+        "label": "Beg",
+        "consequenceHint": "Risk: Denial, Over-groveling"
+      }
+    ]
+  },
+  "melissa": {
+    "specialty": "post_orgasm",
+    "choices": [
+      {
+        "archetype": "ENDURE",
+        "text": "Clench everything and bear it.",
+        "label": "Steel Yourself",
+        "rollRequired": { "dc": 15, "stat": "endurance" },
+        "consequenceHint": "May reduce impact"
+      },
+      {
+        "archetype": "NEGOTIATE",
+        "text": "Just... give me a moment to breathe?",
+        "label": "Ask Pause",
+        "rollRequired": { "dc": 16, "stat": "obedience" },
+        "consequenceHint": "Unlikely to work"
+      },
+      {
+        "archetype": "SUBMIT",
+        "text": "Accept the overstimulation completely.",
+        "label": "Accept",
+        "effects": { "stats": { "sensitivity": 5, "obedience": 3 } },
+        "consequenceHint": "Likely: +Affinity, +Sensitivity"
+      }
+    ]
+  }
+}

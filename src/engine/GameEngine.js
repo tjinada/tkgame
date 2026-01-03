@@ -195,6 +195,16 @@ export class GameEngine {
     const startScene = await this.contentRouter.getSceneContent(startSceneId, this._getContext())
     
     if (startScene) {
+      // Generate hybrid choices with scene context
+      const { available, locked, sceneContext } = this.contentRouter.generateHybridChoices(
+        this._getContext(),
+        startScene.choices,
+        startScene.description || ''
+      )
+      startScene.choices = available
+      startScene.lockedChoices = locked
+      startScene.sceneContext = sceneContext
+      
       // Filter choices based on conditions
       startScene.choices = this.filterChoicesByConditions(startScene.choices)
       
@@ -255,6 +265,16 @@ export class GameEngine {
     )
     
     if (openingScene) {
+      // Generate hybrid choices with scene context
+      const { available, locked, sceneContext } = this.contentRouter.generateHybridChoices(
+        this._getContext(),
+        openingScene.choices,
+        openingScene.description || ''
+      )
+      openingScene.choices = available
+      openingScene.lockedChoices = locked
+      openingScene.sceneContext = sceneContext
+      
       openingScene.choices = this.filterChoicesByConditions(openingScene.choices)
       this.currentScene = openingScene
       this.stateManager.setCurrentScene(openingScene.id)
@@ -313,6 +333,16 @@ export class GameEngine {
     if (sceneId) {
       const scene = await this.contentRouter.getSceneContent(sceneId, this._getContext())
       if (scene) {
+        // Generate hybrid choices with scene context
+        const { available, locked, sceneContext } = this.contentRouter.generateHybridChoices(
+          this._getContext(),
+          scene.choices,
+          scene.description || ''
+        )
+        scene.choices = available
+        scene.lockedChoices = locked
+        scene.sceneContext = sceneContext
+        
         // Filter choices based on conditions
         scene.choices = this.filterChoicesByConditions(scene.choices)
         this.currentScene = scene
@@ -441,6 +471,16 @@ export class GameEngine {
     if (result.nextSceneId) {
       const nextScene = await this.contentRouter.getSceneContent(result.nextSceneId, this._getContext())
       if (nextScene) {
+        // Generate hybrid choices with scene context
+        const { available, locked, sceneContext } = this.contentRouter.generateHybridChoices(
+          this._getContext(),
+          nextScene.choices,
+          nextScene.description || ''
+        )
+        nextScene.choices = available
+        nextScene.lockedChoices = locked
+        nextScene.sceneContext = sceneContext
+        
         // Filter choices based on conditions
         nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
         
@@ -466,6 +506,16 @@ export class GameEngine {
           // Generate AI continuation
           const nextScene = await this._generateWithStreaming(choice.text)
           if (nextScene) {
+            // Generate hybrid choices with scene context
+            const { available: hybridAvail, locked: hybridLocked, sceneContext } = this.contentRouter.generateHybridChoices(
+              this._getContext(),
+              nextScene.choices,
+              nextScene.description || ''
+            )
+            nextScene.choices = hybridAvail
+            nextScene.lockedChoices = hybridLocked
+            nextScene.sceneContext = sceneContext
+            
             nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
             this.currentScene = nextScene
             this.stateManager.setCurrentScene(nextScene.id)
@@ -484,6 +534,16 @@ export class GameEngine {
       // No next scene specified - generate AI continuation with streaming
       const nextScene = await this._generateWithStreaming(choice.text)
       if (nextScene) {
+        // Generate hybrid choices with scene context
+        const { available: hybridChoices, locked: hybridLocked, sceneContext } = this.contentRouter.generateHybridChoices(
+          this._getContext(),
+          nextScene.choices,
+          nextScene.description || ''
+        )
+        nextScene.choices = hybridChoices
+        nextScene.lockedChoices = hybridLocked
+        nextScene.sceneContext = sceneContext
+        
         nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
         this.currentScene = nextScene
         this.stateManager.setCurrentScene(nextScene.id)
@@ -576,6 +636,16 @@ export class GameEngine {
     const nextScene = await this._generateWithStreaming(actionText)
     
     if (nextScene) {
+      // Generate hybrid choices with scene context
+      const { available, locked, sceneContext } = this.contentRouter.generateHybridChoices(
+        this._getContext(),
+        nextScene.choices,
+        nextScene.description || ''
+      )
+      nextScene.choices = available
+      nextScene.lockedChoices = locked
+      nextScene.sceneContext = sceneContext
+      
       nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
       this.currentScene = nextScene
       this.stateManager.setCurrentScene(nextScene.id)

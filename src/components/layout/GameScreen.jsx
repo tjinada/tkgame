@@ -125,6 +125,7 @@ export function GameScreen({
       {/* Choice Panel */}
       <ChoicePanel 
         choices={currentScene?.choices || []}
+        lockedChoices={currentScene?.lockedChoices || []}
         onChoiceSelect={handleChoiceSelect}
         onCustomAction={handleCustomAction}
         disabled={isLoading || !!streamingContent}

@@ -65,8 +65,14 @@ const defaultSettings = {
   // -- Bondage --
   aiBondageLevel: 'light', // 'none', 'light', 'heavy', 'inescapable'
   
+  // -- Choice Generation --
+  choiceBalance: 50, // 0 = all engine, 100 = all AI (slider)
+  engineChoiceMax: 4, // max engine-generated choices (1-6)
+  aiChoiceMax: 4, // max AI-generated choices (1-6)
+  totalChoiceMax: 6, // total max choices shown (3-8)
+  
   // -- Game Mechanics --
-  aiChoiceCount: 4, // 3, 4, 5
+  aiChoiceCount: 4, // 3, 4, 5 (legacy, now calculated from balance)
   aiRollDifficulty: 'normal', // 'easy', 'normal', 'hard', 'brutal'
   aiStatChangeRate: 'normal', // 'slow', 'normal', 'fast'
   aiEventFrequency: 'normal', // 'rare', 'normal', 'frequent'
@@ -190,6 +196,7 @@ class SettingsService {
       aiNpc: ['aiNpcMood', 'aiCollaboration', 'aiAffectionStyle', 'aiMockeryStyle'],
       aiBalance: ['aiPainVsPleasure', 'aiPhysicalVsPsychological', 'aiActionVsDialogue', 'aiSensoryFocus'],
       aiKinks: ['aiTickleTools', 'aiTickleSpots', 'aiFootCondition', 'aiFootwear', 'aiBondageLevel'],
+      choiceGeneration: ['choiceBalance', 'engineChoiceMax', 'aiChoiceMax', 'totalChoiceMax'],
       aiMechanics: ['aiChoiceCount', 'aiRollDifficulty', 'aiStatChangeRate', 'aiEventFrequency'],
       aiImmersion: ['aiInnerThoughts', 'aiEnvironmentalDetail', 'aiSoundDescriptions', 'aiTimeAwareness'],
       aiAdvanced: ['aiCreativity', 'aiContinuity', 'aiNpcConsistency', 'aiSurpriseEvents'],
