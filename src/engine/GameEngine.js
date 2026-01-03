@@ -4,6 +4,7 @@ import { EventSystem } from './EventSystem'
 import { ToneEngine } from './ToneEngine'
 import { ContentRouter } from '../content/ContentRouter'
 import { progressionSystem } from './ProgressionSystem.js'
+import { eventLogger } from './EventLogger.js'
 import { debugLog } from '../components/admin/tabs/DebugTab'
 import sampleScenario from '../data/scenarios/sample.json'
 
@@ -29,6 +30,7 @@ export class GameEngine {
       progressionUpdate: [],
       milestoneCompleted: [],
       stageAdvanced: [],
+      eventLogged: [],
     }
 
     // Subscribe to state changes
@@ -185,6 +187,10 @@ export class GameEngine {
     // Initialize progression system
     const slotId = saveSlotId || `save_${Date.now()}`
     this.stateManager.setSaveSlotId(slotId)
+    
+    // Initialize event logger
+    eventLogger.initialize(slotId)
+    
     try {
       await this.stateManager.resetProgression(slotId)
       debugLog.game('Progression system initialized', { saveSlotId: slotId })
@@ -266,6 +272,10 @@ export class GameEngine {
     // Initialize progression system
     const slotId = saveSlotId || `save_${Date.now()}`
     this.stateManager.setSaveSlotId(slotId)
+    
+    // Initialize event logger
+    eventLogger.initialize(slotId)
+    
     try {
       await this.stateManager.resetProgression(slotId)
       debugLog.game('Progression system initialized', { saveSlotId: slotId })
@@ -343,6 +353,10 @@ export class GameEngine {
     const saveSlotId = savedState.saveSlotId || savedState.slotId
     if (saveSlotId) {
       this.stateManager.setSaveSlotId(saveSlotId)
+      
+      // Initialize event logger
+      eventLogger.initialize(saveSlotId)
+      
       try {
         await this.stateManager.initializeProgression(saveSlotId)
         debugLog.game('Progression loaded', { saveSlotId })
@@ -512,6 +526,20 @@ export class GameEngine {
     if (progressionResults) {
       result.progression = progressionResults
     }
+
+    // Log event for context tracking
+    const historyEntry = this.stateManager.getState().history.slice(-1)[0]
+    await this._logTurnEvent({
+      turn: this.stateManager.getState().turn,
+      chapter: this.stateManager.getState().chapter,
+      choice,
+      outcome: result,
+      scene: this.currentScene,
+      historyEntry,
+      progressionResults,
+      diceRoll: result.roll,
+      isCustomAction: false
+    })
 
     // Handle END scene
     if (result.nextSceneId === 'END') {
@@ -701,6 +729,21 @@ export class GameEngine {
       { text: actionText, type: 'custom' },
       null
     )
+
+    // Log event for context tracking
+    const historyEntry = this.stateManager.getState().history.slice(-1)[0]
+    await this._logTurnEvent({
+      turn: this.stateManager.getState().turn,
+      chapter: this.stateManager.getState().chapter,
+      choice: { text: actionText, type: 'custom' },
+      outcome: {},
+      scene: this.currentScene,
+      historyEntry,
+      progressionResults,
+      diceRoll: null,
+      isCustomAction: true,
+      actionText
+    })
     
     if (nextScene) {
       // Generate hybrid choices with scene context
@@ -862,6 +905,13 @@ export class GameEngine {
     }
   }
 
+  onEventLogged(callback) {
+    this.listeners.eventLogged.push(callback)
+    return () => {
+      this.listeners.eventLogged = this.listeners.eventLogged.filter(cb => cb !== callback)
+    }
+  }
+
   // Private methods
 
   _emit(event, data) {
@@ -957,6 +1007,25 @@ export class GameEngine {
       return results
     } catch (error) {
       debugLog.error('Progression tracking failed', error.message)
+      return null
+    }
+  }
+
+  /**
+   * Log a turn event for context tracking
+   * @param {Object} turnData - The turn data to log
+   * @returns {Promise<Object>} The logged event
+   */
+  async _logTurnEvent(turnData) {
+    try {
+      const event = await eventLogger.logTurnEvent(turnData)
+      if (event) {
+        this._emit('eventLogged', event)
+        debugLog.game('Event logged', { type: event.type, turn: event.turn })
+      }
+      return event
+    } catch (error) {
+      debugLog.error('Failed to log event', error.message)
       return null
     }
   }
