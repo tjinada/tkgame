@@ -3,12 +3,15 @@ import { NanoGPTClient } from './NanoGPTClient'
 import { PromptBuilder } from './PromptBuilder'
 import { ChoiceGenerator } from '../engine/ChoiceGenerator'
 import { settingsService } from '../services/SettingsService'
+import { debugLog } from '../components/admin/tabs/DebugTab'
 
 export class ContentRouter {
   constructor(options = {}) {
     this.scenarioLoader = options.scenarioLoader || new ScenarioLoader()
     this.nanoGPTClient = options.nanoGPTClient || new NanoGPTClient()
-    this.promptBuilder = options.promptBuilder || new PromptBuilder()
+    this.promptBuilder = options.promptBuilder || new PromptBuilder({
+      contextLimit: settingsService.get('aiHistoryTurns') || settingsService.get('contextLimit') || 6,
+    })
     this.choiceGenerator = options.choiceGenerator || new ChoiceGenerator()
     
     // Modes: 'json-only', 'ai-only', 'hybrid'
@@ -16,6 +19,15 @@ export class ContentRouter {
     
     // Whether to use the hybrid choice system
     this.useHybridChoices = options.useHybridChoices !== false
+  }
+
+  /**
+   * Update settings that affect content generation
+   */
+  refreshSettings() {
+    this.promptBuilder.setContextLimit(
+      settingsService.get('aiHistoryTurns') || settingsService.get('contextLimit') || 6
+    )
   }
 
   /**
@@ -94,6 +106,12 @@ export class ContentRouter {
     const systemPrompt = this.promptBuilder.buildSystemPrompt(context)
     const userMessage = this.promptBuilder.buildUserMessage(actionText, context)
 
+    // Log the full prompt for debugging
+    debugLog.prompt(systemPrompt, userMessage, {
+      ...context,
+      turn: context.history?.length || 0,
+    })
+
     const response = await this.nanoGPTClient.chat([
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userMessage },
@@ -130,6 +148,12 @@ export class ContentRouter {
 
     const systemPrompt = this.promptBuilder.buildSystemPrompt(context)
     const userMessage = this.promptBuilder.buildUserMessage(actionText, context)
+
+    // Log the full prompt for debugging
+    debugLog.prompt(systemPrompt, userMessage, {
+      ...context,
+      turn: context.history?.length || 0,
+    })
 
     const response = await this.nanoGPTClient.streamChat(
       [

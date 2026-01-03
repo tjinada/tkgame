@@ -5,6 +5,119 @@ import { saveSystem } from '../engine/SaveSystem'
 import npcsData from '../data/npcs.json'
 import configData from '../data/config.json'
 
+/**
+ * Remove consecutive duplicate lines and sentences from content
+ */
+function removeDuplicates(content) {
+  if (!content) return ''
+  
+  // Remove consecutive duplicate lines
+  const lines = content.split('\n')
+  const dedupedLines = []
+  let lastLine = null
+  
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (trimmed && trimmed !== lastLine) {
+      dedupedLines.push(line)
+      lastLine = trimmed
+    } else if (!trimmed && lastLine !== '') {
+      dedupedLines.push(line)
+      lastLine = ''
+    }
+  }
+  
+  // Remove duplicate sentences within lines
+  const finalLines = dedupedLines.map(line => {
+    if (!line.trim()) return line
+    const sentences = line.split(/(?<=[.!?])\s+/)
+    const seen = new Set()
+    const unique = []
+    for (const s of sentences) {
+      const norm = s.trim().toLowerCase()
+      if (norm && !seen.has(norm)) {
+        seen.add(norm)
+        unique.push(s)
+      }
+    }
+    return unique.join(' ')
+  })
+  
+  return finalLines.join('\n')
+}
+
+/**
+ * Extract just the description content from streaming JSON response
+ * This allows us to display narrative text cleanly during streaming
+ * without showing raw JSON structure
+ */
+function extractDescriptionFromStreaming(content) {
+  if (!content) return ''
+  
+  // If it doesn't look like JSON at all, return as-is
+  if (!content.includes('"description"') && !content.includes('{')) {
+    return content
+  }
+  
+  // Try to extract the description field value
+  // Pattern: "description": "content here
+  const descMatch = content.match(/"description"\s*:\s*"([\s\S]*?)(?:"\s*,\s*"(?:npc|location|choices|bodyPart|npcEmotion|statChanges|affinityChanges)"|$)/)
+  
+  if (descMatch && descMatch[1]) {
+    // Unescape JSON string escapes
+    let desc = descMatch[1]
+      .replace(/\\n/g, '\n')
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, '\\')
+    
+    // Remove trailing incomplete escape sequences or quotes
+    desc = desc.replace(/\\$/, '')
+    
+    return desc
+  }
+  
+  // If we can see JSON structure but can't extract description,
+  // it might be incomplete - return empty or a loading indicator
+  if (content.trim().startsWith('{') && content.includes('"description"')) {
+    // Try a more lenient extraction - just get what's after "description":
+    const simpleMatch = content.match(/"description"\s*:\s*"([\s\S]*)/)
+    if (simpleMatch && simpleMatch[1]) {
+      let desc = simpleMatch[1]
+        .replace(/\\n/g, '\n')
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+      
+      // Remove any trailing JSON that leaked through
+      const jsonEndPatterns = [
+        /"\s*,\s*"npc"[\s\S]*$/,
+        /"\s*,\s*"location"[\s\S]*$/,
+        /"\s*,\s*"choices"[\s\S]*$/,
+        /"\s*,\s*"bodyPart"[\s\S]*$/,
+        /"\s*,\s*"npcEmotion"[\s\S]*$/,
+        /"\s*,\s*"statChanges"[\s\S]*$/,
+        /"\s*,\s*"affinityChanges"[\s\S]*$/,
+        /"\s*\}\s*$/,
+      ]
+      
+      for (const pattern of jsonEndPatterns) {
+        desc = desc.replace(pattern, '')
+      }
+      
+      // Clean up trailing partial content
+      desc = desc.replace(/"\s*$/, '')
+      
+      return desc
+    }
+  }
+  
+  // Fallback: if content looks like plain JSON object, don't show it
+  if (content.trim().startsWith('{') && !content.includes('*')) {
+    return '' // Still parsing JSON, wait for description
+  }
+  
+  return content
+}
+
 export function useGameState() {
   const gameEngineRef = useRef(null)
   const commandManagerRef = useRef(null)
@@ -43,7 +156,11 @@ export function useGameState() {
     })
 
     engine.onStreamChunk(({ delta, fullContent }) => {
-      setStreamingContent(fullContent)
+      // Try to extract just the description from JSON-like content during streaming
+      const cleanedContent = extractDescriptionFromStreaming(fullContent)
+      // Remove any duplicate lines/sentences that may have appeared during streaming
+      const dedupedContent = removeDuplicates(cleanedContent)
+      setStreamingContent(dedupedContent)
     })
 
     setIsInitialized(true)

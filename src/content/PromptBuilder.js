@@ -5,9 +5,17 @@ import { settingsService } from '../services/SettingsService'
 export class PromptBuilder {
   constructor(options = {}) {
     this.contextMode = options.contextMode || 'full-chapter'
-    this.contextLimit = options.contextLimit || 10
+    this.contextLimit = options.contextLimit || 6 // Default to 6 turns of history
     this.npcs = npcsData.npcs
     this.toneRules = configData.toneRules
+  }
+
+  /**
+   * Update context limit from settings
+   * @param {number} limit - Number of history turns to include
+   */
+  setContextLimit(limit) {
+    this.contextLimit = limit || 6
   }
 
   /**
@@ -548,39 +556,101 @@ Continue the scene based on this action. Remember to use *asterisks* for narrati
       return 'This is the beginning of the game.'
     }
 
-    let relevantHistory = []
-    
-    switch (this.contextMode) {
-      case 'full-chapter':
-        relevantHistory = history
-        break
-      case 'last-n-turns':
-        relevantHistory = history.slice(-this.contextLimit)
-        break
-      case 'token-budget':
-        // Simple approximation: ~4 chars per token
-        let tokenCount = 0
-        for (let i = history.length - 1; i >= 0; i--) {
-          const entry = history[i]
-          const entryTokens = (entry.description?.length || 0) / 4
-          if (tokenCount + entryTokens > this.contextLimit) break
-          relevantHistory.unshift(entry)
-          tokenCount += entryTokens
-        }
-        break
-      default:
-        relevantHistory = history.slice(-10)
-    }
+    // Get last N turns (configurable, default 6)
+    const historyLimit = this.contextLimit || 6
+    const relevantHistory = history.slice(-historyLimit)
 
     if (relevantHistory.length === 0) {
       return 'This is the beginning of the game.'
     }
 
-    const summaries = relevantHistory.map(h => 
-      `Turn ${h.turn}: ${h.choice} → ${h.outcome || 'resolved'}`
-    ).join('\n')
+    // Build rich history summaries
+    const summaries = relevantHistory.map(h => {
+      const location = h.location || 'unknown'
+      const npc = h.npc || 'unknown'
+      const bodyPart = h.bodyPart ? ` [${h.bodyPart}]` : ''
+      const sceneType = h.sceneType ? ` (${h.sceneType})` : ''
+      
+      // Truncate description for context
+      const descSnippet = h.description 
+        ? h.description.substring(0, 100).replace(/\n/g, ' ') + '...'
+        : ''
+      
+      return `Turn ${h.turn} [${location}, ${npc}${bodyPart}]${sceneType}:\n  Choice: "${h.choice}"\n  Result: ${h.outcome}${descSnippet ? `\n  Scene: ${descSnippet}` : ''}`
+    }).join('\n\n')
 
-    return `RECENT HISTORY:\n${summaries}`
+    // Analyze for progression hints
+    const progressionHints = this._analyzeProgression(relevantHistory)
+
+    let context = `=== RECENT HISTORY (last ${relevantHistory.length} turns) ===\n${summaries}`
+    
+    if (progressionHints) {
+      context += `\n\n${progressionHints}`
+    }
+
+    return context
+  }
+
+  /**
+   * Analyze history for repetition and generate progression hints
+   * @param {Array} history - Recent history entries
+   * @returns {string|null} - Progression hints or null
+   */
+  _analyzeProgression(history) {
+    if (!history || history.length < 2) return null
+
+    const hints = []
+    
+    // Check for scene type repetition
+    const sceneTypes = history.map(h => h.sceneType).filter(Boolean)
+    const lastType = sceneTypes[sceneTypes.length - 1]
+    const typeCount = sceneTypes.filter(t => t === lastType).length
+    
+    if (typeCount >= 3 && lastType && lastType !== 'general' && lastType !== 'unknown') {
+      const typeLabel = lastType.replace(/_/g, ' ')
+      hints.push(`⚠️ REPETITION DETECTED: "${typeLabel}" for ${typeCount} consecutive turns.`)
+      hints.push(`   Consider: transitioning to different activity, changing NPC, shifting location, or escalating intensity.`)
+    }
+
+    // Check for NPC monopoly
+    const npcs = history.map(h => h.npc).filter(Boolean)
+    const lastNpc = npcs[npcs.length - 1]
+    const npcCount = npcs.filter(n => n === lastNpc).length
+    
+    if (npcCount >= 4 && lastNpc) {
+      hints.push(`⚠️ NPC MONOPOLY: ${lastNpc} has dominated for ${npcCount} turns.`)
+      hints.push(`   Consider: introducing another NPC, having ${lastNpc} hand off to someone else, or creating an interruption.`)
+    }
+
+    // Check for location stagnation
+    const locations = history.map(h => h.location).filter(Boolean)
+    const lastLocation = locations[locations.length - 1]
+    const locationCount = locations.filter(l => l === lastLocation).length
+    
+    if (locationCount >= 5 && lastLocation) {
+      hints.push(`⚠️ LOCATION STAGNATION: Been in ${lastLocation.replace(/_/g, ' ')} for ${locationCount} turns.`)
+      hints.push(`   Consider: moving to a new location for variety.`)
+    }
+
+    // Check for body part focus
+    const bodyParts = history.map(h => h.bodyPart).filter(Boolean)
+    const lastBodyPart = bodyParts[bodyParts.length - 1]
+    const bodyPartCount = bodyParts.filter(b => b === lastBodyPart).length
+    
+    if (bodyPartCount >= 3 && lastBodyPart) {
+      hints.push(`⚠️ BODY PART FIXATION: Focus on ${lastBodyPart} for ${bodyPartCount} turns.`)
+      hints.push(`   Consider: shifting attention to different body part or activity.`)
+    }
+
+    // Add general progression guidance if any issues detected
+    if (hints.length > 0) {
+      hints.unshift('=== PROGRESSION ALERTS ===')
+      hints.push('')
+      hints.push('IMPORTANT: Create choices that naturally lead to NEW situations - different NPCs, locations, or activities.')
+      hints.push('At least ONE choice should offer a clear transition or escalation to break the current pattern.')
+    }
+
+    return hints.length > 0 ? hints.join('\n') : null
   }
 
   /**
@@ -594,9 +664,17 @@ Continue the scene based on this action. Remember to use *asterisks* for narrati
       const jsonMatch = response.match(/\{[\s\S]*\}/)
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0])
+        
+        // Clean up description - unescape and remove any JSON artifacts
+        let description = parsed.description || ''
+        description = description
+          .replace(/\\n/g, '\n')
+          .replace(/\\"/g, '"')
+          .replace(/\\\\/g, '\\')
+        
         return {
           id: `ai-${Date.now()}`,
-          description: parsed.description || response,
+          description: description || response,
           npc: parsed.npc || 'sandy',
           npcEmotion: parsed.npcEmotion || 'neutral',
           location: parsed.location || 'main_hall',
@@ -609,12 +687,49 @@ Continue the scene based on this action. Remember to use *asterisks* for narrati
       }
     } catch (e) {
       console.error('Failed to parse AI response as JSON:', e)
+      
+      // Try to extract description even from malformed JSON
+      const descMatch = response.match(/"description"\s*:\s*"([\s\S]*?)"\s*(?:,|\})/)
+      if (descMatch && descMatch[1]) {
+        const description = descMatch[1]
+          .replace(/\\n/g, '\n')
+          .replace(/\\"/g, '"')
+          .replace(/\\\\/g, '\\')
+        
+        return {
+          id: `ai-${Date.now()}`,
+          description,
+          npc: 'sandy',
+          npcEmotion: 'neutral',
+          location: 'main_hall',
+          bodyPart: null,
+          choices: this._getDefaultChoices(),
+          statChanges: {},
+          affinityChanges: {},
+          source: 'ai',
+        }
+      }
     }
 
-    // Fallback: treat entire response as description
+    // Fallback: treat entire response as description, but clean any JSON-like content
+    let cleanedResponse = response
+    if (response.trim().startsWith('{')) {
+      // Try to extract description from malformed JSON
+      const lenientMatch = response.match(/"description"\s*:\s*"([\s\S]*)/)
+      if (lenientMatch && lenientMatch[1]) {
+        cleanedResponse = lenientMatch[1]
+          .replace(/\\n/g, '\n')
+          .replace(/\\"/g, '"')
+          .replace(/\\\\/g, '\\')
+          .replace(/"\s*,\s*"(npc|location|choices|bodyPart|npcEmotion|statChanges|affinityChanges)"[\s\S]*$/, '')
+          .replace(/"\s*\}\s*$/, '')
+          .replace(/"\s*$/, '')
+      }
+    }
+    
     return {
       id: `ai-${Date.now()}`,
-      description: response,
+      description: cleanedResponse,
       npc: 'sandy',
       npcEmotion: 'neutral',
       location: 'main_hall',

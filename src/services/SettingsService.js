@@ -9,7 +9,8 @@ const defaultSettings = {
   // Content Settings
   contentMode: 'hybrid', // 'json-only', 'ai-only', 'hybrid'
   contextMode: 'last-n-turns', // 'full-chapter', 'last-n-turns', 'token-budget'
-  contextLimit: 10,
+  contextLimit: 6, // Number of turns of history to send to AI
+  aiHistoryTurns: 6, // Alias for contextLimit, more descriptive
   streamResponses: true,
   
   // ===================

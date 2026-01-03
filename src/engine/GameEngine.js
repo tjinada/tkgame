@@ -447,16 +447,22 @@ export class GameEngine {
     // Update tone
     this.toneEngine.updateStateTone()
 
-    // Add to history
+    // Add to history with rich context for AI
     this.stateManager.addHistoryEntry({
       turn: this.stateManager.getState().turn,
       scene: this.currentScene.id,
-      description: this.currentScene.description?.substring(0, 200),
+      description: this.currentScene.description?.substring(0, 300),
       choice: choice.text,
-      outcome: result.roll ? (result.roll.success ? 'success' : 'failure') : 'none',
+      choiceType: choice.type || 'unknown',
+      outcome: result.roll ? (result.roll.success ? 'success' : 'failure') : 'resolved',
       rolls: result.roll ? [result.roll] : [],
       statChanges: result.statChanges,
       affinityChanges: result.affinityChanges,
+      // Rich context for progression tracking
+      npc: this.currentScene.npc || this.stateManager.getState().currentNpc,
+      location: this.currentScene.location || this.stateManager.getState().currentLocation,
+      bodyPart: this.currentScene.bodyPart || null,
+      sceneType: this._inferSceneType(this.currentScene),
     })
 
     // Handle END scene
@@ -620,16 +626,22 @@ export class GameEngine {
     // Increment turn
     this.stateManager.incrementTurn()
 
-    // Add to history
+    // Add to history with rich context for AI
     this.stateManager.addHistoryEntry({
       turn: this.stateManager.getState().turn,
       scene: this.currentScene?.id,
-      description: this.currentScene?.description?.substring(0, 200),
+      description: this.currentScene?.description?.substring(0, 300),
       choice: actionText,
+      choiceType: 'custom',
       outcome: 'custom',
       rolls: [],
       statChanges: {},
       affinityChanges: {},
+      // Rich context for progression tracking
+      npc: this.currentScene?.npc || this.stateManager.getState().currentNpc,
+      location: this.currentScene?.location || this.stateManager.getState().currentLocation,
+      bodyPart: this.currentScene?.bodyPart || null,
+      sceneType: this._inferSceneType(this.currentScene),
     })
 
     // Generate AI response with streaming
@@ -798,6 +810,46 @@ export class GameEngine {
       history: state.history,
       flags: state.flags,
     }
+  }
+
+  /**
+   * Infer the scene type from scene content for progression tracking
+   * @param {Object} scene - The current scene
+   * @returns {string} - The inferred scene type
+   */
+  _inferSceneType(scene) {
+    if (!scene) return 'unknown'
+    
+    const desc = (scene.description || '').toLowerCase()
+    const bodyPart = scene.bodyPart?.toLowerCase() || ''
+    
+    // Check for specific scene types based on content
+    if (bodyPart === 'feet' || desc.includes('foot') || desc.includes('feet') || desc.includes('sole') || desc.includes('toes')) {
+      return 'foot_worship'
+    }
+    if (bodyPart === 'armpit' || desc.includes('armpit') || desc.includes('sweat')) {
+      return 'sweat_worship'
+    }
+    if (desc.includes('tickl')) {
+      return 'tickling'
+    }
+    if (desc.includes('edge') || desc.includes('denial') || desc.includes('stroke') || desc.includes('teas')) {
+      return 'edging'
+    }
+    if (desc.includes('orgasm') || desc.includes('cum') || desc.includes('release')) {
+      return 'post_orgasm'
+    }
+    if (desc.includes('punish') || desc.includes('spank') || desc.includes('slap')) {
+      return 'punishment'
+    }
+    if (desc.includes('kneel') || desc.includes('bow') || desc.includes('arrive') || desc.includes('enter') || desc.includes('approach')) {
+      return 'introduction'
+    }
+    if (desc.includes('move') || desc.includes('lead') || desc.includes('follow') || desc.includes('take you')) {
+      return 'transition'
+    }
+    
+    return 'general'
   }
 }
 

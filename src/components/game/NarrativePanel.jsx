@@ -2,6 +2,91 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 /**
+ * Remove consecutive duplicate lines and sentences from content
+ * Handles both full line duplicates and repeated sentences within paragraphs
+ */
+function removeDuplicates(content) {
+  if (!content) return ''
+  
+  // First pass: remove consecutive duplicate lines
+  const lines = content.split('\n')
+  const dedupedLines = []
+  let lastLine = null
+  
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (trimmed && trimmed !== lastLine) {
+      dedupedLines.push(line)
+      lastLine = trimmed
+    } else if (!trimmed && lastLine !== '') {
+      // Preserve single blank lines for paragraph breaks
+      dedupedLines.push(line)
+      lastLine = ''
+    }
+  }
+  
+  // Second pass: remove duplicate sentences within each line
+  const finalLines = dedupedLines.map(line => {
+    if (!line.trim()) return line
+    
+    // Split by sentence-ending punctuation, keeping the punctuation
+    const sentences = line.split(/(?<=[.!?])\s+/)
+    const seenSentences = new Set()
+    const uniqueSentences = []
+    
+    for (const sentence of sentences) {
+      const normalized = sentence.trim().toLowerCase()
+      if (normalized && !seenSentences.has(normalized)) {
+        seenSentences.add(normalized)
+        uniqueSentences.push(sentence)
+      }
+    }
+    
+    return uniqueSentences.join(' ')
+  })
+  
+  return finalLines.join('\n')
+}
+
+/**
+ * Clean raw JSON from content that leaked through parsing
+ * This is a last-resort safeguard
+ */
+function cleanJsonFromContent(content) {
+  if (!content) return ''
+  
+  // If content looks like raw JSON, try to extract description
+  if (content.trim().startsWith('{') || content.includes('"description"')) {
+    // Try to extract just the description value
+    const match = content.match(/"description"\s*:\s*"([\s\S]*?)"\s*(?:,|\})/)
+    if (match && match[1]) {
+      return match[1]
+        .replace(/\\n/g, '\n')
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+    }
+    
+    // More lenient: get everything after "description": "
+    const lenientMatch = content.match(/"description"\s*:\s*"([\s\S]*)/)
+    if (lenientMatch && lenientMatch[1]) {
+      let desc = lenientMatch[1]
+        .replace(/\\n/g, '\n')
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+      
+      // Remove trailing JSON parts
+      desc = desc.replace(/"\s*,\s*"(npc|location|choices|bodyPart|npcEmotion|statChanges|affinityChanges)"[\s\S]*$/, '')
+      desc = desc.replace(/"\s*\}\s*$/, '')
+      desc = desc.replace(/"\s*$/, '')
+      
+      return desc
+    }
+  }
+  
+  return content
+}
+
+/**
  * Parse narrative text into structured blocks for display
  * Creates separate blocks for dialogue vs narrative for better visual separation
  */
@@ -132,10 +217,14 @@ export function NarrativePanel({
   npcName = '',
 }) {
   // Use streaming content if available, otherwise scene description
-  const displayContent = streamingContent || scene?.description || ''
+  const rawContent = streamingContent || scene?.description || ''
   
-  // Parse the formatted text into blocks
-  const blocks = useMemo(() => parseFormattedText(displayContent), [displayContent])
+  // Clean any JSON that leaked through, remove duplicates, then parse into blocks
+  const blocks = useMemo(() => {
+    const cleanedContent = cleanJsonFromContent(rawContent)
+    const dedupedContent = removeDuplicates(cleanedContent)
+    return parseFormattedText(dedupedContent)
+  }, [rawContent])
   
   if (!scene && !streamingContent) {
     return (

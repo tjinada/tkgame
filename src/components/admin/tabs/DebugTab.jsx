@@ -82,6 +82,7 @@ export const debugLog = {
   api: (action, data) => logStore.log('api', `API: ${action}`, data),
   error: (message, error) => logStore.log('error', message, error),
   game: (action, data) => logStore.log('game', action, data),
+  prompt: (systemPrompt, userMessage, context) => logStore.log('prompt', 'AI Prompt Sent', { systemPrompt, userMessage, context }),
 }
 
 export function DebugTab() {
@@ -123,6 +124,7 @@ export function DebugTab() {
       case 'roll': return <Dice1 size={14} className="text-accent-primary" />
       case 'event': return <Zap size={14} className="text-accent-warning" />
       case 'api': return <MessageSquare size={14} className="text-accent-secondary" />
+      case 'prompt': return <MessageSquare size={14} className="text-cyan-400" />
       case 'error': return <AlertCircle size={14} className="text-accent-danger" />
       default: return null
     }
@@ -133,6 +135,7 @@ export function DebugTab() {
       case 'roll': return 'bg-accent-primary/20 text-accent-primary'
       case 'event': return 'bg-accent-warning/20 text-accent-warning'
       case 'api': return 'bg-accent-secondary/20 text-accent-secondary'
+      case 'prompt': return 'bg-cyan-500/20 text-cyan-400'
       case 'error': return 'bg-accent-danger/20 text-accent-danger'
       case 'game': return 'bg-accent-success/20 text-accent-success'
       default: return 'bg-text-muted/20 text-text-muted'
@@ -144,7 +147,7 @@ export function DebugTab() {
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-4 p-4 border-b border-background-tertiary">
         <div className="flex gap-2">
-          {['all', 'roll', 'event', 'api', 'game', 'error'].map(type => (
+          {['all', 'prompt', 'roll', 'event', 'api', 'game', 'error'].map(type => (
             <button
               key={type}
               onClick={() => setFilter(type)}
@@ -156,7 +159,7 @@ export function DebugTab() {
                 }
               `}
             >
-              {type.charAt(0).toUpperCase() + type.slice(1)}
+              {type === 'prompt' ? '📝 Prompt' : type.charAt(0).toUpperCase() + type.slice(1)}
             </button>
           ))}
         </div>
@@ -197,7 +200,52 @@ export function DebugTab() {
                     </span>
                   </div>
                   <p className="text-text-primary break-words">{log.message}</p>
-                  {log.data && (
+                  
+                  {/* Special rendering for prompt logs */}
+                  {log.type === 'prompt' && log.data && (
+                    <div className="mt-3 space-y-3">
+                      {/* System Prompt */}
+                      <div>
+                        <div className="text-xs text-cyan-400 font-semibold mb-1 uppercase tracking-wide">
+                          System Prompt
+                        </div>
+                        <pre className="p-3 bg-background-elevated rounded text-xs text-text-secondary overflow-x-auto whitespace-pre-wrap max-h-96 overflow-y-auto">
+                          {log.data.systemPrompt}
+                        </pre>
+                      </div>
+                      
+                      {/* User Message */}
+                      <div>
+                        <div className="text-xs text-green-400 font-semibold mb-1 uppercase tracking-wide">
+                          User Message
+                        </div>
+                        <pre className="p-3 bg-background-elevated rounded text-xs text-text-secondary overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
+                          {log.data.userMessage}
+                        </pre>
+                      </div>
+                      
+                      {/* Context Summary */}
+                      {log.data.context && (
+                        <div>
+                          <div className="text-xs text-yellow-400 font-semibold mb-1 uppercase tracking-wide">
+                            Context Summary
+                          </div>
+                          <pre className="p-3 bg-background-elevated rounded text-xs text-text-muted overflow-x-auto whitespace-pre-wrap max-h-32 overflow-y-auto">
+                            {JSON.stringify({
+                              turn: log.data.context.turn,
+                              npc: log.data.context.currentNpc,
+                              location: log.data.context.currentLocation,
+                              stats: log.data.context.stats,
+                              historyLength: log.data.context.history?.length || 0,
+                            }, null, 2)}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Standard data rendering for non-prompt logs */}
+                  {log.type !== 'prompt' && log.data && (
                     <pre className="mt-2 p-2 bg-background-elevated rounded text-xs text-text-muted overflow-x-auto">
                       {JSON.stringify(log.data, null, 2)}
                     </pre>
@@ -213,6 +261,7 @@ export function DebugTab() {
       {/* Stats */}
       <div className="flex items-center gap-4 px-4 py-2 border-t border-background-tertiary text-xs text-text-muted">
         <span>Total: {logs.length}</span>
+        <span className="text-cyan-400">Prompts: {logs.filter(l => l.type === 'prompt').length}</span>
         <span>Rolls: {logs.filter(l => l.type === 'roll').length}</span>
         <span>Events: {logs.filter(l => l.type === 'event').length}</span>
         <span>API: {logs.filter(l => l.type === 'api').length}</span>
