@@ -1,0 +1,2944 @@
+{
+  "id": "chapter1",
+  "name": "Fresh Meat",
+  "chapter": 1,
+  "description": "Your first day as the lowest-ranking slave in Sandy's fetish school. Learn the rules, meet the Queens, and try to survive.",
+  "scenes": [
+    {
+      "id": "c1_awakening",
+      "location": "dungeon",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "Darkness. Cold stone against your back. Your head throbs as consciousness claws its way back to you. The air is thick with dampness and something else—leather, sweat, a hint of perfume. You're lying on a thin mattress in what appears to be a cell. Iron bars cast long shadows from a single flickering torch in the corridor beyond. Your wrists ache. Looking down, you see faint red marks where restraints recently held you. How did you get here? The last thing you remember is... nothing. Just fog. A woman's laugh echoes somewhere in the distance, and footsteps begin approaching. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_aw_1",
+          "text": "Stay still and feign unconsciousness (you fucking worm)",
+          "next": "c1_sandy_entrance_passive",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "firstImpression": "passive" }
+        },
+        {
+          "id": "c1_aw_2",
+          "text": "Scramble to your feet and call out (you fucking worm)",
+          "next": "c1_sandy_entrance_active",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "firstImpression": "active" }
+        },
+        {
+          "id": "c1_aw_3",
+          "text": "Examine the cell for any means of escape (you fucking worm)",
+          "next": "c1_examine_cell",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "firstImpression": "defiant" }
+        },
+        {
+          "id": "c1_aw_4",
+          "text": "Try to remember how you got here (you fucking worm)",
+          "next": "c1_memory_attempt",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "firstImpression": "confused" }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_examine_cell",
+      "location": "dungeon",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "You pull yourself up, ignoring the dizziness, and scan your prison. The bars are solid iron, ancient but unyielding. The stone walls are slick with moisture—no handholds, no loose blocks. A small drain in the corner. The mattress. A bucket. That's it. Whoever built this place knew what they were doing. The footsteps grow louder, accompanied by the sharp click of heels. Before you can return to the mattress, a figure appears at the bars. Caught. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_ec_1",
+          "text": "\"I was just stretching my legs.\" [Bluff - DC 14] (you fucking worm)",
+          "next": "c1_sandy_entrance_defiant",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -5 },
+          "rollRequired": {
+            "dc": 14,
+            "stat": "obedience",
+            "successNext": "c1_sandy_entrance_passive",
+            "failureNext": "c1_sandy_entrance_defiant"
+          },
+          "flags": { "attemptedBluff": true }
+        },
+        {
+          "id": "c1_ec_2",
+          "text": "Drop to your knees immediately (you fucking worm)",
+          "next": "c1_sandy_entrance_submissive",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_ec_3",
+          "text": "Stand your ground and meet her gaze (you fucking worm)",
+          "next": "c1_sandy_entrance_defiant",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_ec_4",
+          "text": "Try to hide something you found [DC 16] (you fucking worm)",
+          "next": "c1_sandy_entrance_passive",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "rollRequired": {
+            "dc": 16,
+            "stat": "endurance",
+            "successNext": "c1_sandy_entrance_passive",
+            "failureNext": "c1_sandy_entrance_defiant"
+          },
+          "flags": { "triedToHide": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_memory_attempt",
+      "location": "dungeon",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "You close your eyes and reach into the fog. Fragments surface—a bar, a drink, a woman with knowing eyes buying you another round. Then... a car? No, a van. The smell of chloroform. Your blood runs cold. You were drugged. Taken. This isn't a nightmare you'll wake from. The click of heels announces company before you can process the implications. A figure stops at your cell door, keys jangling. She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_ma_1",
+          "text": "\"You drugged me! Let me out of here!\" (you fucking worm)",
+          "next": "c1_sandy_entrance_defiant",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -5 },
+          "flags": { "remembersCapture": true }
+        },
+        {
+          "id": "c1_ma_2",
+          "text": "Stay quiet and observe (you fucking worm)",
+          "next": "c1_sandy_entrance_passive",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "remembersCapture": true }
+        },
+        {
+          "id": "c1_ma_3",
+          "text": "\"Where am I? What do you want?\" (you fucking worm)",
+          "next": "c1_sandy_entrance_active",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "remembersCapture": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_entrance_passive",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "amused",
+      "bodyPart": null,
+      "description": "You keep your eyes mostly closed, watching through your lashes. The woman who appears is striking—tall, confident, dressed in a tailored black corset and leather pants that probably cost more than your car. Dark hair frames a face that manages to be beautiful and terrifying in equal measure. She studies you like a cat watching a mouse, a small smile playing on crimson lips. \"Playing dead, little toy?\" Her voice is honey poured over broken glass. \"Cute. But I saw you breathing change. I'm Sandy, your Head Mistress. And that little trick just told me you're smarter than the usual meat we get. I haven't decided if that's good or bad for you yet.\" She unlocks the cell door. It swings open with a groan. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_sep_1",
+          "text": "Open your eyes and sit up slowly (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_sep_2",
+          "text": "\"Head Mistress of what?\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_sep_3",
+          "text": "Bolt for the open door (you fucking worm)",
+          "next": "c1_escape_attempt",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -10 },
+          "rollRequired": {
+            "dc": 18,
+            "stat": "endurance",
+            "successNext": "c1_escape_success",
+            "failureNext": "c1_escape_fail"
+          },
+          "flags": { "attemptedEscape": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_entrance_active",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "smirk",
+      "bodyPart": null,
+      "description": "\"Hello? Who's there?\" Your voice echoes off the damp stones. The footsteps pause, then resume with purpose. The woman who appears makes your breath catch. Tall, imperious, dressed in black leather that fits like a second skin. Her dark eyes sweep over you with the casual assessment of someone examining livestock. \"Noisy one,\" she observes, her voice a velvet purr. \"I'm Sandy. Head Mistress of this establishment. And you, little TJ, are my newest acquisition.\" She knows your name. She unlocks the cell with a key from a ring at her hip. \"You have questions. I can see them buzzing behind your eyes. Some I'll answer. Most, you'll learn the hard way.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_sea_1",
+          "text": "\"How do you know my name?\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_sea_2",
+          "text": "\"What do you mean 'acquisition'?\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_sea_3",
+          "text": "Attack her while she's close (you fucking worm)",
+          "next": "c1_attack_sandy",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -15 },
+          "rollRequired": {
+            "dc": 20,
+            "stat": "endurance",
+            "successNext": "c1_attack_success",
+            "failureNext": "c1_attack_fail"
+          },
+          "flags": { "attackedSandy": true }
+        },
+        {
+          "id": "c1_sea_4",
+          "text": "Lower your gaze submissively (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_entrance_defiant",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "unimpressed",
+      "bodyPart": null,
+      "description": "The woman who appears at the bars is not what you expected. Beautiful in a predatory way—high cheekbones, dark eyes that miss nothing, lips curved in perpetual knowing amusement. She's dressed like she owns the place, which you're beginning to suspect she does. \"Oh, a fighter.\" Her voice drips with condescension. \"How... tedious.\" She doesn't flinch at your posture, your defiance. If anything, she looks bored. \"I'm Sandy. Head Mistress. And that spine of yours? Enjoy it while it lasts, TJ. They all break eventually. The only question is how much you'll suffer first.\" The cell door swings open. She doesn't step back. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_sed_1",
+          "text": "\"I won't break.\" (you fucking worm)",
+          "next": "c1_sandy_challenge",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -5 },
+          "flags": { "defiantToSandy": true }
+        },
+        {
+          "id": "c1_sed_2",
+          "text": "Reconsider and lower your eyes (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_sed_3",
+          "text": "Try to push past her and run (you fucking worm)",
+          "next": "c1_escape_attempt",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -10 },
+          "rollRequired": {
+            "dc": 18,
+            "stat": "endurance",
+            "successNext": "c1_escape_success",
+            "failureNext": "c1_escape_fail"
+          },
+          "flags": { "attemptedEscape": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_entrance_submissive",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "Your knees hit the cold stone. Some instinct, some primal recognition of danger, tells you that whoever this woman is, submission is survival. She stops at the cell door, and you feel her gaze on the top of your bowed head. \"Well, well.\" Her voice is silk and satisfaction. \"Either you've been trained before, or you have excellent instincts.\" Keys jingle. The cell door swings open. \"I'm Sandy, your Head Mistress. And that display just earned you a marginally less painful introduction to your new life.\" She steps into the cell, heels clicking on stone. \"Look at me.\" It's not a request. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_ses_1",
+          "text": "Raise your eyes to meet hers (you fucking worm)",
+          "next": "c1_sandy_explains_pleased",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_ses_2",
+          "text": "Keep your eyes lowered respectfully (you fucking worm)",
+          "next": "c1_sandy_explains_pleased",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_ses_3",
+          "text": "\"What is this place, Mistress?\" (you fucking worm)",
+          "next": "c1_sandy_explains_pleased",
+          "statChanges": { "obedience": 2, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_escape_attempt",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "amused",
+      "bodyPart": null,
+      "description": "You lunge. Sandy doesn't move—doesn't need to. Her hand shoots out and catches you by the throat with almost casual precision. Your momentum works against you as she uses it to spin you, slamming your back against the bars. The impact drives the air from your lungs. Her grip isn't choking, but it's firm enough that you understand she could. \"They always try,\" she murmurs, almost fondly. \"And they always fail. This place is a maze, little toy. Even if you got past me—which you can't—you'd wander until you collapsed. Or until one of my girls found you.\" Her eyes glitter. \"Trust me. You don't want them to find you without my introduction.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_ea_1",
+          "text": "Go limp in her grip (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 5, "endurance": -5, "arousal": 15 },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_ea_2",
+          "text": "Struggle against her hold [Endurance DC 15] (you fucking worm)",
+          "next": "c1_struggle_result",
+          "statChanges": { "endurance": -10, "arousal": 15 },
+          "affinityChanges": { "sandy": -5 },
+          "rollRequired": {
+            "dc": 15,
+            "stat": "endurance",
+            "successNext": "c1_struggle_success",
+            "failureNext": "c1_struggle_result"
+          },
+          "flags": {}
+        },
+        {
+          "id": "c1_ea_3",
+          "text": "\"I'm sorry. Please.\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": { "apologized": true }
+        },
+        {
+          "id": "c1_ea_4",
+          "text": "Beg desperately for mercy [Plea DC 12] (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 10, "arousal": 15 },
+          "affinityChanges": { "sandy": 3 },
+          "rollRequired": {
+            "dc": 12,
+            "stat": "obedience",
+            "successNext": "c1_sandy_explains_pleased",
+            "failureNext": "c1_sandy_explains"
+          },
+          "flags": { "beggedMercy": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_escape_success",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "angry",
+      "bodyPart": null,
+      "description": "By some miracle, you slip past her. Adrenaline floods your system as you sprint down the corridor—left, right, another left. The dungeon is a labyrinth of stone and shadow. Behind you, Sandy's laugh echoes, unhurried. \"Run, little mouse!\" You round another corner and slam directly into something soft yet unyielding—a wall of female flesh. Looking up, you see a curvy woman with a post-workout glow, sweat gleaming on her dark skin. She grins down at you. \"Oh, Sandy! You shouldn't have!\" Before you can react, she has you in a headlock, your face pressed directly into her damp armpit. The smell is overwhelming—salt and musk and something primal. 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_es_1",
+          "text": "Try to break free desperately (you fucking worm)",
+          "next": "c1_aish_intro_struggle",
+          "statChanges": { "endurance": -10, "sensitivity": 5, "arousal": 15 },
+          "affinityChanges": { "aish": -5 },
+          "flags": { "metAishFirst": true }
+        },
+        {
+          "id": "c1_es_2",
+          "text": "Go limp and accept your fate (you fucking worm)",
+          "next": "c1_aish_intro_submit",
+          "statChanges": { "obedience": 5, "arousal": 20 },
+          "affinityChanges": { "aish": 5 },
+          "flags": { "metAishFirst": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_escape_fail",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "You don't even make it two steps. Sandy's hand catches your collar—when did you get a collar?—and yanks you back with humiliating ease. You crash to the floor at her feet, the stone unforgiving against your knees. \"Pathetic,\" she says, and the word cuts deeper than it should. \"Did you really think that would work?\" She circles you slowly, heels clicking a deliberate rhythm. \"Now you've annoyed me. That was stupid, TJ. Very stupid.\" Her boot finds your chin, tilting your face up. \"I was going to give you the gentle introduction. But I think you need a lesson in reality first.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_ef_1",
+          "text": "\"I'm sorry, I panicked—\" (you fucking worm)",
+          "next": "c1_sandy_punishment_light",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_ef_2",
+          "text": "Glare up at her silently (you fucking worm)",
+          "next": "c1_sandy_punishment_hard",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -5 },
+          "flags": { "defiantAfterFail": true }
+        },
+        {
+          "id": "c1_ef_3",
+          "text": "Kiss her boot in apology (you fucking worm)",
+          "next": "c1_sandy_punishment_light",
+          "statChanges": { "obedience": 10, "arousal": 15 },
+          "affinityChanges": { "sandy": 8 },
+          "flags": { "kissedBoot": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_attack_success",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "angry",
+      "bodyPart": null,
+      "description": "Your fist connects with her jaw—barely. She saw it coming, rolled with it, but you still made contact. For a fraction of a second, genuine surprise flashes in her eyes. Then it's replaced by something much worse: cold, calculated fury. \"That,\" she says, touching her jaw where a red mark is already forming, \"was a mistake you'll be paying for for a very long time.\" She whistles sharply. Footsteps thunder from multiple directions. Before you can react, you're surrounded by women—five of them, each more intimidating than the last. \"Ladies,\" Sandy announces, \"meet TJ. He just hit me. I want him broken in by morning.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_as_1",
+          "text": "Try to apologize frantically (you fucking worm)",
+          "next": "c1_group_punishment",
+          "statChanges": { "obedience": -5, "arousal": 15 },
+          "affinityChanges": { "sandy": -10, "araph": -5, "nancy": -5, "aish": -5, "gaya": -5, "melissa": -5 },
+          "flags": { "groupPunishment": true }
+        },
+        {
+          "id": "c1_as_2",
+          "text": "Accept your fate with dignity (you fucking worm)",
+          "next": "c1_group_punishment",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -5, "araph": -3, "nancy": -3, "aish": -3, "gaya": -3, "melissa": -3 },
+          "flags": { "groupPunishment": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_attack_fail",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "You swing. She doesn't even seem to move, but suddenly your arm is twisted behind your back, your face is pressed against the cold bars, and her lips are at your ear. \"Oh, honey,\" she breathes, and the warmth of it sends an unwelcome shiver down your spine. \"Did you really think you could hurt me?\" She increases the pressure until you gasp. \"I've broken men twice your size. Men with training. Men with experience.\" Another twist—your shoulder screams. \"You? You're nothing. Less than nothing. You're meat that hasn't learned its place yet.\" She releases you, and you crumple. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_af_1",
+          "text": "\"I'll learn. Please, give me a chance.\" (you fucking worm)",
+          "next": "c1_sandy_punishment_hard",
+          "statChanges": { "obedience": 10, "endurance": -5, "arousal": 15 },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_af_2",
+          "text": "Stay down and say nothing (you fucking worm)",
+          "next": "c1_sandy_punishment_hard",
+          "statChanges": { "endurance": -5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_af_3",
+          "text": "Try to attack again (you fucking worm)",
+          "next": "c1_group_punishment",
+          "statChanges": { "endurance": -15, "arousal": 15 },
+          "affinityChanges": { "sandy": -15 },
+          "rollRequired": {
+            "dc": 25,
+            "stat": "endurance",
+            "successNext": "c1_attack_success",
+            "failureNext": "c1_group_punishment"
+          },
+          "flags": { "groupPunishment": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_struggle_result",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "mean",
+      "bodyPart": null,
+      "description": "You thrash against her grip like a fish on a line. All it accomplishes is exhausting yourself while she waits, patient as a spider, for you to tire. When you finally slump, chest heaving, she leans in close. \"Got that out of your system?\" Her free hand pats your cheek—not gently. \"Good. Every bit of energy you waste fighting me is energy you won't have when you actually need it.\" She releases you and steps back. \"Now. We can do this the easy way or the hard way. The easy way: you follow me, keep your mouth shut, and learn the rules. The hard way: I call the girls and let them use you as a group stress ball until you're too broken to resist anyway.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_sr_1",
+          "text": "\"Easy way. Please.\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_sr_2",
+          "text": "Nod silently (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": {
+            "sandy": 2
+          },
+          "flags": {}
+        },
+        {
+          "id": "c1_sr_3",
+          "text": "\"Hard way. Do your worst.\" (you fucking worm)",
+          "next": "c1_group_punishment",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -10 },
+          "flags": { "groupPunishment": true, "chooseHardWay": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_challenge",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "amused",
+      "bodyPart": null,
+      "description": "Sandy's laugh is genuine, which somehow makes it worse. \"Oh, sweet boy. They all say that.\" She steps into the cell, invading your space with the casual confidence of someone who's never been refused. \"You know what I love about defiance? It makes the submission so much sweeter when it comes. \" And it will come, TJ. Not if. When.\" Her hand reaches out, fingers trailing down your cheek. You flinch despite yourself. \"But for now, let's get you oriented. Unless you'd rather stay in this lovely cell? I'm sure the rats would appreciate the company.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_sc_1",
+          "text": "Follow her, keeping your defiance internal (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "internalDefiance": true }
+        },
+        {
+          "id": "c1_sc_2",
+          "text": "\"Fine. Show me what you've got.\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_sc_3",
+          "text": "Stay in the cell to spite her (you fucking worm)",
+          "next": "c1_stay_in_cell",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -10 },
+          "flags": { "stayedInCell": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_stay_in_cell",
+      "location": "dungeon",
+      "npc": "sandy",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "\"Suit yourself.\" Sandy shrugs and turns to leave. The cell door clangs shut. The key turns in the lock. She doesn't look back as her footsteps fade into the distance. Hours pass. The torch gutters and dies. In absolute darkness, the rats come out. You feel them brush against your legs, hear their squeaking. Something larger than a rat scrabbles in the corner. When Sandy finally returns—you've lost all sense of time—you're huddled on the mattress, shaking. \"Ready to be cooperative now?\" Her voice floats from the darkness. The cell door creaks open. She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_sic_1",
+          "text": "Rush toward the door immediately (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 10, "endurance": -10, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": { "brokenByCell": true }
+        },
+        {
+          "id": "c1_sic_2",
+          "text": "\"Yes. I'm ready.\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 15, "endurance": -10, "arousal": 15 },
+          "affinityChanges": { "sandy": 8 },
+          "flags": { "brokenByCell": true }
+        },
+        {
+          "id": "c1_sic_3",
+          "text": "Try to maintain composure despite the terror [Endurance DC 16] (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "endurance": -5, "arousal": 15 },
+          "affinityChanges": {},
+          "rollRequired": {
+            "dc": 16,
+            "stat": "endurance",
+            "successNext": "c1_sandy_explains",
+            "failureNext": "c1_sandy_explains_pleased"
+          },
+          "flags": { "maintainedComposure": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_explains",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "neutral",
+      "bodyPart": null,
+      "description": "Sandy leads you through a maze of corridors. The dungeon gives way to something that might generously be called a main hall—high ceilings, chains hanging decoratively (or not so decoratively) from the walls, dim atmospheric lighting. It's like a cross between a gothic mansion and a BDSM club. \"Welcome to my academy,\" Sandy announces, spreading her arms. \"This is where we train... special individuals. You, TJ, are my first male student. Lucky you.\" She circles you slowly. \"Here, you're at the bottom of the hierarchy. Below every female student. Below the cleaning staff. Below the furniture, if I decide to make you into furniture.\" Her smile is sharp. \"Any questions before I explain the rules?\" Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_se_1",
+          "text": "\"What kind of training?\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_se_2",
+          "text": "\"Why me?\" (you fucking worm)",
+          "next": "c1_why_me",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_se_3",
+          "text": "\"Can I leave?\" (you fucking worm)",
+          "next": "c1_can_i_leave",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_se_4",
+          "text": "\"No questions. I'm ready to learn.\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_explains_pleased",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "Sandy's grip on your arm is surprisingly gentle as she guides you through the corridors. \"You show promise,\" she says, sounding almost approving. \"Most new acquisitions are all panic and bravado. Exhausting.\" The dungeon transitions into something grander—a main hall with vaulted ceilings, elaborate chandeliers, and chains worked into the decor with artistic flair. \"This is my academy. A finishing school of sorts, for a very particular kind of education.\" She releases you, gesturing at the space. \"You're my first male student. An experiment. If you're smart—and I think you might be—you'll embrace this rather than fight it. The ones who embrace it... they find pleasure even in the pain.\" Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_sep_1",
+          "text": "\"I'll do my best to please you, Mistress.\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "sandy": 8 },
+          "flags": {}
+        },
+        {
+          "id": "c1_sep_2",
+          "text": "\"What do you mean by 'education'?\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_sep_3",
+          "text": "\"What happens to me if I fail?\" (you fucking worm)",
+          "next": "c1_consequences_preview",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_why_me",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "smirk",
+      "bodyPart": null,
+      "description": "\"Why you?\" Sandy laughs. \"Because you were convenient. Available. Had the right... profile.\" She produces a folder from seemingly nowhere—your folder, with your name on it. \"No family who'll miss you. Enough debt that you might have disappeared anyway. And...\" She flips it open, scanning. \"...certain search histories that suggested you might adapt well to this lifestyle. Everyone has their kinks, TJ. We just accelerate the process of exploring yours.\" She snaps the folder closed. \"Does that answer your question? Or would you like to feel more special? I can lie if you prefer.\" Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_wm_1",
+          "text": "\"You researched me?\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "knowsResearch": true }
+        },
+        {
+          "id": "c1_wm_2",
+          "text": "\"That's... actually kind of hot.\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 20
+          },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_wm_3",
+          "text": "\"Just tell me the rules.\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_can_i_leave",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "mean",
+      "bodyPart": null,
+      "description": "Sandy's expression flickers through several emotions—amusement, pity, cruelty—before settling on a cold smile. \"Leave? Oh, TJ.\" She steps closer, cupping your chin. \"You signed away that right when you accepted that drink from my recruiter. But I'll tell you what—a graduate my program, truly embrace what you are, and maybe, in a few years, I'll give you the option. Of course, by then...\" Her thumb traces your lower lip. \"...you won't want to leave. They never do. The ones who make it to the end, they beg to stay.\" She releases you. \"But that's future talk. For now, let me explain how to survive the present.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_cil_1",
+          "text": "\"Fine. What are the rules?\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_cil_2",
+          "text": "\"I'll never stop trying to escape.\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -5 },
+          "flags": { "vowedEscape": true }
+        },
+        {
+          "id": "c1_cil_3",
+          "text": "\"A few years?\" (look terrified) (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_consequences_preview",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "teasing",
+      "bodyPart": null,
+      "description": "\"Failure comes in degrees,\" Sandy explains, leading you toward a window overlooking an interior courtyard. Below, you can see several figures—all female—engaged in various activities. One is being made to lick boots. Another is bound in an elaborate rope harness, being used as a footstool. A third is... you look away quickly. \"Minor failures mean minor corrections. Extended tickle sessions with Araph. Foot worship duty under Nancy until your tongue cramps. Sweat cleanup after Aish's workouts.\" She smiles at your expression. \"Major failures are... more creative. And persistent failure?\" She nods toward a figure in the corner of the courtyard, naked and blank-eyed. \"You become a cautionary tale.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_cp_1",
+          "text": "\"I won't fail.\" (with determination) (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_cp_2",
+          "text": "Swallow hard and nod (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_cp_3",
+          "text": "\"What happened to that one?\" (point at the blank-eyed figure) (you fucking worm)",
+          "next": "c1_cautionary_tale",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_cautionary_tale",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "neutral",
+      "bodyPart": null,
+      "description": "\"That's Amy. Or it was.\" Sandy's voice is matter-of-fact. \"She was stubborn. Fought every step for eight months. Tried to escape eleven times. Attacked my girls more times than I can count.\" She sighs, almost wistfully. \"Such fire. But fire without wisdom just burns itself out. After her twelfth escape attempt, I let Melissa have her for a week straight. Post-orgasm torture for seven days, with strategic edging in between. By day four, she was begging. By day six, she'd agree to anything. By day seven...\" Sandy gestures at the vacant figure. \"...there was no 'she' left. Just a body that follows orders.\" She turns to you. \"I'm telling you this not as a threat, TJ, but as a kindness. Don't be Amy.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_ct_1",
+          "text": "\"I understand, Mistress.\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": { "obedience": 10, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": { "heardAmyStory": true }
+        },
+        {
+          "id": "c1_ct_2",
+          "text": "\"That's monstrous.\" (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -5 },
+          "flags": { "heardAmyStory": true }
+        },
+        {
+          "id": "c1_ct_3",
+          "text": "Say nothing (you're too disturbed) (you fucking worm)",
+          "next": "c1_rules_explanation",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "heardAmyStory": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_rules_explanation",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "neutral",
+      "bodyPart": null,
+      "description": "Sandy leads you into what she calls a \"classroom\"—though it looks more like a dungeon's torture chamber tried to go to finishing school. Desks with restraint attachments. A blackboard listing what appear to be names and demerits. Implements hanging on the walls that you don't want to think too hard about. \"Rule One: Address every woman here with respect. 'Mistress' for my senior students—the Queens. 'Miss' for others. You do NOT get the privilege of using first names unless granted.\" She holds up two fingers. \"Rule Two: When ordered to do something, you do it. Immediately. No hesitation, no bargaining.\" Three fingers. \"Rule Three: Your body is not your own. It belongs to this academy, to be used as we see fit.\" She smiles. \"Simple, yes?\" 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_re_1",
+          "text": "\"Yes, Mistress.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_re_2",
+          "text": "\"What happens if I break a rule?\" (you fucking worm)",
+          "next": "c1_punishment_preview",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_re_3",
+          "text": "\"Who are the Queens?\" (you fucking worm)",
+          "next": "c1_queens_preview",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_re_4",
+          "text": "Nod silently in acknowledgment (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_re_5",
+          "text": "Request a moment of leniency to adjust [Plea DC 14] (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "rollRequired": {
+            "dc": 14,
+            "stat": "obedience",
+            "successNext": "c1_leniency_hint",
+            "failureNext": "c1_meet_queens_intro"
+          },
+          "flags": { "requestedLeniency": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_punishment_preview",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "smirk",
+      "bodyPart": null,
+      "description": "\"Oh, eager to learn about consequences?\" Sandy's smirk sharpens. \"Each of my Queens specializes in a particular... discipline. Break a rule, and you'll be assigned to whichever Queen's punishment fits the crime.\" She walks to the blackboard, tapping names. \"Araph handles defiance—she tickles it out of you until you're a sobbing, giggling mess begging for mercy. Nancy handles disrespect—you'll worship her feet until you've licked away every trace of attitude. Aish handles laziness—she works you until you're drenched in her sweat, then makes you clean it up with your tongue.\" She continues. \"Gaya handles... arousal management. Melissa handles extreme cases.\" Her eyes gleam. \"Any particular punishment you'd like to preview?\" Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_pp_1",
+          "text": "\"No thank you, Mistress. I'll follow the rules.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_pp_2",
+          "text": "\"What does Gaya do exactly?\" (you fucking worm)",
+          "next": "c1_gaya_preview",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "askedAboutGaya": true }
+        },
+        {
+          "id": "c1_pp_3",
+          "text": "\"What makes Melissa's cases 'extreme'?\" (you fucking worm)",
+          "next": "c1_melissa_preview",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "askedAboutMelissa": true }
+        },
+        {
+          "id": "c1_pp_4",
+          "text": "\"I'd like to meet them all.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_queens_preview",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "\"Smart question.\" Sandy produces photographs—five of them—and lays them on a desk. \"These are my senior students. The elite. They've completed their training and now help train others. You will address them as 'Mistress' followed by their name.\" She taps the first photo—a blue-haired woman with sharp nails and sharper smile. \"Araph. The Tickle Queen.\" Next, a tall athletic woman. \"Nancy. The Foot Goddess.\" A curvy dark-skinned woman in workout clothes. \"Aish. The Sweat Sovereign.\" A deceptively soft-featured woman. \"Gaya. The Edging Engineer.\" Finally, a predatory blonde. \"And Melissa. The Post-Orgasm Punisher.\" She gathers the photos. \"You'll meet them soon enough. And TJ? They're going to eat you alive.\" 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_qp_1",
+          "text": "\"I look forward to meeting them, Mistress.\" (fake confidence) (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_qp_2",
+          "text": "\"Why do they all have... themes?\" (you fucking worm)",
+          "next": "c1_specialization_explain",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_qp_3",
+          "text": "\"Are there... male Queens?\" (you fucking worm)",
+          "next": "c1_male_question",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_qp_4",
+          "text": "Say nothing (the photos are intimidating enough) (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_gaya_preview",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "teasing",
+      "bodyPart": null,
+      "description": "\"Curious about Gaya?\" Sandy's tone turns silky. \"She's our edging specialist. Orgasm control. Denial.\" She watches your face carefully. \"Some might think that sounds pleasant. Hours of stimulation? What's not to like?\" She laughs at your expression. \"But imagine being brought to the edge—that perfect moment before release—and being held there. For an hour. Two hours. Six. Gaya's record is fourteen hours of continuous edging without allowing release.\" She pauses to let that sink in. \"The subject was speaking in tongues by the end. Forgot her own name for two days. That's what Gaya does. She takes pleasure and turns it into the most exquisite torture imaginable.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_gp_1",
+          "text": "Swallow nervously (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 20
+          },
+          "affinityChanges": {},
+          "flags": { "arousalFromGaya": true }
+        },
+        {
+          "id": "c1_gp_2",
+          "text": "\"That sounds... I'll behave.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_gp_3",
+          "text": "\"Fourteen hours?\" (voice cracking) (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "arousal": 20, "obedience": 5 },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_melissa_preview",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "Sandy's expression darkens with pleasure. \"Melissa handles post-orgasm torture. You know that moment right after you cum? When everything is oversensitive, and you want nothing more than to be left alone?\" She leans in close. \"Melissa doesn't leave you alone. She keeps going. Stroking. Rubbing. Stimulating. When you're at your most sensitive and every touch is agony disguised as pleasure.\" Her breath is warm on your ear. \"She once made a subject orgasm seven times in two hours, milking him dry while he screamed and begged her to stop. By the end, he'd promised her anything—his savings, his soul, his firstborn. She didn't even want anything. She just enjoys the breaking.\" Sandy straightens. \"She's for extreme cases. Don't become one.\" 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_mp_1",
+          "text": "\"I'll be good. I promise.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 10, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_mp_2",
+          "text": "\"You're all monsters.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -8 },
+          "flags": { "calledThemMonsters": true }
+        },
+        {
+          "id": "c1_mp_3",
+          "text": "Feel yourself getting aroused despite the terror (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 25
+          },
+          "affinityChanges": {},
+          "flags": { "arousalFromMelissa": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_specialization_explain",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "amused",
+      "bodyPart": null,
+      "description": "\"Why themes?\" Sandy chuckles. \"Because mastery requires focus. Anyone can torture. It takes an artist to make it an experience.\" She gestures broadly. \"Each Queen has developed her specialty over years of study and practice. They understand the psychology, the physiology, the precise application of their chosen... discipline.\" Her eyes gleam. \"Araph knows exactly where to tickle to make you lose your mind. Nancy understands the profound submission of foot worship. Aish has turned sweat into a tool of domination. Gaya has mastered the art of denial. And Melissa...\" She smiles fondly. \"Melissa is a surgeon with pleasure and pain. By specializing, they've become the best at what they do. And you'll have the privilege of experiencing them all.\" 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_se_1",
+          "text": "\"I see. Thank you for explaining, Mistress.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_se_2",
+          "text": "\"Experiencing them doesn't sound like a privilege.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_se_3",
+          "text": "\"Which one is your favorite?\" (you fucking worm)",
+          "next": "c1_sandys_favorite",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandys_favorite",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "The question seems to genuinely please Sandy. \"Asking about me? How... unexpected.\" She considers for a moment. \"They're all my girls. I trained each of them. But if I had to choose...\" A distant look enters her eyes. \"There's something special about watching Gaya work. The patience. The precision. The way she reduces someone to a quivering mess without leaving a mark.\" She refocuses on you. \"But I don't play favorites when it comes to punishment. Each Queen earns her assignments through merit. And you've already earned quite a bit of attention just by being here.\" She smiles. \"New toys are always popular. Come. It's time for introductions.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_sf_1",
+          "text": "\"Lead the way, Mistress.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": { "builtRapport": true }
+        },
+        {
+          "id": "c1_sf_2",
+          "text": "Follow silently but appreciating the moment of connection (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 3 },
+          "flags": { "builtRapport": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_male_question",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "mean",
+      "bodyPart": null,
+      "description": "Sandy's expression flattens. \"Male Queens?\" The temperature in the room seems to drop. \"No. There are no male Queens. There never have been. There never will be.\" She steps closer, and you fight the urge to step back. \"Men do not rise here, TJ. They serve. They worship. They break. But they do not lead.\" Her finger jabs into your chest. \"You are here to learn your place, which is beneath every woman in this building. The sooner you internalize that, the better your existence will be.\" She straightens. \"That question just earned you extra duty. I'll decide with whom later.\" Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_mq_1",
+          "text": "\"I'm sorry, Mistress. I meant no offense.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": -3 },
+          "flags": { "earnedExtraDuty": true }
+        },
+        {
+          "id": "c1_mq_2",
+          "text": "Lower your eyes in submission (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "earnedExtraDuty": true }
+        },
+        {
+          "id": "c1_mq_3",
+          "text": "\"That seems... discriminatory.\" (you fucking worm)",
+          "next": "c1_sandy_angry",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": -10 },
+          "flags": { "earnedExtraDuty": true, "angeredSandy": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_angry",
+      "location": "classroom",
+      "npc": "sandy",
+      "npcEmotion": "angry",
+      "bodyPart": null,
+      "description": "\"Discriminatory?\" Sandy's voice is ice. \"Did you just critique my academy's policies?\" Before you can respond, she has you by the throat, pushing you back against the wall. \"Let me be clear, since you seem slow.\" Her grip tightens. \"You have no rights here. No voice. No opinions that matter. You exist to serve and suffer at our pleasure.\" Her eyes bore into yours. \"One more word of back-talk and I'm giving you to all five Queens simultaneously. They'll use you until there's nothing left.\" She releases you and straightens her outfit. \"Now. Follow me. Keep your mouth shut. And pray I'm feeling merciful when it's time to assign your duties.\" Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_sa_1",
+          "text": "Follow in terrified silence (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 10, "endurance": -5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "intimidated": true }
+        },
+        {
+          "id": "c1_sa_2",
+          "text": "\"Yes, Mistress. I'm sorry.\" (you fucking worm)",
+          "next": "c1_meet_queens_intro",
+          "statChanges": { "obedience": 15, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_meet_queens_intro",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "neutral",
+      "bodyPart": null,
+      "description": "Sandy leads you to a grand chamber where five women are already gathered, lounging on various pieces of furniture like a pride of lions. Each one is striking in her own way, and each one's eyes lock onto you with predatory interest the moment you enter. \"Ladies,\" Sandy announces, \"meet our newest student. TJ. He's mine to break in initially, but I thought you'd all like a preview.\" A blue-haired woman with wicked nails grins. A tall athlete in combat boots eyes you from head to toe. A curvy woman fresh from a workout fans herself, sweat gleaming. A soft-featured woman smiles almost sweetly. And a blonde with hungry eyes licks her lips. You've never felt more like prey in your life. Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_mqi_1",
+          "text": "\"Hello, Mistresses.\" (bow respectfully) (you fucking worm)",
+          "next": "c1_queens_reactions_good",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "araph": 3, "nancy": 3, "aish": 3, "gaya": 3, "melissa": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_mqi_2",
+          "text": "Try to meet each of their eyes with confidence (you fucking worm)",
+          "next": "c1_queens_reactions_mixed",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "araph": -2, "nancy": -2, "aish": 2, "gaya": 0, "melissa": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_mqi_3",
+          "text": "Keep your gaze down, overwhelmed (you fucking worm)",
+          "next": "c1_queens_reactions_submissive",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "araph": 5, "nancy": 5, "aish": 3, "gaya": 5, "melissa": -2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_mqi_4",
+          "text": "\"I'm not going to be easy to break.\" (you fucking worm)",
+          "next": "c1_queens_reactions_defiant",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "araph": -5, "nancy": -5, "aish": -3, "gaya": 0, "melissa": 8, "sandy": -5 },
+          "flags": { "defiantToQueens": true }
+        }
+      ],
+      "eventRoll": true
+    },
+    {
+      "id": "c1_queens_reactions_good",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "Your bow creates a ripple of pleased murmurs. \"Oh, he's been trained already,\" the blue-haired one—Araph—observes, nails clicking together. \"Or he's naturally submissive. Delicious either way.\" Nancy uncrosses her long legs, combat boots thudding on the floor. \"Polite. I like polite. They're easier to... educate.\" Aish fans herself more vigorously. \"Dibs on workout cleanup duty.\" Gaya says nothing, just watches you with an evaluating smile. Melissa pouts. \"Boring. I was hoping for a fighter.\" Sandy places a proprietary hand on your shoulder. \"He's fresh. Give him time—he might develop a spine yet. For now, he knows his place.\" The Queens exchange knowing glances. You've survived the first impression. Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_qrg_1",
+          "text": "\"Thank you for the welcome, Mistresses.\" (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "sandy": 3 },
+          "flags": { "goodFirstImpression": true }
+        },
+        {
+          "id": "c1_qrg_2",
+          "text": "Remain silent but attentive (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 2, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "goodFirstImpression": true }
+        },
+        {
+          "id": "c1_qrg_3",
+          "text": "Focus on Gaya (she seems the least threatening) (you fucking worm)",
+          "next": "c1_gaya_notice",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "gaya": 5 },
+          "flags": { "goodFirstImpression": true, "gayaInterest": true }
+        },
+        {
+          "id": "c1_qrg_4",
+          "text": "Try for extra eloquence to impress them all [Performance DC 13] (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "rollRequired": {
+            "dc": 13,
+            "stat": "obedience",
+            "successNext": "c1_eloquent_success",
+            "failureNext": "c1_over_groveling"
+          },
+          "flags": { "goodFirstImpression": true, "triedEloquence": true }
+        }
+      ],
+      "eventRoll": true
+    },
+    {
+      "id": "c1_queens_reactions_mixed",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "amused",
+      "bodyPart": null,
+      "description": "Your attempt at eye contact gets varied responses. Araph narrows her eyes—challenge accepted. Nancy scoffs, unimpressed. Aish laughs appreciatively. \"Look at him trying to be brave. Cute.\" Gaya's expression doesn't change, but something flickers in her eyes. Melissa, though—Melissa practically purrs. \"Oh, I like this one. He thinks he can handle us.\" She stands, prowling closer. \"Let me have him first, Sandy. I'll show him what confidence gets you here.\" Sandy holds up a hand. \"Down, girl. He's mine first. After that...\" She surveys her Queens. \"I'll consider requests based on behavior.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_qrm_1",
+          "text": "Lower your eyes now that you've made your point (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_qrm_2",
+          "text": "Hold Melissa's gaze specifically (you fucking worm)",
+          "next": "c1_melissa_interest",
+          "statChanges": {
+            "arousal": 20
+          },
+          "affinityChanges": { "melissa": 5 },
+          "flags": { "melissaInterest": true }
+        },
+        {
+          "id": "c1_qrm_3",
+          "text": "\"I'm not trying to 'handle' anyone. Just... meeting you.\" (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_queens_reactions_submissive",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "Your downcast eyes spark an almost-predatory excitement. \"Already trained?\" Araph sounds disappointed. \"No fun.\" But Nancy smiles. \"No, look at him. He's terrified but trying. Natural submissive instincts.\" She stands and circles you, the scent of leather and something floral in her wake. \"I bet he'd worship beautifully with the right... motivation.\" Aish waves a hand dismissively. \"Too easy. Where's the challenge?\" Gaya speaks for the first time, her voice soft as silk. \"The challenge isn't in breaking the willing. It's in seeing how deep the submission goes.\" She meets your accidentally-raised eyes and you quickly look down again. \"Very deep, I think.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_qrs_1",
+          "text": "Shiver at Gaya's assessment (you fucking worm)",
+          "next": "c1_gaya_notice",
+          "statChanges": { "arousal": 15, "obedience": 5 },
+          "affinityChanges": { "gaya": 8 },
+          "flags": { "gayaInterest": true }
+        },
+        {
+          "id": "c1_qrs_2",
+          "text": "Stay perfectly still and quiet (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "nancy": 5 },
+          "flags": { "submissiveFirstImpression": true }
+        },
+        {
+          "id": "c1_qrs_3",
+          "text": "\"I'll do my best to please you all, Mistresses.\" (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "sandy": 5, "nancy": 3, "gaya": 3 },
+          "flags": { "submissiveFirstImpression": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_queens_reactions_defiant",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "angry",
+      "bodyPart": null,
+      "description": "Silence. Then, almost in unison, the Queens laugh. All except Melissa, who looks at you like Christmas came early. \"Sandy,\" she breathes, \"please. Give him to me.\" But Araph is already on her feet, stalking toward you. \"Did the fresh meat just challenge us?\" Her nails rake lightly down your arm. \"Oh, I am going to enjoy tickling that defiance out of you.\" Nancy cracks her knuckles. Aish grins widely. Gaya just shakes her head slowly—pity, perhaps? Sandy's hand clamps down on your shoulder hard enough to bruise. \"You just made a very, very stupid mistake,\" she hisses. \"Congratulations. You've earned yourself a demonstration.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_qrd_1",
+          "text": "\"Wait—I didn't mean—\" (you fucking worm)",
+          "next": "c1_demonstration",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "demonstrationPunishment": true }
+        },
+        {
+          "id": "c1_qrd_2",
+          "text": "Stand your ground despite the fear [Endurance DC 14] (you fucking worm)",
+          "next": "c1_demonstration_hard",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "melissa": 5 },
+          "rollRequired": {
+            "dc": 14,
+            "stat": "endurance",
+            "successNext": "c1_demonstration_hard",
+            "failureNext": "c1_demonstration"
+          },
+          "flags": { "demonstrationPunishment": true, "stoodGround": true }
+        },
+        {
+          "id": "c1_qrd_3",
+          "text": "\"I'm sorry! Mistresses, please—\" [Plea DC 15] (you fucking worm)",
+          "next": "c1_demonstration",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 3 },
+          "rollRequired": {
+            "dc": 15,
+            "stat": "obedience",
+            "successNext": "c1_sandy_intervenes",
+            "failureNext": "c1_demonstration"
+          },
+          "flags": { "demonstrationPunishment": true }
+        },
+        {
+          "id": "c1_qrd_4",
+          "text": "Try to stare down Araph specifically [Endurance DC 16] (you fucking worm)",
+          "next": "c1_demonstration_hard",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "araph": -8 },
+          "rollRequired": {
+            "dc": 16,
+            "stat": "endurance",
+            "successNext": "c1_araph_impressed",
+            "failureNext": "c1_demonstration_hard"
+          },
+          "flags": { "demonstrationPunishment": true, "challengedAraph": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_gaya_notice",
+      "location": "main_hall",
+      "npc": "gaya",
+      "npcEmotion": "teasing",
+      "bodyPart": null,
+      "description": "Gaya rises from her seat with fluid grace, approaching you like water seeking its level—inevitable, unhurried. Up close, she's beautiful in a way that makes you uncomfortable: serene features, knowing eyes, a smile that promises nothing good. \"He looked at me,\" she tells Sandy without breaking eye contact with you. \"Interesting choice.\" Her fingers brush your chin, tilting your face. \"Most new ones try to avoid my gaze. They sense what I am.\" Her voice drops to almost a whisper. \"Do you sense it, TJ? Do you know what I could do to you?\" Your body responds before your mind can catch up—heat pooling, breath quickening. Her smile sharpens. \"Oh yes. You sense it. Sandy, may I request first private session after your initial training?\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_gn_1",
+          "text": "\"Please be gentle with me.\" (knowing she won't be) (you fucking worm)",
+          "next": "c1_first_assignment_gaya",
+          "statChanges": {
+            "arousal": 20
+          },
+          "affinityChanges": { "gaya": 8 },
+          "flags": { "gayaFirstRequest": true }
+        },
+        {
+          "id": "c1_gn_2",
+          "text": "Try to look away but can't (you fucking worm)",
+          "next": "c1_first_assignment_gaya",
+          "statChanges": { "arousal": 25, "obedience": 5 },
+          "affinityChanges": { "gaya": 10 },
+          "flags": { "gayaFirstRequest": true }
+        },
+        {
+          "id": "c1_gn_3",
+          "text": "\"I don't know what you mean.\" (lying) (you fucking worm)",
+          "next": "c1_first_assignment_gaya",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "gaya": 5 },
+          "flags": { "gayaFirstRequest": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_melissa_interest",
+      "location": "main_hall",
+      "npc": "melissa",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "Melissa stalks toward you, hips swaying. She stops inches away, close enough that you can smell her perfume—something sweet underlaid with something dangerous. \"You're looking at me,\" she observes. \"Most don't. They've heard stories.\" Her hand presses flat against your chest. \"Your heart's racing.\" She leans in, lips nearly touching your ear. \"Good. Fear makes it better. The adrenaline, the cortisol, mixed with the endorphins when I finally let you release...\" She pulls back, eyes gleaming. \"If I let you release. Sometimes I don't. Sometimes I milk them dry and keep going until they're screaming and begging and promising me everything.\" She pats your cheek. \"We're going to have such fun together.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_mi_1",
+          "text": "\"I... look forward to it, Mistress.\" (terrified but aroused) (you fucking worm)",
+          "next": "c1_first_assignment_melissa",
+          "statChanges": {
+            "arousal": 25
+          },
+          "affinityChanges": { "melissa": 10 },
+          "flags": { "melissaFirstRequest": true }
+        },
+        {
+          "id": "c1_mi_2",
+          "text": "Try to maintain composure [Endurance DC 15] (you fucking worm)",
+          "next": "c1_first_assignment_melissa",
+          "statChanges": { "arousal": 20, "sensitivity": 5 },
+          "affinityChanges": { "melissa": 8 },
+          "rollRequired": {
+            "dc": 15,
+            "stat": "endurance",
+            "successNext": "c1_melissa_impressed",
+            "failureNext": "c1_first_assignment_melissa"
+          },
+          "flags": { "melissaFirstRequest": true }
+        },
+        {
+          "id": "c1_mi_3",
+          "text": "\"Sandy said she gets me first.\" (hiding behind Sandy) (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "melissa": -3, "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_mi_4",
+          "text": "Try to bargain with her [Plea DC 16] (you fucking worm)",
+          "next": "c1_first_assignment_melissa",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "melissa": 5 },
+          "rollRequired": {
+            "dc": 16,
+            "stat": "obedience",
+            "successNext": "c1_melissa_deal",
+            "failureNext": "c1_melissa_laughs"
+          },
+          "flags": { "triedBargaining": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_demonstration",
+      "location": "punishment_room",
+      "npc": "araph",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "They drag you to a room that makes the classroom look cozy—restraint frames, padded tables with straps, walls lined with implements. Araph shoves you onto a padded bench, and before you can react, your wrists and ankles are secured. \"Just a taste,\" Sandy says from the doorway. \"Araph, five minutes. Show him what defiance earns.\" Araph's grin is terrifying. She flexes her fingers, nails glinting. \"With pleasure.\" She straddles the bench, pinning you further. Her nails find your ribs, and then—tickling. But not playful tickling. Targeted, precise, relentless. You try to hold back but within seconds you're howling with forced laughter, thrashing against your bonds. \"Five minutes,\" Araph coos. \"Let's see how brave you are after five minutes.\" 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_dem_1",
+          "text": "Try to endure silently [Endurance DC 18] (you fucking worm)",
+          "next": "c1_post_demonstration",
+          "statChanges": { "endurance": -15, "sensitivity": 10, "arousal": 15 },
+          "affinityChanges": { "araph": 5 },
+          "rollRequired": {
+            "dc": 18,
+            "stat": "endurance",
+            "successNext": "c1_post_demonstration_endured",
+            "failureNext": "c1_post_demonstration"
+          },
+          "flags": {}
+        },
+        {
+          "id": "c1_dem_2",
+          "text": "Beg for mercy immediately (you fucking worm)",
+          "next": "c1_post_demonstration",
+          "statChanges": { "endurance": -10, "obedience": 10, "arousal": 15 },
+          "affinityChanges": { "araph": 3, "sandy": 5 },
+          "flags": { "beggedEarly": true }
+        },
+        {
+          "id": "c1_dem_3",
+          "text": "Try to curse through the torture [Defiance DC 20] (you fucking worm)",
+          "next": "c1_demonstration_extended",
+          "statChanges": { "endurance": -20, "sensitivity": 15, "arousal": 15 },
+          "affinityChanges": { "araph": -5, "sandy": -5 },
+          "rollRequired": {
+            "dc": 20,
+            "stat": "endurance",
+            "successNext": "c1_demonstration_defiant_success",
+            "failureNext": "c1_demonstration_extended"
+          },
+          "flags": { "threatenedDuringDemo": true }
+        },
+        {
+          "id": "c1_dem_4",
+          "text": "Plead directly to Sandy for intervention [Plea DC 16] (you fucking worm)",
+          "next": "c1_post_demonstration",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "sandy": 2 },
+          "rollRequired": {
+            "dc": 16,
+            "stat": "obedience",
+            "successNext": "c1_sandy_intervenes",
+            "failureNext": "c1_post_demonstration"
+          },
+          "flags": { "pleadedToSandy": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_demonstration_hard",
+      "location": "punishment_room",
+      "npc": "sandy",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "\"Still standing there with that look,\" Sandy observes. \"Fine. Full demonstration.\" Multiple hands grab you—the Queens working together with practiced efficiency. Within minutes, you're strapped to a frame, spread-eagle and vulnerable. Sandy addresses her students like a professor. \"Note the tension in his jaw. The defiance in his eyes. This is what we call 'unbroken.'\" She snaps her fingers. \"Araph, tickling. Nancy, feet. Aish, when they've got him sweating, introduce yourself. Gaya, you manage the arousal. And Melissa...\" She smiles. \"You get cleanup duty if there's anything left.\" They descend on you like wolves. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_dh_1",
+          "text": "Scream defiance as long as you can (you fucking worm)",
+          "next": "c1_group_punishment",
+          "statChanges": { "endurance": -25, "sensitivity": 20, "arousal": 30 },
+          "affinityChanges": { "melissa": 10 },
+          "flags": { "fullGroupDemo": true }
+        },
+        {
+          "id": "c1_dh_2",
+          "text": "Break immediately—\"I'm sorry! I submit!\" (you fucking worm)",
+          "next": "c1_post_demonstration",
+          "statChanges": { "endurance": -15, "obedience": 15, "arousal": 15 },
+          "affinityChanges": { "sandy": 8 },
+          "flags": { "brokeQuickly": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_demonstration_extended",
+      "location": "punishment_room",
+      "npc": "araph",
+      "npcEmotion": "mean",
+      "bodyPart": "armpit",
+      "description": "Your curse dissolves into hysterical laughter as Araph's fingers find your armpits. \"What was that?\" She mocks, leaning close. \"I couldn't hear you over all that giggling.\" The tickling intensifies—not just fingers now, but nails, dragging feather-light then digging in. You can't breathe. You can't think. \"That's another five minutes,\" Sandy announces from the doorway. \"Want to try for ten?\" Araph shifts her attention to your ribs, your sides, your stomach. The forced laughter is agony—your muscles cramping, tears streaming. When it finally stops, you're a gasping, whimpering mess. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_de_1",
+          "text": "Wheeze out an apology (you fucking worm)",
+          "next": "c1_post_demonstration",
+          "statChanges": { "endurance": -20, "obedience": 15, "sensitivity": 15, "arousal": 15 },
+          "affinityChanges": { "sandy": 5, "araph": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_de_2",
+          "text": "Just lie there, broken (you fucking worm)",
+          "next": "c1_post_demonstration",
+          "statChanges": { "endurance": -20, "sensitivity": 15, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "brokenByTickling": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_post_demonstration_endured",
+      "location": "punishment_room",
+      "npc": "sandy",
+      "npcEmotion": "impressed",
+      "bodyPart": null,
+      "description": "Against all odds, you manage to keep from screaming or begging. Your body betrays you—the laughter, the thrashing, the tears—but you don't give them words. When Araph finally stops, even she looks mildly impressed. \"Tough one,\" she admits, climbing off you. Sandy approaches, studying your face. \"Interesting. Five minutes of Araph's attention and you didn't break.\" She runs a finger along your jaw. \"That's... rare. Either you have remarkable endurance or a very high pain threshold.\" She unlocks your restraints. \"Either way, you've earned a small measure of respect. Don't let it go to your head.\" The Queens watch you with new interest as you're helped to your feet. 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": "neutral",
+      "choices": [
+        {
+          "id": "c1_pde_1",
+          "text": "\"Thank you for the lesson, Mistress.\" (barely able to speak) (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 10, "araph": 5 },
+          "flags": { "earnedRespect": true }
+        },
+        {
+          "id": "c1_pde_2",
+          "text": "Stand silently, preserving dignity (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 8, "araph": 3, "melissa": -3 },
+          "flags": { "earnedRespect": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_post_demonstration",
+      "location": "punishment_room",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "When it finally ends, you're a wreck. Gasping, whimpering, muscles twitching from aftershocks. Araph climbs off you, flexing her fingers. \"Broken in five,\" she reports to Sandy. \"Standard.\" Sandy unlocks your restraints and helps you sit up—the gesture almost gentle, which somehow makes it worse. \"Now you know,\" she says quietly. \"That was five minutes. With one Queen. Using one technique.\" She lets that sink in. \"Imagine an hour. Multiple Queens. Multiple... approaches.\" She offers you water, which you take with shaking hands. \"Are we going to have any more defiance, TJ?\" The question is almost rhetorical. 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_pd_1",
+          "text": "\"No, Mistress. Never again.\" (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 10, "arousal": 15 },
+          "affinityChanges": { "sandy": 8 },
+          "flags": { "brokenByDemo": true }
+        },
+        {
+          "id": "c1_pd_2",
+          "text": "Shake your head weakly (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": { "brokenByDemo": true }
+        },
+        {
+          "id": "c1_pd_3",
+          "text": "\"I'll try not to, Mistress.\" (honest but not entirely broken) (you fucking worm)",
+          "next": "c1_first_assignment",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "sandy": 3, "araph": 2, "melissa": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_group_punishment",
+      "location": "punishment_room",
+      "npc": "sandy",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "What follows is a blur of sensation—overwhelming, inescapable. All five Queens work you simultaneously. Araph's tickling targets your most sensitive spots while Nancy forces her sweaty feet against your face, making you lick and worship. Aish grinds against you from behind, her post-workout body drenching you in her sweat. Gaya's hands are everywhere, teasing, edging, bringing you close and pulling back. And through it all, Melissa watches, waiting. By the time they're done, you don't know where you end and they begin. You've screamed, begged, laughed, cried, and done things with your tongue you'll never forget. Sandy finally calls a halt when you're barely conscious. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_gp_1",
+          "text": "Whisper \"Thank you, Mistresses\" (completely broken) (you fucking worm)",
+          "next": "c1_recovery",
+          "statChanges": { "endurance": -30, "obedience": 25, "sensitivity": 25, "arousal": 40 },
+          "affinityChanges": { "sandy": 10, "araph": 5, "nancy": 5, "aish": 5, "gaya": 5, "melissa": 5 },
+          "flags": { "totallyBroken": true }
+        },
+        {
+          "id": "c1_gp_2",
+          "text": "Pass out (you fucking worm)",
+          "next": "c1_recovery",
+          "statChanges": { "endurance": -35, "obedience": 20, "sensitivity": 25, "arousal": 35 },
+          "affinityChanges": {},
+          "flags": { "passedOut": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_recovery",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "You wake in a small room—not a cell, but not comfortable either. A cot, a sink, a toilet. No windows. Your body aches everywhere, and memories of what happened flood back. How long were you out? A tray of food sits by the door—simple but sustaining. You're alone for what feels like the first time since you woke in that dungeon. Time to take stock. Your wrists are raw from restraints. Various parts of you are hypersensitive from the attention they received. But you're alive. You're intact. And apparently, you've been given a reprieve. A note on the tray reads: \"Eat. Rest. Training begins tomorrow. - S\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_rec_1",
+          "text": "Eat and try to sleep (you fucking worm)",
+          "next": "c1_first_morning",
+          "statChanges": { "endurance": 10, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        },
+        {
+          "id": "c1_rec_2",
+          "text": "Examine the room for weaknesses (you fucking worm)",
+          "next": "c1_examine_room",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "searchedRoom": true }
+        },
+        {
+          "id": "c1_rec_3",
+          "text": "Cry quietly (you fucking worm)",
+          "next": "c1_first_morning",
+          "statChanges": { "endurance": 5, "obedience": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "criedAlone": true }
+        },
+        {
+          "id": "c1_rec_4",
+          "text": "Process what happened (and your confusing reactions to it) (you fucking worm)",
+          "next": "c1_self_reflection",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_first_assignment",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "neutral",
+      "bodyPart": null,
+      "description": "Sandy claps her hands, and the Queens settle back to watch. \"Time for your first assignment. Nothing too strenuous—I want to see how you handle instruction before we progress.\" She gestures, and Nancy rises, stretching languidly. \"You'll spend the next hour with Nancy. Basic foot worship introduction.\" Nancy smirks, already removing her combat boots. The smell hits you immediately—leather and sweat and something that makes your head swim. \"Don't worry,\" Nancy says, settling into a chair and extending one long leg toward you, \"I won't push too hard. First time.\" Her smile sharpens. \"Unless you give me a reason to.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_fa_1",
+          "text": "Kneel before Nancy without being told (you fucking worm)",
+          "next": "c1_nancy_worship_good",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "nancy": 8, "sandy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_fa_2",
+          "text": "Wait for explicit instructions (you fucking worm)",
+          "next": "c1_nancy_worship_neutral",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "nancy": 0 },
+          "flags": {}
+        },
+        {
+          "id": "c1_fa_3",
+          "text": "Hesitate visibly (you fucking worm)",
+          "next": "c1_nancy_worship_bad",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "nancy": -5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_fa_4",
+          "text": "\"I've never done this before.\" (honest) (you fucking worm)",
+          "next": "c1_nancy_worship_honest",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "nancy": 5, "sandy": 2 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": true
+    },
+    {
+      "id": "c1_first_assignment_gaya",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "amused",
+      "bodyPart": null,
+      "description": "Sandy notices your interaction with Gaya and smirks. \"I see someone's made an impression.\" She considers for a moment. \"Fine. Gaya, you may have him for his first assignment. Nothing too... intensive. Just establish baseline.\" Gaya rises with that serene smile, extending a hand to you. \"Come, TJ. Let me introduce you to patience.\" She leads you toward a side chamber, her grip gentle but unbreakable. Behind you, you hear Melissa's disappointed huff and Araph's laugh. \"Don't let her fool you,\" Araph calls after you. \"She's the cruelest one of all. She just hides it better.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_fag_1",
+          "text": "Follow Gaya obediently (you fucking worm)",
+          "next": "c1_gaya_session",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "gaya": 5 },
+          "flags": { "gayaFirstSession": true }
+        },
+        {
+          "id": "c1_fag_2",
+          "text": "\"What did she mean, cruelest?\" (you fucking worm)",
+          "next": "c1_gaya_session",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "gaya": 3 },
+          "flags": { "gayaFirstSession": true, "askedAboutCruelty": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_first_assignment_melissa",
+      "location": "main_hall",
+      "npc": "sandy",
+      "npcEmotion": "thoughtful",
+      "bodyPart": null,
+      "description": "Sandy watches your interaction with Melissa with raised eyebrows. \"Well, well. Attracted to the most dangerous one in the room? Either you're brave or stupid.\" She seems to consider something. \"Melissa, you may observe his first session, but no participation. Not yet.\" Melissa's pout is theatrical. \"You're no fun, Sandy.\" \"I'm keeping our new toy intact for more than one day.\" She turns back to you. \"You'll train with Nancy. Basic foot worship. Melissa will watch and... take notes.\" The hungry gleam in Melissa's eyes suggests her 'notes' will be detailed. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_fam_1",
+          "text": "Try not to think about Melissa watching (you fucking worm)",
+          "next": "c1_nancy_worship_watched",
+          "statChanges": {
+            "arousal": 20
+          },
+          "affinityChanges": { "melissa": 5 },
+          "flags": { "melissaWatching": true }
+        },
+        {
+          "id": "c1_fam_2",
+          "text": "Focus entirely on Nancy to avoid Melissa's gaze (you fucking worm)",
+          "next": "c1_nancy_worship_good",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "nancy": 5, "melissa": -3 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_worship_good",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "pleased",
+      "bodyPart": "feet",
+      "description": "You kneel without hesitation, positioning yourself at Nancy's feet. She makes an approving sound. \"Initiative. Sandy, are you sure this one isn't pre-trained?\" Her foot extends toward your face—long, elegant, slightly damp from her boots. \"Start with the soles. Long strokes with your tongue. Work your way to the toes.\" You comply, the taste of salt and leather filling your mouth. It's... not unpleasant, exactly. There's something almost meditative about the repetition, the submission. \"Good,\" Nancy murmurs, wiggling her toes. \"Very good. Now between the toes. Yes, just like that. You're a natural, TJ.\" The praise sends an unexpected warmth through you. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_nwg_1",
+          "text": "Continue diligently, seeking her approval (you fucking worm)",
+          "next": "c1_nancy_session_end_good",
+          "statChanges": { "obedience": 10, "arousal": 25 },
+          "affinityChanges": { "nancy": 10, "sandy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nwg_2",
+          "text": "Try to show extra enthusiasm (you fucking worm)",
+          "next": "c1_nancy_session_end_great",
+          "statChanges": { "obedience": 12, "arousal": 30 },
+          "affinityChanges": { "nancy": 15, "sandy": 5 },
+          "rollRequired": {
+            "dc": 12,
+            "stat": "obedience",
+            "successNext": "c1_nancy_session_end_great",
+            "failureNext": "c1_nancy_too_eager"
+          },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_worship_neutral",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "neutral",
+      "bodyPart": "feet",
+      "description": "You wait, uncertain. Nancy sighs. \"Sandy, your new pet needs hand-holding.\" She snaps her fingers, pointing at the floor. \"Kneel.\" You comply. \"Face toward my feet.\" You adjust. \"Now lean forward and start licking. Soles first. Full tongue strokes.\" Her instructions are clinical, almost bored. You follow them precisely, tasting salt and leather as your tongue works across her foot. \"Adequate,\" she says after a few minutes. \"No creativity, but you follow directions. We can work with that.\" It's not exactly praise, but it's not condemnation either. Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_nwn_1",
+          "text": "Continue following instructions exactly (you fucking worm)",
+          "next": "c1_nancy_session_end_neutral",
+          "statChanges": { "obedience": 5, "arousal": 20 },
+          "affinityChanges": { "nancy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nwn_2",
+          "text": "Try to show initiative now [Performance DC 13] (you fucking worm)",
+          "next": "c1_nancy_session_end_good",
+          "statChanges": { "obedience": 8, "arousal": 22 },
+          "affinityChanges": { "nancy": 8 },
+          "rollRequired": {
+            "dc": 13,
+            "stat": "obedience",
+            "successNext": "c1_nancy_session_end_good",
+            "failureNext": "c1_nancy_too_eager"
+          },
+          "flags": {}
+        },
+        {
+          "id": "c1_nwn_3",
+          "text": "Ask permission before trying something new [DC 12] (you fucking worm)",
+          "next": "c1_nancy_session_end_neutral",
+          "statChanges": { "obedience": 6, "arousal": 20 },
+          "affinityChanges": { "nancy": 6 },
+          "rollRequired": {
+            "dc": 12,
+            "stat": "obedience",
+            "successNext": "c1_nancy_permits_creativity",
+            "failureNext": "c1_nancy_session_end_neutral"
+          },
+          "flags": { "askedPermission": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_worship_bad",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "mean",
+      "bodyPart": "feet",
+      "description": "Your hesitation does not go unnoticed. Nancy's eyes narrow. \"Problem?\" Her voice is cold. \"Is my foot not good enough for you?\" Before you can respond, her other boot slams into your chest, knocking you backward. She's on you in an instant, one foot pressing down on your face. \"Let me make something clear,\" she says, grinding slightly. \"When I offer you the privilege of worshipping my feet, the correct response is gratitude. Not hesitation.\" The pressure increases. You can barely breathe. \"Now. Are you going to kiss my foot and thank me for the opportunity, or do I need to teach you a harder lesson?\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_nwb_1",
+          "text": "Kiss her foot and thank her profusely (you fucking worm)",
+          "next": "c1_nancy_session_recovery",
+          "statChanges": { "obedience": 10, "endurance": -5, "arousal": 15 },
+          "affinityChanges": { "nancy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nwb_2",
+          "text": "Try to push her off [Endurance DC 16] (you fucking worm)",
+          "next": "c1_nancy_punishment",
+          "statChanges": { "endurance": -15, "arousal": 15 },
+          "affinityChanges": { "nancy": -10, "sandy": -5 },
+          "rollRequired": {
+            "dc": 16,
+            "stat": "endurance",
+            "successNext": "c1_nancy_struggle_success",
+            "failureNext": "c1_nancy_punishment"
+          },
+          "flags": {}
+        },
+        {
+          "id": "c1_nwb_3",
+          "text": "Beg Sandy for intervention [Plea DC 15] (you fucking worm)",
+          "next": "c1_nancy_punishment",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "nancy": -8, "sandy": 2 },
+          "rollRequired": {
+            "dc": 15,
+            "stat": "obedience",
+            "successNext": "c1_sandy_intervenes_nancy",
+            "failureNext": "c1_nancy_punishment"
+          },
+          "flags": { "appealedToSandy": true }
+        },
+        {
+          "id": "c1_nwb_4",
+          "text": "Try to explain your hesitation [DC 14] (you fucking worm)",
+          "next": "c1_nancy_session_recovery",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "nancy": -3 },
+          "rollRequired": {
+            "dc": 14,
+            "stat": "obedience",
+            "successNext": "c1_nancy_listens",
+            "failureNext": "c1_nancy_punishment"
+          },
+          "flags": { "triedExplaining": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_worship_honest",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "amused",
+      "bodyPart": "feet",
+      "description": "Nancy's expression softens slightly—the first crack in her stern demeanor. \"Virgin territory?\" She sounds almost delighted. \"How rare.\" She extends her foot more gently than you expected. \"Then we start from the beginning. Kneel.\" You do. \"A foot is worshipped like this: you begin with reverence. Look at it. Appreciate it.\" Her toes flex. \"Then you make contact. Kiss first—here, on the top. Good. Now the toes. One by one.\" She guides you through each step. \"Now the sole. Tongue flat, long strokes.\" Her voice is almost kind. \"There. You're learning.\" Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_nwh_1",
+          "text": "\"Thank you for teaching me, Mistress.\" (you fucking worm)",
+          "next": "c1_nancy_session_end_good",
+          "statChanges": { "obedience": 10, "arousal": 20 },
+          "affinityChanges": { "nancy": 12, "sandy": 3 },
+          "flags": { "nancyTeaching": true }
+        },
+        {
+          "id": "c1_nwh_2",
+          "text": "Focus on being a good student (you fucking worm)",
+          "next": "c1_nancy_session_end_good",
+          "statChanges": { "obedience": 8, "arousal": 20 },
+          "affinityChanges": { "nancy": 10 },
+          "flags": { "nancyTeaching": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_worship_watched",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "teasing",
+      "bodyPart": "feet",
+      "description": "You try to focus on Nancy's feet, but you can feel Melissa's gaze burning into your back. Every movement you make, every lick and kiss, is being observed and catalogued. It's distracting in ways you didn't expect—part humiliation, part strange excitement. Nancy notices your distraction. \"Melissa watching you work?\" She sounds amused. \"Use it. Channel that nervous energy into enthusiasm.\" Her foot presses against your face. \"Show her what you can do. Consider it an audition.\" From behind you, Melissa's voice purrs: \"Oh, I'm definitely taking notes.\" Your face burns with embarrassment, but something else stirs too. Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_nww_1",
+          "text": "Put on a show for both of them (you fucking worm)",
+          "next": "c1_nancy_session_end_good",
+          "statChanges": { "obedience": 10, "arousal": 30 },
+          "affinityChanges": { "nancy": 10, "melissa": 10 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nww_2",
+          "text": "Try to ignore Melissa and focus on Nancy (you fucking worm)",
+          "next": "c1_nancy_worship_good",
+          "statChanges": { "obedience": 8, "arousal": 20 },
+          "affinityChanges": { "nancy": 8, "melissa": -3 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_session_end_good",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "An hour passes faster than you expected. When Nancy finally withdraws her feet, your jaw aches, your tongue is tired, and you've swallowed more sweat than you thought possible. But you also feel... something. Pride? Accomplishment? Nancy stretches languidly. \"Not bad for a first session.\" She turns to Sandy. \"He's got potential. Needs refinement, but the base instincts are there.\" Sandy nods approvingly. \"Excellent. TJ, you've completed your first official task. Return to your room. Rest. Dinner will be brought.\" As you rise on unsteady legs, Nancy adds: \"Same time tomorrow. I expect improvement.\" 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_nseg_1",
+          "text": "\"Yes, Mistress Nancy. Thank you.\" (you fucking worm)",
+          "next": "c1_end_day_good",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "nancy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nseg_2",
+          "text": "Bow and withdraw silently (you fucking worm)",
+          "next": "c1_end_day_good",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_session_end_great",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "amused",
+      "bodyPart": null,
+      "description": "\"Well!\" Nancy laughs, actually laughs, as she finally pulls her feet away. \"Sandy, where did you find this one?\" She's practically glowing. \"That was exceptional for a first session. The attention to detail, the enthusiasm...\" She fans herself dramatically. \"I haven't had a foot rub that good in months.\" Sandy looks surprised and pleased. \"High praise from the Foot Goddess.\" Nancy stands, ruffling your hair almost affectionately. \"He's earned dinner privileges. And...\" She considers. \"A pillow for his room. Reward good behavior and all that.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_nsegr_1",
+          "text": "\"Thank you, Mistress Nancy. I tried my best.\" (you fucking worm)",
+          "next": "c1_end_day_great",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "nancy": 8, "sandy": 5 },
+          "flags": { "earnedPillow": true }
+        },
+        {
+          "id": "c1_nsegr_2",
+          "text": "Blush at the praise (you fucking worm)",
+          "next": "c1_end_day_great",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "nancy": 5, "sandy": 3 },
+          "flags": { "earnedPillow": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_session_end_neutral",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "neutral",
+      "bodyPart": null,
+      "description": "\"Time.\" Sandy's voice cuts through your trance. Has it been an hour? Your jaw aches, tongue exhausted. Nancy withdraws her feet without ceremony, already reaching for her boots. \"Adequate,\" she reports to Sandy. \"Nothing special, nothing terrible. He follows instructions. Doesn't seem to have natural instincts, but that can be trained.\" She stands, not bothering to look at you. \"Same time tomorrow. I expect effort.\" Sandy gestures toward the corridor. \"You're dismissed to your room. Food will be provided. Think about what you learned today.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_nsen_1",
+          "text": "\"Yes, Mistress. Thank you for the lesson.\" (you fucking worm)",
+          "next": "c1_end_day_neutral",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "nancy": 3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nsen_2",
+          "text": "Leave quickly before anything else happens (you fucking worm)",
+          "next": "c1_end_day_neutral",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_too_eager",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "unimpressed",
+      "bodyPart": "feet",
+      "description": "Your enthusiasm backfires. In your eagerness to impress, you bite down slightly on her toe. Nancy's leg snaps back, and before you can apologize, her other foot connects with your chin. \"Ow!\" She's more annoyed than hurt. \"Teeth, idiot! No teeth!\" Sandy sighs. \"And he was doing so well.\" Nancy flexes her toes, glaring at you. \"Start over. From the beginning. And this time, think about what you're doing instead of trying to show off.\" The other Queens snicker. Your face burns with humiliation as you resume, much more carefully this time. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_nte_1",
+          "text": "\"I'm so sorry, Mistress. It won't happen again.\" (you fucking worm)",
+          "next": "c1_nancy_session_end_neutral",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "nancy": -3 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nte_2",
+          "text": "Focus intensely on being careful (you fucking worm)",
+          "next": "c1_nancy_session_end_neutral",
+          "statChanges": { "obedience": 3, "arousal": 15 },
+          "affinityChanges": { "nancy": -2 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_session_recovery",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "pleased",
+      "bodyPart": "feet",
+      "description": "You kiss her foot fervently, tasting leather and sweat, babbling gratitude between each press of your lips. \"Thank you, Mistress. Thank you for the opportunity. Please let me worship you.\" The pressure on your face eases. Nancy looks down at you with something like satisfaction. \"Better. Much better.\" She settles back into her chair. \"Now do it properly. Full hour. Show me you understand your place.\" You throw yourself into the task, determined not to hesitate again. By the end, your jaw aches, but Nancy nods approvingly. \"Correctable. That's good enough for day one.\" 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_nsr_1",
+          "text": "\"Thank you for correcting me, Mistress.\" (you fucking worm)",
+          "next": "c1_end_day_neutral",
+          "statChanges": { "obedience": 8, "arousal": 15 },
+          "affinityChanges": { "nancy": 5 },
+          "flags": {}
+        },
+        {
+          "id": "c1_nsr_2",
+          "text": "Bow your head in relief and exhaustion (you fucking worm)",
+          "next": "c1_end_day_neutral",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "nancy": 3 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_punishment",
+      "location": "punishment_room",
+      "npc": "nancy",
+      "npcEmotion": "angry",
+      "bodyPart": "feet",
+      "description": "Your resistance only makes things worse. Nancy doesn't even bother restraining you properly—she's strong enough to hold you down with just her legs while Sandy watches with disappointment. \"You had such potential,\" Sandy sighs. Nancy forces both feet onto your face, grinding, smothering. \"You will lick,\" she growls. \"And you will enjoy it. Or I will make the next hour the worst of your life.\" You have no choice. You lick. You worship. And eventually, through tears and exhaustion, you learn what it means to truly submit. When it's finally over, you're a broken, sweaty mess—and Nancy is smiling. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_np_1",
+          "text": "\"I'm sorry, Mistress Nancy.\" (genuinely broken) (you fucking worm)",
+          "next": "c1_end_day_bad",
+          "statChanges": { "obedience": 15, "endurance": -15, "arousal": 15 },
+          "affinityChanges": { "nancy": 5, "sandy": 0 },
+          "flags": { "brokenByNancy": true }
+        },
+        {
+          "id": "c1_np_2",
+          "text": "Say nothing (you have no words left) (you fucking worm)",
+          "next": "c1_end_day_bad",
+          "statChanges": { "obedience": 10, "endurance": -15, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "brokenByNancy": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_nancy_struggle_success",
+      "location": "main_hall",
+      "npc": "nancy",
+      "npcEmotion": "hostile",
+      "bodyPart": null,
+      "description": "Through sheer desperate strength, you manage to push Nancy off balance. She stumbles back—more from surprise than force. For a moment, there's shock in the room. Then Nancy's expression hardens into something dangerous. \"Did you just...?\" She advances. \"ARAPH. AISH.\" The other Queens are on you instantly. You fight, but three against one is impossible. They pin you down, Nancy standing over you with murder in her eyes. \"Sandy,\" she says quietly, \"I want him. Extended session. After what he just did.\" Sandy considers. \"Fine. But don't break him completely. He still has value.\" Nancy's smile promises suffering. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_nss_1",
+          "text": "Accept the coming punishment (you fucking worm)",
+          "next": "c1_extended_punishment",
+          "statChanges": { "endurance": -20, "arousal": 15 },
+          "affinityChanges": { "nancy": -15 },
+          "flags": { "extendedNancySession": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_gaya_session",
+      "location": "chamber",
+      "npc": "gaya",
+      "npcEmotion": "teasing",
+      "bodyPart": null,
+      "description": "Gaya's chamber is different from the rest of the academy—softer, more intimate, lit by candles that cast dancing shadows. \"Sit,\" she says, indicating a padded chair. You obey. She moves around you, fingers trailing across your shoulders. \"Araph thinks she's cruel because she makes them laugh. Nancy thinks she's powerful because she forces worship. Melissa thinks she's extreme because she pushes past limits.\" She stops in front of you, tilting your chin up. \"But I understand the deepest cruelty: making someone want something they can't have.\" Her thumb brushes your lips. \"Let me show you what I mean.\" Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_gs_1",
+          "text": "\"I'm ready to learn, Mistress.\" (you fucking worm)",
+          "next": "c1_gaya_session_begin",
+          "statChanges": {
+            "arousal": 25
+          },
+          "affinityChanges": { "gaya": 8 },
+          "flags": {}
+        },
+        {
+          "id": "c1_gs_2",
+          "text": "Swallow nervously but hold her gaze (you fucking worm)",
+          "next": "c1_gaya_session_begin",
+          "statChanges": {
+            "arousal": 20
+          },
+          "affinityChanges": { "gaya": 10 },
+          "flags": {}
+        },
+        {
+          "id": "c1_gs_3",
+          "text": "\"Are you going to hurt me?\" (you fucking worm)",
+          "next": "c1_gaya_session_begin",
+          "statChanges": {
+            "arousal": 20
+          },
+          "affinityChanges": { "gaya": 5 },
+          "flags": { "askedGayaAboutPain": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_gaya_session_begin",
+      "location": "chamber",
+      "npc": "gaya",
+      "npcEmotion": "pleased",
+      "bodyPart": "full_body",
+      "description": "\"Hurt you?\" Gaya laughs softly. \"No, TJ. I'm going to make you feel wonderful. So wonderful you'll beg for more. And then...\" She leans close. \"I'm going to stop.\" What follows is unlike anything you've experienced. Her hands are everywhere and nowhere, teasing, stroking, building sensation without ever quite delivering satisfaction. Time loses meaning. Your body strains toward release that never comes. \"Good,\" she whispers. \"Feel it building. Don't fight it. But know—you don't get to finish. Not until I say.\" After what might be minutes or hours, she finally stops, leaving you gasping and desperate. \"That's just a taste. Imagine a full session.\" Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_gsb_1",
+          "text": "Beg for release [Plea DC 18] (you fucking worm)",
+          "next": "c1_gaya_session_end",
+          "statChanges": { "arousal": 40, "obedience": 10 },
+          "affinityChanges": { "gaya": 12 },
+          "rollRequired": {
+            "dc": 18,
+            "stat": "obedience",
+            "successNext": "c1_gaya_mercy",
+            "failureNext": "c1_gaya_session_end"
+          },
+          "flags": { "beggedGaya": true }
+        },
+        {
+          "id": "c1_gsb_2",
+          "text": "Try to control your breathing [Endurance DC 15] (you fucking worm)",
+          "next": "c1_gaya_session_end",
+          "statChanges": { "arousal": 35, "obedience": 5 },
+          "affinityChanges": { "gaya": 8 },
+          "rollRequired": {
+            "dc": 15,
+            "stat": "endurance",
+            "successNext": "c1_gaya_impressed",
+            "failureNext": "c1_gaya_session_end"
+          },
+          "flags": {}
+        },
+        {
+          "id": "c1_gsb_3",
+          "text": "\"That was... incredible and terrible.\" (you fucking worm)",
+          "next": "c1_gaya_session_end",
+          "statChanges": { "arousal": 35, "obedience": 8 },
+          "affinityChanges": { "gaya": 15 },
+          "flags": {}
+        },
+        {
+          "id": "c1_gsb_4",
+          "text": "Try to resist entirely [Defiance DC 20] (you fucking worm)",
+          "next": "c1_gaya_session_end",
+          "statChanges": { "arousal": 30 },
+          "affinityChanges": { "gaya": -5 },
+          "rollRequired": {
+            "dc": 20,
+            "stat": "endurance",
+            "successNext": "c1_gaya_impressed",
+            "failureNext": "c1_gaya_annoyed"
+          },
+          "flags": { "resistedGaya": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_gaya_session_end",
+      "location": "chamber",
+      "npc": "gaya",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "Gaya strokes your hair almost tenderly as you come down from the edge. \"You did well,\" she murmurs. \"Most new ones cry or beg much sooner.\" She hands you a glass of water. \"The arousal will fade. Slowly. The memory won't.\" She helps you stand on shaky legs. \"Report to Sandy. Tell her I give my approval. You have good instincts for denial.\" Her smile is serene. \"We'll work together again soon. And TJ?\" She cups your face. \"Don't touch yourself tonight. I'll know if you do. And the punishment...\" Her eyes glitter. \"...would be memorable.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_gse_1",
+          "text": "\"I won't, Mistress. I promise.\" (you fucking worm)",
+          "next": "c1_end_day_gaya",
+          "statChanges": { "obedience": 10, "arousal": 15 },
+          "affinityChanges": { "gaya": 8 },
+          "flags": { "promisedGaya": true }
+        },
+        {
+          "id": "c1_gse_2",
+          "text": "Nod weakly, not trusting your voice (you fucking worm)",
+          "next": "c1_end_day_gaya",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": { "gaya": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_examine_room",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "You search methodically—walls, floor, ceiling, the thin mattress, even the drain. Nothing. The room is escape-proof, designed by someone who understood desperate prisoners. The door is solid steel with no handle on the inside. A small slot at the bottom—for food trays, presumably. The walls are smooth concrete, the ceiling too high to reach. No vents, no windows, no weaknesses. You slump against the wall, defeated. Whoever built this place knew what they were doing. Your only way out is through them. Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_er_1",
+          "text": "Accept the situation and rest (you fucking worm)",
+          "next": "c1_first_morning",
+          "statChanges": { "endurance": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "acceptedPrison": true }
+        },
+        {
+          "id": "c1_er_2",
+          "text": "Keep looking (denial) (you fucking worm)",
+          "next": "c1_keep_searching",
+          "statChanges": { "endurance": -5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_keep_searching",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "You search again. And again. Hours pass—or what feels like hours. The food grows cold on its tray. Your fingers are raw from testing every inch of wall. Eventually, exhaustion wins. You collapse onto the cot without having found anything. Your last thought before sleep claims you is that you need a new strategy. Fighting the building won't work. You need to be smarter. Play the game. Find weaknesses in the people, not the architecture. It's a cold comfort, but it's something. 'Lick it clean, you filthy bitch,' she commands.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_ks_1",
+          "text": "Sleep (you fucking worm)",
+          "next": "c1_first_morning",
+          "statChanges": { "endurance": -5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "strategicMindset": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_self_reflection",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "You sit on the cot, trying to process everything. You were kidnapped. You're being held prisoner. Women are going to torture you, dominate you, use you. This should be terrifying. It IS terrifying. So why... why did your body respond the way it did? The way Nancy's foot felt against your face. The way Gaya's eyes stripped you bare. The way your heart raced when Melissa looked at you like prey. You should be disgusted. Instead, there's a confusing warmth, a shameful excitement mixing with the fear. Maybe they researched you for a reason. Maybe they knew something about you that you didn't even know about yourself. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_sr_1",
+          "text": "Accept that maybe you're exactly where you belong (you fucking worm)",
+          "next": "c1_first_morning",
+          "statChanges": { "obedience": 10, "arousal": 20 },
+          "affinityChanges": {},
+          "flags": { "acceptedNature": true }
+        },
+        {
+          "id": "c1_sr_2",
+          "text": "Reject the feelings as Stockholm syndrome (you fucking worm)",
+          "next": "c1_first_morning",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "denialMode": true }
+        },
+        {
+          "id": "c1_sr_3",
+          "text": "Decide to explore these feelings while staying strategic (you fucking worm)",
+          "next": "c1_first_morning",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "strategicSubmission": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_extended_punishment",
+      "location": "punishment_room",
+      "npc": "nancy",
+      "npcEmotion": "cruel",
+      "bodyPart": "feet",
+      "description": "The next several hours are a blur of foot worship, trampling, and humiliation. Nancy is relentless, using you as a footstool, making you lick her feet clean after she deliberately steps in water, forcing your face between her toes until you can't breathe. Other Queens drift in and out to watch. By the end, you're completely broken—you'd do anything to make it stop. \"Had enough?\" Nancy asks, pressing her foot against your throat. You nod desperately. \"Say it.\" \"I'm yours, Mistress. I'm sorry. I'll never resist again.\" She releases you. \"We'll see. Take him to his room. He's earned his rest.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_ep_1",
+          "text": "(Too broken to choose) (you fucking worm)",
+          "next": "c1_end_day_bad",
+          "statChanges": { "obedience": 25, "endurance": -25, "sensitivity": 20, "arousal": 15 },
+          "affinityChanges": { "nancy": 5 },
+          "flags": { "totallyBrokenByNancy": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_aish_intro_struggle",
+      "location": "workout_pit",
+      "npc": "aish",
+      "npcEmotion": "amused",
+      "bodyPart": "armpit",
+      "description": "Your struggle only presses your face deeper into Aish's sweaty armpit. The smell is overwhelming—salt and musk and raw femininity. \"Oh, a fighter!\" She laughs, tightening her grip. \"I love fighters. They squirm so nicely.\" Sandy approaches leisurely. \"Aish, try not to smother him completely. He just got here.\" \"Five more minutes?\" \"Two.\" Those two minutes are an eternity. Aish grinds your face into her armpit, her sweat covering you, filling your nose and mouth. When she finally releases you, you're gasping and drenched. \"Mmm, marked my territory,\" she purrs. \"He smells like me now.\" Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_ais_1",
+          "text": "Gasp for air but say nothing (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "endurance": -10, "sensitivity": 10, "arousal": 20 },
+          "affinityChanges": { "aish": 0 },
+          "flags": { "aishMarked": true }
+        },
+        {
+          "id": "c1_ais_2",
+          "text": "\"That was disgusting!\" (still gasping) (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "endurance": -10, "sensitivity": 10, "arousal": 15 },
+          "affinityChanges": { "aish": -10, "sandy": -5 },
+          "flags": { "aishMarked": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_aish_intro_submit",
+      "location": "workout_pit",
+      "npc": "aish",
+      "npcEmotion": "pleased",
+      "bodyPart": "armpit",
+      "description": "You go limp, accepting the smothering. Something about it—the heat, the smell, the overwhelming power—triggers an unexpected response. Aish notices immediately. \"Oh my,\" she breathes. \"Sandy, we have a natural here.\" She shifts, pressing your face even deeper. \"You like this, don't you?\" Your body's response speaks for itself. After what feels like an eternity, she releases you. But gently. Almost affectionately. \"I'm Aish. The Sweat Sovereign. You and I are going to have so much fun together.\" She winks. \"Come find me after your workouts. I'll have special tasks for you.\" She grinds her wet pussy against your face, forcing you to taste her arousal.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_aisub_1",
+          "text": "\"Yes, Mistress Aish.\" (face burning) (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 10, "arousal": 30, "sensitivity": 5 },
+          "affinityChanges": { "aish": 15 },
+          "flags": { "aishFavorite": true }
+        },
+        {
+          "id": "c1_aisub_2",
+          "text": "Nod, unable to meet her eyes (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 8, "arousal": 25 },
+          "affinityChanges": { "aish": 10 },
+          "flags": { "aishFavorite": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_end_day_good",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "Back in your room, you finally have a moment to breathe. The day replays in fragments: Sandy's cold authority, the Queens' varying cruelties, the unexpected moments of... pleasure? You eat mechanically, barely tasting the food. Your body aches in places you didn't know could ache. But you're alive. You survived Day One. A small victory. As you drift toward sleep, Sandy's words echo: 'They all break eventually.' Maybe. But not today. And tomorrow, you'll be smarter. More careful. More aware. This is a game with hidden rules, and you're just beginning to learn them. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_edg_1",
+          "text": "Sleep and prepare for tomorrow (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": { "endurance": 15, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_end_day_great",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "Your room seems almost welcoming tonight—especially with the new pillow Nancy earned for you. A reward. Your first reward. It shouldn't mean anything, but it does. You impressed them. Or at least, you didn't disappoint them. In a place like this, that counts as victory. The food tastes better than it probably is. You find yourself thinking about Nancy's approval, about Sandy's nod, about the other Queens watching with interest instead of contempt. Maybe... maybe survival here isn't just about enduring. Maybe there's a way to thrive. Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": "soft",
+      "choices": [
+        {
+          "id": "c1_edgr_1",
+          "text": "Sleep well for the first time (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": { "endurance": 20, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "goodFirstDay": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_end_day_neutral",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "Your room is cold and impersonal, but it's shelter. Privacy. Safety, at least until morning. You eat the provided food without enthusiasm, replay the day's events without conclusion. You neither excelled nor failed catastrophically. In an environment designed to break you, mediocrity might be its own form of success. Sleep comes fitfully, interrupted by dreams of feet and laughter and hands that won't stop moving. You wake several times, disoriented, before exhaustion finally pulls you under completely. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_edn_1",
+          "text": "Endure until morning (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": { "endurance": 10, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_end_day_bad",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "Someone carries you to your room—you're not sure who. The food sits untouched; you can't imagine eating. Every part of you hurts. Your pride, especially. You thought you were strong. You thought you could resist. Now you know better. In the darkness, you curl into yourself and try not to cry. Tomorrow will be worse if they see weakness. Tomorrow you need to be smarter. But tonight... tonight you can admit you're terrified. And somewhere deep down, you can admit something else: a part of you responded to their dominance in ways you don't want to examine. Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": "humiliating",
+      "choices": [
+        {
+          "id": "c1_edb_1",
+          "text": "Cry yourself to sleep (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": { "endurance": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "criedToSleep": true }
+        },
+        {
+          "id": "c1_edb_2",
+          "text": "Force yourself to eat and plan (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": { "endurance": 10, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "resilientDespitePunishment": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_end_day_gaya",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "The arousal doesn't fade. Gaya promised it would, slowly, but hours later you still feel the phantom sensation of her hands, the unbearable edge she kept you on. The temptation to touch yourself is overwhelming. But her warning echoes: 'I'll know.' You believe her. So you lie there, aching, frustrated, your body screaming for release you can't have. Sleep comes eventually, but it's interrupted by vivid dreams. Of Gaya. Of edges. Of whispered promises and threats. When you wake, you're harder than ever. And somewhere, you know, Gaya is smiling. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_edga_1",
+          "text": "Endure the frustration (obey Gaya) (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": { "obedience": 10, "arousal": 30 },
+          "affinityChanges": { "gaya": 10 },
+          "flags": { "obeyedGaya": true }
+        },
+        {
+          "id": "c1_edga_2",
+          "text": "Give in to temptation (disobey Gaya) (you fucking worm)",
+          "next": "c1_chapter_end_gaya_betrayal",
+          "statChanges": {
+            "arousal": -10
+          },
+          "affinityChanges": { "gaya": -15 },
+          "flags": { "betrayedGaya": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_chapter_end_gaya_betrayal",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "The relief is brief. Almost immediately, guilt floods in—and something else. A sense of dread. How would she know? Could she know? It's impossible. And yet... The next morning, when Gaya passes you in the hall, her serene smile has edges you didn't notice before. \"Sleep well?\" she asks. You mumble something affirmative. She nods. \"We'll have another session soon. A longer one.\" Her eyes hold yours. \"I think you have much to learn about self-control.\" She knows. Somehow, impossibly, she knows. And you understand: whatever punishment is coming will make yesterday seem gentle. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_cegb_1",
+          "text": "Accept that you've earned punishment (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": { "obedience": 5, "arousal": 15 },
+          "affinityChanges": {},
+          "flags": { "awaitingGayaPunishment": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_first_morning",
+      "location": "dormitory",
+      "npc": null,
+      "npcEmotion": null,
+      "bodyPart": null,
+      "description": "Light—artificial, harsh—floods your room. A bell sounds from somewhere distant. \"Rise and prepare!\" Sandy's voice, amplified, echoes through the building. \"Breakfast in ten. Late arrivals forfeit food and earn... additional duties.\" You drag yourself out of bed. Every muscle protests. The small sink provides cold water for your face. No mirror—probably intentional. The door clicks unlocked. Day Two of your new existence begins. Whatever comes next, you're as ready as you'll ever be. Which, you suspect, isn't ready at all. Fuck, the humiliation makes you harder than ever.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_fm_1",
+          "text": "Head to breakfast immediately (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": { "sandy": 2 },
+          "flags": {}
+        },
+        {
+          "id": "c1_fm_2",
+          "text": "Take a moment to compose yourself first (you fucking worm)",
+          "next": "c1_chapter_end",
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "composedMorning": true }
+        }
+      ],
+      "eventRoll": true
+    },
+    {
+      "id": "c1_sandy_punishment_light",
+      "location": "punishment_room",
+      "npc": "sandy",
+      "npcEmotion": "pleased",
+      "bodyPart": null,
+      "description": "Sandy's expression softens marginally at your apology. \"Good. You're learning.\" She doesn't take you to the main punishment room—instead, a smaller chamber with a simple padded bench. \"Twenty minutes with me. Light discipline. Consider it an orientation to consequences.\" What follows is uncomfortable but not unbearable: spanking, some light humiliation, being made to kneel while she explains exactly how fortunate you are that she's being merciful. By the end, you're red-faced and sore, but intact. \"Remember this feeling,\" Sandy says, helping you up. \"It's the gentlest consequence you'll experience here. Don't make me escalate.\" Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_spl_1",
+          "text": "\"Thank you for teaching me, Mistress.\" (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 10, "endurance": -5, "arousal": 15 },
+          "affinityChanges": { "sandy": 8 },
+          "flags": {}
+        },
+        {
+          "id": "c1_spl_2",
+          "text": "Nod and follow her (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 8, "endurance": -5, "arousal": 15 },
+          "affinityChanges": { "sandy": 5 },
+          "flags": {}
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_sandy_punishment_hard",
+      "location": "punishment_room",
+      "npc": "sandy",
+      "npcEmotion": "cruel",
+      "bodyPart": null,
+      "description": "\"Defiance after failure,\" Sandy observes. \"Interesting choice.\" She snaps her fingers, and Araph appears from the shadows. \"Thirty minutes. Make him regret it.\" What follows is a masterclass in tickle torture. Araph restrains you and systematically finds every sensitive spot—feet, ribs, armpits, thighs, neck. She varies pressure and location until you can't breathe from forced laughter. When it finally ends, you're a twitching, sobbing mess. Sandy surveys the damage. \"Learn anything?\" You can only nod desperately. \"Good. Clean him up and bring him to the main hall. He has lessons to absorb.\" Your cock twitches involuntarily as you inhale the musky scent.",
+      "toneOverride": "aggressive",
+      "choices": [
+        {
+          "id": "c1_sph_1",
+          "text": "Follow meekly after being cleaned up (you fucking worm)",
+          "next": "c1_sandy_explains",
+          "statChanges": { "obedience": 15, "endurance": -15, "sensitivity": 15, "arousal": 15 },
+          "affinityChanges": { "sandy": 5, "araph": 5 },
+          "flags": { "ticklePunished": true }
+        }
+      ],
+      "eventRoll": false
+    },
+    {
+      "id": "c1_chapter_end",
+      "location": "dormitory",
+      "npc": "sandy",
+      "npcEmotion": "neutral",
+      "bodyPart": null,
+      "description": "As the first night ends and your second day begins, you take stock. You've survived your introduction to Sandy's academy. You've met the Queens—some more intimately than others. You've learned some rules, broken others, and faced consequences. You're not the same person who woke in that dungeon cell. That person had illusions of quick escape, of resistance, of maintaining some sense of self intact. Now you understand: this place will change you. The only questions are how much, how quickly, and whether any part of your former self will survive.\n\nCHAPTER 1 COMPLETE - \"Fresh Meat\"\n\nYour journey has only begun. The Queens await. Sandy watches. And somewhere in the depths of this academy, your fate is still being written. Your balls ache from the denied release, precum dripping pathetically.",
+      "toneOverride": null,
+      "choices": [
+        {
+          "id": "c1_ce_1",
+          "text": "[Continue to Chapter 2] (you fucking worm)",
+          "next": null,
+          "statChanges": {
+            "arousal": 15
+          },
+          "affinityChanges": {},
+          "flags": { "chapter1Complete": true }
+        }
+      ],
+      "eventRoll": false
+    }
+  ]
+}

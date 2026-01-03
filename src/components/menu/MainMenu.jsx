@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '../ui/Button'
 import { saveSystem } from '../../engine/SaveSystem'
-import { Settings, ChevronLeft, Play, FileJson } from 'lucide-react'
+import { Settings, ChevronLeft, Play, FileJson, Sparkles } from 'lucide-react'
 
 const SCENARIOS_KEY = 'fd-scenarios'
 
 export function MainMenu({ 
-  onStartNewGame, 
+  onStartNewGame,
+  onStartAIGame,
   onStartScenario,
   getAvailableScenarios,
   onLoadGame, 
@@ -139,6 +140,16 @@ export function MainMenu({
                   onClick={onStartNewGame}
                 >
                   Start New Game
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="w-full"
+                  onClick={onStartAIGame}
+                >
+                  <Sparkles size={18} className="mr-2" />
+                  Start AI Game
                 </Button>
 
                 <Button

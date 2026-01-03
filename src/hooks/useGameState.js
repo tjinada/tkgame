@@ -110,6 +110,24 @@ export function useGameState() {
     }
   }, [])
 
+  // Start a new AI-only game (no JSON scenario)
+  const startAIOnlyGame = useCallback(async () => {
+    if (!gameEngineRef.current) return
+    
+    setIsLoading(true)
+    setStreamingContent('')
+    try {
+      await gameEngineRef.current.startAIOnlyGame()
+      setIsGameRunning(true)
+      setState(gameEngineRef.current.getState())
+      
+      // Enable auto-save
+      saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
   // Get available scenarios from localStorage
   const getAvailableScenarios = useCallback(() => {
     if (!gameEngineRef.current) return []
@@ -326,6 +344,7 @@ export function useGameState() {
 
     // Actions
     startNewGame,
+    startAIOnlyGame,
     startScenario,
     startWithScenario,
     getAvailableScenarios,

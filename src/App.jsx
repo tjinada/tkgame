@@ -11,6 +11,7 @@ function App() {
     isInitialized, 
     isGameRunning, 
     startNewGame,
+    startAIOnlyGame,
     startWithScenario,
     getAvailableScenarios,
     continueGame, 
@@ -60,6 +61,7 @@ function App() {
         <SlideshowBackground />
         <MainMenu
           onStartNewGame={startNewGame}
+          onStartAIGame={startAIOnlyGame}
           onStartScenario={handleStartScenario}
           getAvailableScenarios={getAvailableScenarios}
           onLoadGame={loadGame}

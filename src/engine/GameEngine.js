@@ -231,6 +231,49 @@ export class GameEngine {
   }
 
   /**
+   * Start a new game with pure AI generation (no JSON scenarios)
+   */
+  async startAIOnlyGame() {
+    this.stateManager.reset()
+    this.eventSystem.clearHistory()
+    
+    // Set content router to AI-only mode
+    this.contentRouter.setMode('ai-only')
+    
+    // No scenario loaded
+    this.currentScenario = null
+    
+    debugLog.game('Starting AI-only game')
+    
+    // Generate opening scene via AI
+    const openingPrompt = this.contentRouter.promptBuilder.buildOpeningPrompt(this._getContext())
+    
+    const openingScene = await this.contentRouter.generateFromActionStreaming(
+      openingPrompt,
+      this._getContext(),
+      (delta, fullContent) => this._emit('streamChunk', { delta, fullContent })
+    )
+    
+    if (openingScene) {
+      openingScene.choices = this.filterChoicesByConditions(openingScene.choices)
+      this.currentScene = openingScene
+      this.stateManager.setCurrentScene(openingScene.id)
+      this.stateManager.setCurrentLocation(openingScene.location || 'main_hall')
+      
+      if (openingScene.npc) {
+        this.stateManager.setCurrentNpc(openingScene.npc)
+      }
+      
+      this.toneEngine.updateStateTone()
+      this._emit('sceneChange', openingScene)
+    }
+    
+    this.isRunning = true
+    debugLog.game('AI-only game started', { sceneId: openingScene?.id })
+    return openingScene
+  }
+
+  /**
    * Start a game with a scenario from localStorage by ID
    * @param {string} scenarioId - The scenario ID
    */
@@ -426,6 +469,12 @@ export class GameEngine {
             nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
             this.currentScene = nextScene
             this.stateManager.setCurrentScene(nextScene.id)
+            if (nextScene.location) {
+              this.stateManager.setCurrentLocation(nextScene.location)
+            }
+            if (nextScene.npc) {
+              this.stateManager.setCurrentNpc(nextScene.npc)
+            }
             result.newScene = nextScene
             this._emit('sceneChange', nextScene)
           }
@@ -438,6 +487,12 @@ export class GameEngine {
         nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
         this.currentScene = nextScene
         this.stateManager.setCurrentScene(nextScene.id)
+        if (nextScene.location) {
+          this.stateManager.setCurrentLocation(nextScene.location)
+        }
+        if (nextScene.npc) {
+          this.stateManager.setCurrentNpc(nextScene.npc)
+        }
         result.newScene = nextScene
         this._emit('sceneChange', nextScene)
       }
@@ -524,6 +579,14 @@ export class GameEngine {
       nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
       this.currentScene = nextScene
       this.stateManager.setCurrentScene(nextScene.id)
+      
+      // Update location and NPC from AI response
+      if (nextScene.location) {
+        this.stateManager.setCurrentLocation(nextScene.location)
+      }
+      if (nextScene.npc) {
+        this.stateManager.setCurrentNpc(nextScene.npc)
+      }
       
       // Apply any stat/affinity changes from AI response
       if (nextScene.statChanges) {

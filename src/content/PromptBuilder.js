@@ -70,7 +70,9 @@ You MUST format your narrative using these markers:
 Provide your response as JSON:
 {
   "description": "YOUR FORMATTED NARRATIVE HERE (200-400 words, using the *narrative* and dialogue format above)",
+  "npc": "sandy|araph|nancy|aish|gaya|melissa",
   "npcEmotion": "neutral|smirk|angry|pleased|cruel|amused|bored|hostile|teasing",
+  "location": "main_hall|classroom|workout_pit|chamber|dormitory|punishment_room|garden|dungeon",
   "choices": [
     {"id": "1", "text": "Choice description", "type": "submit"},
     {"id": "2", "text": "Choice with roll", "type": "defy", "rollRequired": {"dc": 15, "stat": "obedience"}},
@@ -83,7 +85,24 @@ Provide your response as JSON:
 Types: submit, defy, observe, beg, custom
 Stats for rolls: obedience, endurance, arousal, sensitivity
 
-STYLE: Dark, gritty Arcane-inspired aesthetic. Casual, profane language. No mercy, no romance - only domination.`
+STYLE: Dark, gothic aesthetic. Casual, profane language. No mercy, no romance - only domination.`
+  }
+
+  /**
+   * Build the opening prompt for a new AI-only game
+   * @param {Object} context - Current game context
+   * @returns {string}
+   */
+  buildOpeningPrompt(context) {
+    return `BEGIN THE GAME.
+
+TJ has just arrived at the fetish school/dungeon as the newest slave. He stands in the main hall, uncertain and vulnerable. Sandy, the Head Mistress, is about to greet her fresh meat.
+
+Set the scene with a dark, gothic aesthetic. Introduce Sandy with her signature cruel elegance. Establish the power dynamic immediately - TJ is the lowest of the low, and Sandy will make sure he knows it.
+
+This is Day 1, Turn 1. TJ has no allies, no status, and no idea what he's gotten himself into.
+
+Generate the opening scene with vivid description and give TJ his first choices.`
   }
 
   /**
@@ -125,7 +144,9 @@ STYLE: Dark, gritty Arcane-inspired aesthetic. Casual, profane language. No merc
         return {
           id: `ai-${Date.now()}`,
           description: parsed.description || response,
+          npc: parsed.npc || 'sandy',
           npcEmotion: parsed.npcEmotion || 'neutral',
+          location: parsed.location || 'main_hall',
           choices: parsed.choices || this._getDefaultChoices(),
           statChanges: parsed.statChanges || {},
           affinityChanges: parsed.affinityChanges || {},
@@ -140,7 +161,9 @@ STYLE: Dark, gritty Arcane-inspired aesthetic. Casual, profane language. No merc
     return {
       id: `ai-${Date.now()}`,
       description: response,
+      npc: 'sandy',
       npcEmotion: 'neutral',
+      location: 'main_hall',
       choices: this._getDefaultChoices(),
       statChanges: {},
       affinityChanges: {},
