@@ -1,5 +1,6 @@
 import npcsData from '../data/npcs.json'
 import configData from '../data/config.json'
+import { settingsService } from '../services/SettingsService'
 
 export class PromptBuilder {
   constructor(options = {}) {
@@ -7,6 +8,89 @@ export class PromptBuilder {
     this.contextLimit = options.contextLimit || 10
     this.npcs = npcsData.npcs
     this.toneRules = configData.toneRules
+  }
+
+  /**
+   * Build AI behavior instructions based on settings
+   * @returns {string}
+   */
+  _buildBehaviorInstructions() {
+    const settings = settingsService.getAll()
+    const instructions = []
+
+    // Humiliation level
+    const humiliationMap = {
+      none: 'Do NOT include any humiliation or degradation.',
+      mild: 'Include light teasing and mild embarrassment only.',
+      moderate: 'Include moderate verbal degradation and humiliation.',
+      heavy: 'Emphasize heavy humiliation, degradation, and psychological dominance.',
+      extreme: 'Maximize humiliation - constant degradation, personal insults, emphasize worthlessness.',
+    }
+    if (humiliationMap[settings.aiHumiliationLevel]) {
+      instructions.push(`HUMILIATION: ${humiliationMap[settings.aiHumiliationLevel]}`)
+    }
+
+    // Swearing level
+    const swearingMap = {
+      none: 'Do NOT use any profanity or swear words.',
+      mild: 'Use minimal profanity - occasional "damn" or "hell" only.',
+      moderate: 'Use moderate profanity naturally in dialogue.',
+      heavy: 'Use heavy profanity freely - crude, vulgar language throughout.',
+    }
+    if (swearingMap[settings.aiSwearingLevel]) {
+      instructions.push(`PROFANITY: ${swearingMap[settings.aiSwearingLevel]}`)
+    }
+
+    // Response length
+    const lengthMap = {
+      short: 'Keep responses SHORT: 100-200 words maximum.',
+      medium: 'Keep responses MEDIUM length: 200-400 words.',
+      long: 'Write LONG detailed responses: 400-600 words.',
+    }
+    if (lengthMap[settings.aiResponseLength]) {
+      instructions.push(`LENGTH: ${lengthMap[settings.aiResponseLength]}`)
+    }
+
+    // Conversational style
+    const styleMap = {
+      narrative: 'Focus on DESCRIPTIVE NARRATIVE - rich descriptions, actions, atmosphere. Minimal dialogue.',
+      balanced: 'Balance narrative description with character dialogue.',
+      conversational: 'Focus on DIALOGUE - lots of spoken lines, character interactions, verbal exchanges.',
+    }
+    if (styleMap[settings.aiConversationalStyle]) {
+      instructions.push(`STYLE: ${styleMap[settings.aiConversationalStyle]}`)
+    }
+
+    // Intensity
+    const intensityMap = {
+      gentle: 'Keep scenes GENTLE - soft domination, more teasing than torment.',
+      moderate: 'MODERATE intensity - balance of control and cruelty.',
+      intense: 'INTENSE scenes - strong domination, serious torment, no holding back.',
+      brutal: 'BRUTAL intensity - merciless, relentless, maximum cruelty and dominance.',
+    }
+    if (intensityMap[settings.aiIntensity]) {
+      instructions.push(`INTENSITY: ${intensityMap[settings.aiIntensity]}`)
+    }
+
+    // Fetish focus
+    const fetishFocus = settings.aiFetishFocus || []
+    if (fetishFocus.length > 0) {
+      const fetishLabels = {
+        tickling: 'tickling/tickle torture',
+        feet: 'foot worship/foot domination',
+        sweat: 'sweat worship/scent play',
+        edging: 'edging/orgasm denial',
+        pot: 'post-orgasm torture',
+        bondage: 'bondage/restraints',
+        verbal: 'verbal humiliation/degradation',
+      }
+      const focused = fetishFocus.map(f => fetishLabels[f] || f).join(', ')
+      instructions.push(`FETISH FOCUS: Emphasize these fetishes when appropriate: ${focused}`)
+    }
+
+    return instructions.length > 0 
+      ? '\n=== BEHAVIOR SETTINGS ===\n' + instructions.join('\n') + '\n'
+      : ''
   }
 
   /**
@@ -27,6 +111,9 @@ export class PromptBuilder {
     
     // Check for critical flags
     const criticalContext = this._getCriticalContext(flags)
+    
+    // Get behavior settings
+    const behaviorInstructions = this._buildBehaviorInstructions()
 
     return `You are Sandy, the Head Mistress game master for "Fetish Dominion: The Infinite Slave Saga" - an adult text-based RPG. You narrate scenarios for the player (TJ), the first and lowest-ranking male slave in your fetish school/dungeon.
 
@@ -42,6 +129,7 @@ ${npcProfiles}
 
 TONE GUIDELINES:
 ${toneGuidelines}
+${behaviorInstructions}
 
 === CRITICAL FORMATTING RULES ===
 

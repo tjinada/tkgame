@@ -150,6 +150,121 @@ export function SettingsTab() {
           </div>
         </section>
 
+        {/* AI Behavior Settings */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-text-primary">AI Behavior</h3>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => handleResetCategory('aiBehavior')}
+            >
+              <RotateCcw size={14} className="mr-1" /> Reset
+            </Button>
+          </div>
+          
+          <div className="grid gap-4 p-4 bg-background-tertiary/50 rounded-lg">
+            <Select
+              label="Humiliation Level"
+              value={settings.aiHumiliationLevel}
+              onChange={(e) => handleChange('aiHumiliationLevel', e.target.value)}
+              options={[
+                { value: 'none', label: 'None' },
+                { value: 'mild', label: 'Mild' },
+                { value: 'moderate', label: 'Moderate' },
+                { value: 'heavy', label: 'Heavy' },
+                { value: 'extreme', label: 'Extreme' },
+              ]}
+              hint="How much verbal degradation and humiliation"
+            />
+            
+            <Select
+              label="Swearing Level"
+              value={settings.aiSwearingLevel}
+              onChange={(e) => handleChange('aiSwearingLevel', e.target.value)}
+              options={[
+                { value: 'none', label: 'None' },
+                { value: 'mild', label: 'Mild' },
+                { value: 'moderate', label: 'Moderate' },
+                { value: 'heavy', label: 'Heavy' },
+              ]}
+              hint="Amount of profanity in dialogue"
+            />
+            
+            <Select
+              label="Response Length"
+              value={settings.aiResponseLength}
+              onChange={(e) => handleChange('aiResponseLength', e.target.value)}
+              options={[
+                { value: 'short', label: 'Short (100-200 words)' },
+                { value: 'medium', label: 'Medium (200-400 words)' },
+                { value: 'long', label: 'Long (400-600 words)' },
+              ]}
+              hint="Length of narrative responses"
+            />
+            
+            <Select
+              label="Style"
+              value={settings.aiConversationalStyle}
+              onChange={(e) => handleChange('aiConversationalStyle', e.target.value)}
+              options={[
+                { value: 'narrative', label: 'Narrative (more description)' },
+                { value: 'balanced', label: 'Balanced' },
+                { value: 'conversational', label: 'Conversational (more dialogue)' },
+              ]}
+              hint="Balance between narration and dialogue"
+            />
+            
+            <Select
+              label="Intensity"
+              value={settings.aiIntensity}
+              onChange={(e) => handleChange('aiIntensity', e.target.value)}
+              options={[
+                { value: 'gentle', label: 'Gentle' },
+                { value: 'moderate', label: 'Moderate' },
+                { value: 'intense', label: 'Intense' },
+                { value: 'brutal', label: 'Brutal' },
+              ]}
+              hint="Overall intensity of scenes"
+            />
+            
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">
+                Fetish Focus
+              </label>
+              <p className="text-xs text-text-muted mb-3">Select fetishes to emphasize (leave empty for balanced)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { value: 'tickling', label: 'Tickling' },
+                  { value: 'feet', label: 'Feet' },
+                  { value: 'sweat', label: 'Sweat' },
+                  { value: 'edging', label: 'Edging' },
+                  { value: 'pot', label: 'POT' },
+                  { value: 'bondage', label: 'Bondage' },
+                  { value: 'verbal', label: 'Verbal' },
+                ].map(({ value, label }) => (
+                  <label key={value} className="flex items-center gap-2 cursor-pointer p-2 rounded bg-background-secondary/50 hover:bg-background-secondary">
+                    <input
+                      type="checkbox"
+                      checked={settings.aiFetishFocus?.includes(value) || false}
+                      onChange={(e) => {
+                        const current = settings.aiFetishFocus || []
+                        if (e.target.checked) {
+                          handleChange('aiFetishFocus', [...current, value])
+                        } else {
+                          handleChange('aiFetishFocus', current.filter(f => f !== value))
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-background-elevated bg-background-tertiary text-accent-primary focus:ring-accent-primary"
+                    />
+                    <span className="text-sm text-text-primary">{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Visual Settings */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">

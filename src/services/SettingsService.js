@@ -14,6 +14,14 @@ const defaultSettings = {
   contextLimit: 10,
   streamResponses: true,
   
+  // AI Behavior Settings
+  aiHumiliationLevel: 'moderate', // 'none', 'mild', 'moderate', 'heavy', 'extreme'
+  aiSwearingLevel: 'moderate', // 'none', 'mild', 'moderate', 'heavy'
+  aiResponseLength: 'medium', // 'short', 'medium', 'long'
+  aiConversationalStyle: 'balanced', // 'narrative', 'balanced', 'conversational'
+  aiIntensity: 'moderate', // 'gentle', 'moderate', 'intense', 'brutal'
+  aiFetishFocus: [], // array of: 'tickling', 'feet', 'sweat', 'edging', 'pot', 'bondage', 'verbal'
+  
   // Visual Settings
   enableBackgrounds: true,
   enablePortraits: true,
@@ -127,6 +135,7 @@ class SettingsService {
     const categoryKeys = {
       api: ['apiKey', 'baseUrl', 'model'],
       content: ['contentMode', 'contextMode', 'contextLimit', 'streamResponses'],
+      aiBehavior: ['aiHumiliationLevel', 'aiSwearingLevel', 'aiResponseLength', 'aiConversationalStyle', 'aiIntensity', 'aiFetishFocus'],
       visual: ['enableBackgrounds', 'enablePortraits', 'enableDiceAnimation', 'enableEffects'],
       slideshow: ['enableSlideshow', 'slideshowInterval', 'slideshowTransition', 'slideshowTransitionDuration', 'slideshowShuffle'],
       debug: ['debugOverlay', 'logApiCalls', 'logDiceRolls'],

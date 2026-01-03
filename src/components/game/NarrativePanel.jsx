@@ -2,146 +2,124 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 /**
- * Parse narrative text with smart dialogue detection
- * Format:
- * - "quoted text" = dialogue (bold, prominent)
- * - *text* = narrative (italic, muted) - AI format compatibility
- * - Plain unquoted text = narrative (italic, muted) - default for prose
- * 
- * Returns array of { type: 'narrative' | 'dialogue', content: string }
+ * Parse narrative text into structured blocks for display
+ * Creates separate blocks for dialogue vs narrative for better visual separation
  */
 function parseFormattedText(text) {
   if (!text) return []
   
-  const segments = []
+  const blocks = []
   
-  // Split by lines first to preserve structure
-  const lines = text.split('\n')
+  // First, split by newlines to preserve intentional breaks
+  const lines = text.split('\n').filter(line => line.trim())
   
   for (const line of lines) {
     const trimmedLine = line.trim()
-    if (!trimmedLine) continue
     
     // Check if entire line is wrapped in asterisks: *narrative text*
     const fullAsteriskMatch = trimmedLine.match(/^\*(.+)\*$/)
     if (fullAsteriskMatch) {
-      segments.push({ 
+      blocks.push({ 
         type: 'narrative', 
         content: fullAsteriskMatch[1].trim() 
       })
       continue
     }
     
-    // Check if line contains asterisks (AI format)
-    if (trimmedLine.includes('*')) {
-      const parts = trimmedLine.split(/(\*[^*]+\*)/)
-      
-      for (const part of parts) {
-        if (!part.trim()) continue
-        
-        const inlineNarrative = part.match(/^\*(.+)\*$/)
-        if (inlineNarrative) {
-          segments.push({ 
-            type: 'narrative', 
-            content: inlineNarrative[1].trim() 
-          })
-        } else if (part.trim()) {
-          // Text outside asterisks - parse for quotes
-          parseLineForQuotes(part.trim(), segments)
-        }
-      }
+    // Check if line is pure dialogue (starts and ends with quotes)
+    if (trimmedLine.match(/^[""].+[""]$/)) {
+      blocks.push({
+        type: 'dialogue',
+        content: trimmedLine
+      })
       continue
     }
     
-    // No asterisks - parse for quoted dialogue vs narrative prose
-    parseLineForQuotes(trimmedLine, segments)
+    // Mixed content - split by dialogue quotes and asterisks
+    parseMixedLine(trimmedLine, blocks)
   }
   
-  return segments
+  return blocks
 }
 
 /**
- * Parse a line for quoted dialogue vs narrative prose
- * "Quoted text" becomes dialogue, everything else is narrative
- * Handles straight quotes (") and curly quotes ("")
+ * Parse a line with mixed narrative and dialogue
+ * Splits inline quotes into separate blocks for better readability
  */
-function parseLineForQuotes(line, segments) {
-  // Match quoted strings - handles:
-  // - Straight double quotes: "..."
-  // - Curly/smart double quotes: "..."
-  // Using a regex that captures the quote content
-  const quotePattern = /"([^"]+)"|"([^"]+)"/g
+function parseMixedLine(line, blocks) {
+  // Pattern to capture: *narrative*, "dialogue", "dialogue", or "dialogue"
+  const pattern = /(\*[^*]+\*)|("[^"]+"|"[^"]+"|"[^"]+")/g
   
   let lastIndex = 0
   let match
-  const localSegments = []
   
-  while ((match = quotePattern.exec(line)) !== null) {
-    // Add any narrative text before this quote
+  while ((match = pattern.exec(line)) !== null) {
+    // Add narrative text before this match
     if (match.index > lastIndex) {
-      const narrativeText = line.slice(lastIndex, match.index).trim()
-      if (narrativeText) {
-        localSegments.push({ type: 'narrative', content: narrativeText })
+      const before = line.slice(lastIndex, match.index).trim()
+      if (before) {
+        blocks.push({ type: 'narrative', content: before })
       }
     }
     
-    // Get the captured content (from whichever group matched)
-    const dialogueContent = match[1] || match[2]
+    const matched = match[0]
     
-    // Add the quoted dialogue (include quotes in display)
-    if (dialogueContent) {
-      localSegments.push({ type: 'dialogue', content: `"${dialogueContent}"` })
+    if (matched.startsWith('*') && matched.endsWith('*')) {
+      // Asterisk-wrapped narrative
+      blocks.push({ type: 'narrative', content: matched.slice(1, -1).trim() })
+    } else {
+      // Quoted dialogue - push as separate block
+      blocks.push({ type: 'dialogue', content: matched })
     }
     
-    lastIndex = match.index + match[0].length
+    lastIndex = match.index + matched.length
   }
   
-  // Add any remaining narrative text after the last quote
+  // Add any remaining text after last match
   if (lastIndex < line.length) {
-    const remainingText = line.slice(lastIndex).trim()
-    if (remainingText) {
-      localSegments.push({ type: 'narrative', content: remainingText })
+    const remaining = line.slice(lastIndex).trim()
+    if (remaining) {
+      blocks.push({ type: 'narrative', content: remaining })
     }
   }
   
-  // If no quotes were found, the entire line is narrative
-  if (localSegments.length === 0) {
-    segments.push({ type: 'narrative', content: line })
-  } else {
-    // Add all local segments to main segments array
-    segments.push(...localSegments)
+  // If no matches found, treat whole line as narrative
+  if (lastIndex === 0) {
+    blocks.push({ type: 'narrative', content: line })
   }
 }
 
 /**
- * Render narrative segment (descriptions, actions) - inline
+ * Render a narrative block (descriptions, actions)
  */
-function NarrativeSegment({ content, index }) {
+function NarrativeBlock({ content, index }) {
   return (
-    <motion.span
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: index * 0.015, duration: 0.3 }}
-      className="narrative-segment"
+    <motion.p
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.4 }}
+      className="text-slate-300 italic leading-[1.9] text-[1.05rem] mb-5"
     >
-      {content}{' '}
-    </motion.span>
+      {content}
+    </motion.p>
   )
 }
 
 /**
- * Render dialogue segment (speech) - inline
+ * Render a dialogue block (speech) - visually distinct
  */
-function DialogueSegment({ content, index }) {
+function DialogueBlock({ content, index }) {
   return (
-    <motion.span
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: index * 0.015, duration: 0.3 }}
-      className="dialogue-segment"
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.4 }}
+      className="my-5 pl-5 border-l-[3px] border-purple-500/60"
     >
-      {content}{' '}
-    </motion.span>
+      <p className="text-white font-medium leading-[1.8] text-[1.1rem]">
+        {content}
+      </p>
+    </motion.div>
   )
 }
 
@@ -154,8 +132,8 @@ export function NarrativePanel({
   // Use streaming content if available, otherwise scene description
   const displayContent = streamingContent || scene?.description || ''
   
-  // Parse the formatted text
-  const segments = useMemo(() => parseFormattedText(displayContent), [displayContent])
+  // Parse the formatted text into blocks
+  const blocks = useMemo(() => parseFormattedText(displayContent), [displayContent])
   
   if (!scene && !streamingContent) {
     return (
@@ -166,7 +144,7 @@ export function NarrativePanel({
               Narrative will appear here...
             </p>
             <p className="text-text-muted/50 text-base">
-              Start a new game to begin your journey through the dungeon.
+              Start a new game to begin your journey.
             </p>
           </div>
         </div>
@@ -200,7 +178,7 @@ export function NarrativePanel({
       )}
 
       {/* Narrative content */}
-      <div className="flex-1 p-6 md:p-8 overflow-y-auto narrative-container">
+      <div className="flex-1 px-8 py-6 overflow-y-auto">
         {isLoading && !streamingContent ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
@@ -209,28 +187,26 @@ export function NarrativePanel({
             </div>
           </div>
         ) : (
-          <div className="narrative-content">
-            <p className="narrative-paragraph">
-              {segments.map((segment, index) => (
-                segment.type === 'dialogue' ? (
-                  <DialogueSegment 
-                    key={index} 
-                    content={segment.content} 
-                    index={index}
-                  />
-                ) : (
-                  <NarrativeSegment 
-                    key={index} 
-                    content={segment.content} 
-                    index={index}
-                  />
-                )
-              ))}
-            </p>
+          <div className="max-w-2xl mx-auto">
+            {blocks.map((block, index) => (
+              block.type === 'dialogue' ? (
+                <DialogueBlock 
+                  key={index}
+                  content={block.content}
+                  index={index}
+                />
+              ) : (
+                <NarrativeBlock
+                  key={index}
+                  content={block.content}
+                  index={index}
+                />
+              )
+            ))}
             
             {/* Streaming cursor */}
             {streamingContent && (
-              <span className="streaming-cursor" />
+              <span className="inline-block w-2 h-5 bg-purple-500/70 animate-pulse ml-1 align-middle" />
             )}
           </div>
         )}
