@@ -6,6 +6,8 @@ import { ContentRouter } from '../content/ContentRouter'
 import { debugLog } from '../components/admin/tabs/DebugTab'
 import sampleScenario from '../data/scenarios/sample.json'
 
+const SCENARIOS_KEY = 'fd-scenarios'
+
 export class GameEngine {
   constructor(options = {}) {
     this.stateManager = options.stateManager || new StateManager()
@@ -15,6 +17,7 @@ export class GameEngine {
     this.contentRouter = options.contentRouter || new ContentRouter()
 
     this.currentScene = null
+    this.currentScenario = null
     this.isRunning = false
     this.listeners = {
       sceneChange: [],
@@ -31,30 +34,213 @@ export class GameEngine {
   }
 
   /**
-   * Start a new game
+   * Get all available scenarios from localStorage
+   * @returns {Array} List of scenario metadata
    */
-  async startNewGame() {
+  getAvailableScenarios() {
+    try {
+      const stored = localStorage.getItem(SCENARIOS_KEY)
+      const scenarios = stored ? JSON.parse(stored) : []
+      return scenarios.map(s => ({
+        id: s.id,
+        name: s.name,
+        chapter: s.chapter,
+        sceneCount: s.scenes?.length || 0,
+        requires: s.requires || null,
+      }))
+    } catch {
+      return []
+    }
+  }
+
+  /**
+   * Get a scenario by ID from localStorage
+   * @param {string} scenarioId - The scenario ID
+   * @returns {Object|null}
+   */
+  getScenarioById(scenarioId) {
+    try {
+      const stored = localStorage.getItem(SCENARIOS_KEY)
+      const scenarios = stored ? JSON.parse(stored) : []
+      return scenarios.find(s => s.id === scenarioId) || null
+    } catch {
+      return null
+    }
+  }
+
+  /**
+   * Check if player meets scenario entry requirements
+   * @param {Object} requires - The requirements object
+   * @returns {boolean}
+   */
+  checkRequirements(requires) {
+    if (!requires) return true
+
+    const state = this.stateManager.getState()
+
+    // Check chapter requirement
+    if (requires.chapter && state.chapter < requires.chapter) {
+      return false
+    }
+
+    // Check stat requirements
+    if (requires.stats) {
+      for (const [stat, range] of Object.entries(requires.stats)) {
+        const value = state.stats[stat] || 0
+        if (range.min !== undefined && value < range.min) return false
+        if (range.max !== undefined && value > range.max) return false
+      }
+    }
+
+    // Check affinity requirements
+    if (requires.affinities) {
+      for (const [npc, range] of Object.entries(requires.affinities)) {
+        const value = state.affinities[npc] || 0
+        if (range.min !== undefined && value < range.min) return false
+        if (range.max !== undefined && value > range.max) return false
+      }
+    }
+
+    // Check flag requirements
+    if (requires.flags) {
+      for (const [flag, value] of Object.entries(requires.flags)) {
+        if (state.flags[flag] !== value) return false
+      }
+    }
+
+    // Check notFlags requirements
+    if (requires.notFlags) {
+      for (const flag of requires.notFlags) {
+        if (state.flags[flag]) return false
+      }
+    }
+
+    return true
+  }
+
+  /**
+   * Filter choices based on showIf conditions
+   * @param {Array} choices - The choices array
+   * @returns {Array} Filtered choices
+   */
+  filterChoicesByConditions(choices) {
+    if (!choices) return []
+    
+    const state = this.stateManager.getState()
+    
+    return choices.filter(choice => {
+      if (!choice.showIf) return true
+      
+      const { stats, affinities, flags, notFlags } = choice.showIf
+      
+      // Check stat conditions
+      if (stats) {
+        for (const [stat, range] of Object.entries(stats)) {
+          const value = state.stats[stat] || 0
+          if (range.min !== undefined && value < range.min) return false
+          if (range.max !== undefined && value > range.max) return false
+        }
+      }
+      
+      // Check affinity conditions
+      if (affinities) {
+        for (const [npc, range] of Object.entries(affinities)) {
+          const value = state.affinities[npc] || 0
+          if (range.min !== undefined && value < range.min) return false
+          if (range.max !== undefined && value > range.max) return false
+        }
+      }
+      
+      // Check flag conditions
+      if (flags) {
+        for (const [flag, value] of Object.entries(flags)) {
+          if (state.flags[flag] !== value) return false
+        }
+      }
+      
+      // Check notFlags conditions
+      if (notFlags) {
+        for (const flag of notFlags) {
+          if (state.flags[flag]) return false
+        }
+      }
+      
+      return true
+    })
+  }
+
+  /**
+   * Start a new game with a specific scenario
+   * @param {Object} scenarioData - The scenario JSON data
+   */
+  async startWithScenario(scenarioData) {
     this.stateManager.reset()
     this.eventSystem.clearHistory()
     
-    // Load the sample scenario
-    this.contentRouter.loadScenario(sampleScenario)
+    // Store current scenario reference
+    this.currentScenario = scenarioData
+    
+    // Load the scenario into content router
+    this.contentRouter.loadScenario(scenarioData)
+    
+    // Get the starting scene ID
+    const startSceneId = scenarioData.startScene || scenarioData.scenes?.[0]?.id
+    
+    if (!startSceneId) {
+      debugLog.error('No start scene found in scenario')
+      return null
+    }
     
     // Get the starting scene
-    const startScene = await this.contentRouter.getSceneContent('intro-1', this._getContext())
+    const startScene = await this.contentRouter.getSceneContent(startSceneId, this._getContext())
     
     if (startScene) {
+      // Filter choices based on conditions
+      startScene.choices = this.filterChoicesByConditions(startScene.choices)
+      
       this.currentScene = startScene
       this.stateManager.setCurrentScene(startScene.id)
       this.stateManager.setCurrentLocation(startScene.location || 'main_hall')
-      this.stateManager.setCurrentNpc(startScene.npc || null)
+      
+      // Handle multi-NPC scenes
+      if (startScene.npcs && startScene.npcs.length > 0) {
+        this.stateManager.setCurrentNpc(startScene.npcs[0].id)
+      } else if (startScene.npc) {
+        this.stateManager.setCurrentNpc(startScene.npc)
+      } else {
+        this.stateManager.setCurrentNpc(null)
+      }
+      
       this.toneEngine.updateStateTone()
       this._emit('sceneChange', startScene)
     }
 
     this.isRunning = true
-    debugLog.game('New game started', { scene: startScene?.id })
+    debugLog.game('Game started with scenario', { 
+      scenario: scenarioData.name, 
+      scene: startScene?.id 
+    })
     return startScene
+  }
+
+  /**
+   * Start a new game with default sample scenario
+   */
+  async startNewGame() {
+    return this.startWithScenario(sampleScenario)
+  }
+
+  /**
+   * Start a game with a scenario from localStorage by ID
+   * @param {string} scenarioId - The scenario ID
+   */
+  async startScenarioById(scenarioId) {
+    const scenario = this.getScenarioById(scenarioId)
+    if (!scenario) {
+      debugLog.error('Scenario not found', { scenarioId })
+      return null
+    }
+    return this.startWithScenario(scenario)
   }
 
   /**
@@ -64,14 +250,28 @@ export class GameEngine {
   async continueGame(savedState) {
     this.stateManager.deserialize(JSON.stringify(savedState))
     
-    // Load scenario
-    this.contentRouter.loadScenario(sampleScenario)
+    // Try to load the scenario that was being played
+    const scenarioId = savedState.currentScenarioId
+    if (scenarioId) {
+      const scenario = this.getScenarioById(scenarioId)
+      if (scenario) {
+        this.currentScenario = scenario
+        this.contentRouter.loadScenario(scenario)
+      }
+    }
+    
+    // Fallback to sample scenario if no scenario was stored
+    if (!this.currentScenario) {
+      this.contentRouter.loadScenario(sampleScenario)
+    }
     
     // Restore current scene
     const sceneId = savedState.currentScene
     if (sceneId) {
       const scene = await this.contentRouter.getSceneContent(sceneId, this._getContext())
       if (scene) {
+        // Filter choices based on conditions
+        scene.choices = this.filterChoicesByConditions(scene.choices)
         this.currentScene = scene
         this._emit('sceneChange', scene)
       }
@@ -151,6 +351,13 @@ export class GameEngine {
       }
     }
 
+    // Set flags from choice
+    if (choice.flags) {
+      for (const [flag, value] of Object.entries(choice.flags)) {
+        this.stateManager.setFlag(flag, value)
+      }
+    }
+
     // Check for random event
     const event = this.eventSystem.checkForEvent()
     if (event) {
@@ -179,21 +386,56 @@ export class GameEngine {
       affinityChanges: result.affinityChanges,
     })
 
+    // Handle END scene
+    if (result.nextSceneId === 'END') {
+      debugLog.game('Scenario ended')
+      // Could trigger chapter summary, return to menu, etc.
+      result.isEnd = true
+      return result
+    }
+
     // Get next scene
     if (result.nextSceneId) {
       const nextScene = await this.contentRouter.getSceneContent(result.nextSceneId, this._getContext())
       if (nextScene) {
+        // Filter choices based on conditions
+        nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
+        
         this.currentScene = nextScene
         this.stateManager.setCurrentScene(nextScene.id)
         this.stateManager.setCurrentLocation(nextScene.location || this.stateManager.getState().currentLocation)
-        this.stateManager.setCurrentNpc(nextScene.npc || null)
+        
+        // Handle multi-NPC scenes
+        if (nextScene.npcs && nextScene.npcs.length > 0) {
+          this.stateManager.setCurrentNpc(nextScene.npcs[0].id)
+        } else if (nextScene.npc) {
+          this.stateManager.setCurrentNpc(nextScene.npc)
+        } else {
+          this.stateManager.setCurrentNpc(null)
+        }
+        
         result.newScene = nextScene
         this._emit('sceneChange', nextScene)
+      } else if (this.currentScenario?.scenes) {
+        // Scene not found - check if AI fallback is allowed
+        const currentSceneData = this.currentScenario.scenes.find(s => s.id === this.currentScene.id)
+        if (currentSceneData?.allowAIFallback !== false) {
+          // Generate AI continuation
+          const nextScene = await this._generateWithStreaming(choice.text)
+          if (nextScene) {
+            nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
+            this.currentScene = nextScene
+            this.stateManager.setCurrentScene(nextScene.id)
+            result.newScene = nextScene
+            this._emit('sceneChange', nextScene)
+          }
+        }
       }
     } else {
-      // Generate AI continuation with streaming
+      // No next scene specified - generate AI continuation with streaming
       const nextScene = await this._generateWithStreaming(choice.text)
       if (nextScene) {
+        nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
         this.currentScene = nextScene
         this.stateManager.setCurrentScene(nextScene.id)
         result.newScene = nextScene
@@ -279,6 +521,7 @@ export class GameEngine {
     const nextScene = await this._generateWithStreaming(actionText)
     
     if (nextScene) {
+      nextScene.choices = this.filterChoicesByConditions(nextScene.choices)
       this.currentScene = nextScene
       this.stateManager.setCurrentScene(nextScene.id)
       
@@ -333,7 +576,7 @@ export class GameEngine {
   }
 
   /**
-   * Get available choices
+   * Get available choices (already filtered)
    */
   getAvailableChoices() {
     return this.currentScene?.choices || []

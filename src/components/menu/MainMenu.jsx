@@ -1,16 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '../ui/Button'
 import { saveSystem } from '../../engine/SaveSystem'
-import { Settings } from 'lucide-react'
+import { Settings, ChevronLeft, Play, FileJson } from 'lucide-react'
 
-export function MainMenu({ onStartNewGame, onLoadGame, onContinue, onAdminClick }) {
-  const [view, setView] = useState('main') // 'main' | 'load' | 'saves'
+const SCENARIOS_KEY = 'fd-scenarios'
+
+export function MainMenu({ 
+  onStartNewGame, 
+  onStartScenario,
+  getAvailableScenarios,
+  onLoadGame, 
+  onContinue, 
+  onAdminClick 
+}) {
+  const [view, setView] = useState('main') // 'main' | 'load' | 'scenarios'
   const [saves, setSaves] = useState(() => saveSystem.listSaves())
+  const [scenarios, setScenarios] = useState([])
   const [selectedSlot, setSelectedSlot] = useState(null)
 
   const hasSaves = saves.length > 0
   const hasAutoSave = saveSystem.hasSave('auto')
+
+  // Load scenarios from localStorage
+  useEffect(() => {
+    if (view === 'scenarios') {
+      try {
+        const stored = localStorage.getItem(SCENARIOS_KEY)
+        const parsed = stored ? JSON.parse(stored) : []
+        setScenarios(parsed)
+      } catch {
+        setScenarios([])
+      }
+    }
+  }, [view])
 
   const refreshSaves = () => {
     setSaves(saveSystem.listSaves())
@@ -24,6 +47,12 @@ export function MainMenu({ onStartNewGame, onLoadGame, onContinue, onAdminClick 
     saveSystem.delete(slotId)
     refreshSaves()
     setSelectedSlot(null)
+  }
+
+  const handleSelectScenario = (scenario) => {
+    if (onStartScenario) {
+      onStartScenario(scenario)
+    }
   }
 
   const formatDate = (date) => {
@@ -112,6 +141,16 @@ export function MainMenu({ onStartNewGame, onLoadGame, onContinue, onAdminClick 
                   Start New Game
                 </Button>
 
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="w-full"
+                  onClick={() => setView('scenarios')}
+                >
+                  <FileJson size={18} className="mr-2" />
+                  Select Scenario
+                </Button>
+
                 {hasAutoSave && (
                   <Button
                     variant="secondary"
@@ -146,6 +185,68 @@ export function MainMenu({ onStartNewGame, onLoadGame, onContinue, onAdminClick 
               >
                 Version 1.0 • Adult Content
               </motion.p>
+            </motion.div>
+          )}
+
+          {view === 'scenarios' && (
+            <motion.div
+              key="scenarios"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-[450px]"
+            >
+              <h2 className="text-2xl font-bold text-text-primary mb-6">Select Scenario</h2>
+
+              {/* Scenario List */}
+              <div className="space-y-3 mb-6 max-h-[400px] overflow-y-auto">
+                {scenarios.length === 0 ? (
+                  <div className="text-text-muted py-8">
+                    <FileJson size={48} className="mx-auto mb-3 opacity-30" />
+                    <p>No scenarios loaded</p>
+                    <p className="text-sm text-text-muted/60 mt-2">
+                      Use the Admin Panel to upload scenario JSON files
+                    </p>
+                  </div>
+                ) : (
+                  scenarios.map((scenario) => (
+                    <motion.div
+                      key={scenario.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="p-4 rounded-lg border bg-background-tertiary border-background-elevated hover:border-accent-primary/50 transition-all"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="text-left">
+                          <p className="font-medium text-text-primary">{scenario.name}</p>
+                          <p className="text-sm text-text-muted">
+                            {scenario.scenes?.length || 0} scenes
+                            {scenario.chapter && ` • Chapter ${scenario.chapter}`}
+                          </p>
+                        </div>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => handleSelectScenario(scenario)}
+                        >
+                          <Play size={14} className="mr-1" />
+                          Play
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </div>
+
+              {/* Back Button */}
+              <Button
+                variant="ghost"
+                className="w-full"
+                onClick={() => setView('main')}
+              >
+                <ChevronLeft size={18} className="mr-1" />
+                Back
+              </Button>
             </motion.div>
           )}
 

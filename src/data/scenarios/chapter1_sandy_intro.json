@@ -1,0 +1,1033 @@
+{
+  "id": "first_day_arrival",
+  "name": "First Day: Arrival and Induction",
+  "chapter": 1,
+  "version": "1.0",
+  "startScene": "arrival_gates",
+  "requires": null,
+  "scenes": [
+    {
+      "id": "arrival_gates",
+      "location": "garden",
+      "npcs": [],
+      "bodyPart": null,
+      "description": "The wrought-iron gates of Fetish Dominion loom before you like jagged teeth in the dim twilight. Arcane runes pulse faintly along the bars, humming with dark energy. You've heard whispers of this place—a school for the elite in domination, now experimenting with its first male slave. That's you, TJ. Heart pounding, you push the gates open, stepping onto a gravel path lined with twisted thorns and blooming nightshade. The air thickens with humidity, carrying faint scents of sweat and leather from deeper within. Shadows dance across painterly stone walls, high-contrast lights casting elongated figures that seem to mock your approach. A grand main hall rises ahead, its doors ajar, spilling warm, ominous glow. No turning back now—your new life as the lowest bitch begins here. Sandy, the Head Mistress, awaits inside, ready to break you in. Will you stride confidently or hesitate like the toy you are?",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "ag001_confident",
+          "text": "Stride in confidently (Enter boldly)",
+          "next": "main_hall_entry",
+          "statChanges": {
+            "obedience": -3,
+            "endurance": 2
+          },
+          "affinityChanges": {},
+          "rollRequired": null,
+          "flags": {
+            "bold_entry": true
+          },
+          "showIf": null
+        },
+        {
+          "id": "ag001_hesitant",
+          "text": "Hesitate and peek inside (Enter cautiously)",
+          "next": "main_hall_entry",
+          "statChanges": {
+            "obedience": 3,
+            "arousal": 5
+          },
+          "affinityChanges": {},
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "main_hall_entry",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "smirk",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "You cross the threshold into the main hall, a cavernous space with chains dangling from vaulted ceilings like industrial vines. Sandy's throne dominates the center—a twisted metal seat etched with submission symbols. She lounges there, legs crossed, her painterly form glowing in high-contrast light. Dark hair cascades over shoulders, eyes piercing like daggers. \"Well, well, the fresh meat arrives. TJ, right? My first male toy in this den of delights.\" Her voice drips authority, a filthy glee underscoring each word. She uncrosses her legs, boot tapping impatiently. \"Kneel before me, bitch. This is Fetish Dominion—your new hell. I'm Sandy, Head Mistress, and you? You're nothing but a slave-student, lowest rank. The Queens will break you, mold you, use you. Obey, and maybe you'll survive. Defy... and suffer deliciously.\" She leans forward, smirking wider. \"First rule: My word is law. Second: Worship without question. Third: No release without permission. Got it? Now, prove you're worth my time.\"",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "mhe001_kneel",
+          "text": "Kneel immediately (Submit)",
+          "next": "rules_explanation_submit",
+          "statChanges": {
+            "obedience": 5
+          },
+          "affinityChanges": {
+            "sandy": 5
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "mhe001_question",
+          "text": "\"What if I refuse?\" (Question rules)",
+          "next": "rules_explanation_defy",
+          "statChanges": {
+            "obedience": -5
+          },
+          "affinityChanges": {
+            "sandy": -3
+          },
+          "rollRequired": null,
+          "flags": {
+            "questioned_rules": true
+          },
+          "showIf": null
+        },
+        {
+          "id": "mhe001_bold",
+          "text": "Stand tall and stare back (Defy boldly)",
+          "next": null,
+          "statChanges": {
+            "endurance": -5
+          },
+          "affinityChanges": {
+            "sandy": -5
+          },
+          "rollRequired": {
+            "dc": 15,
+            "stat": "endurance",
+            "affinityBonus": null,
+            "successNext": "rules_explanation_defy_success",
+            "failureNext": "rules_explanation_defy_fail"
+          },
+          "flags": {
+            "defied_sandy": true
+          },
+          "showIf": {
+            "flags": {
+              "bold_entry": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rules_explanation_submit",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "pleased",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "You drop to your knees, gravel biting into skin through thin fabric. Sandy chuckles, a low, throaty sound that echoes off the walls. \"Good boy. Already learning your place.\" She extends a boot, the leather scuffed yet gleaming in the shadowy light. \"Lick it clean—your first test. Here, we train in submission's arts. You'll face the Queens: Araph with her tickling torments, Nancy demanding foot worship, Aish forcing sweat licks, Gaya edging you to madness, Melissa punishing any release. Stats matter—build obedience to please me, endurance to survive, but arousal and sensitivity? They'll climb, breaking you sweetly.\" As you hesitate or obey, distant footsteps approach. A blue-haired figure—Araph—peeks in, smirking. \"New toy? Can't wait to make him squeal.\" Nancy follows, tall and athletic, barefoot. \"Save some for my soles.\" Sandy waves them off. \"Not yet. TJ, your dorm awaits after this. Fail, and punishment room first.\" The air thickens, your pulse races.",
+      "toneOverride": "soft",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "res001_lick",
+          "text": "Lick the boot (Obey test)",
+          "next": "queens_intro_submit",
+          "statChanges": {
+            "obedience": 8,
+            "arousal": 10
+          },
+          "affinityChanges": {
+            "sandy": 8
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "res001_resist",
+          "text": "Refuse to lick (Resist test)",
+          "next": "queens_intro_resist",
+          "statChanges": {
+            "obedience": -8,
+            "endurance": -10
+          },
+          "affinityChanges": {
+            "sandy": -5
+          },
+          "rollRequired": null,
+          "flags": {
+            "resisted_test": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "rules_explanation_defy",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "angry",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Sandy's eyes narrow, her smirk twisting into a snarl. \"Refuse? Oh, you stupid fuck. This isn't a negotiation.\" She rises from the throne, towering over you in the high-contrast shadows. Chains rattle faintly above, as if excited for what's next. \"Rules are simple: Obey or break. You're here to serve, TJ—lick, worship, endure. The Queens will test you: Araph's fingers dancing on your ribs till you beg, Nancy's feet grinding your face, Aish smothering you in sweat. Gaya edges without mercy, Melissa slaps post-release. Stats track your pathetic progress—obedience for favor, endurance against torment, arousal building denial, sensitivity amplifying every touch.\" Footsteps echo—Araph saunters in, laughing. \"Defiant already? Fun.\" Nancy trails, unimpressed. \"Break him quick.\" Sandy grabs your collar. \"Lick my boot now, or taste the punishment room. Dorm assignment after—if you earn it.\" Tension coils, your defiance cracking under her gaze.",
+      "toneOverride": "aggressive",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "red001_backdown",
+          "text": "Back down and kneel (Submit now)",
+          "next": "queens_intro_submit",
+          "statChanges": {
+            "obedience": 3,
+            "endurance": -5
+          },
+          "affinityChanges": {
+            "sandy": -2
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "red001_push",
+          "text": "Push back verbally (Defy further - DC 12)",
+          "next": null,
+          "statChanges": {},
+          "affinityChanges": {
+            "sandy": -8
+          },
+          "rollRequired": {
+            "dc": 12,
+            "stat": "obedience",
+            "affinityBonus": null,
+            "successNext": "queens_intro_defy_success",
+            "failureNext": "queens_intro_defy_fail"
+          },
+          "flags": {
+            "pushed_defiance": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "rules_explanation_defy_success",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "amused",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "You stand firm, staring back at Sandy. Surprisingly, her anger cracks into amusement. \"Ballsy for a bitch. I like spirit—makes breaking it sweeter.\" She settles back on her throne, chains above swaying gently. The hall's painterly gloom accentuates her form, shadows playing across her smirk. \"Fine, listen up. Rules: My command is absolute. Worship the Queens—Araph tickles till tears, Nancy's feet demand devotion, Aish's sweat your drink. Gaya edges endlessly, Melissa tortures after rare mercy. Track your stats: Obedience buys favor, endurance survives pain, arousal denies release, sensitivity heightens hell.\" Araph enters giggling, Nancy following bored. \"New meat fighting? Adorable.\" Sandy waves. \"Test time: Lick my boot, or roll the dice on punishment. Dorm after—if you live.\" Your bold stand lingers, tension electric.",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "reds001_lick",
+          "text": "Lick the boot (Obey after defiance)",
+          "next": "queens_intro_submit",
+          "statChanges": {
+            "obedience": 2,
+            "arousal": 8
+          },
+          "affinityChanges": {
+            "sandy": 3
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "reds001_refuse",
+          "text": "Still refuse (Continue defiance)",
+          "next": "queens_intro_resist",
+          "statChanges": {
+            "endurance": -8
+          },
+          "affinityChanges": {
+            "sandy": -5
+          },
+          "rollRequired": null,
+          "flags": {
+            "resisted_test": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "rules_explanation_defy_fail",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "hostile",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Your stance crumbles under Sandy's glare. She laughs cruelly. \"Pathetic. Thought you had guts?\" She yanks you down by the shirt, forcing proximity to her boot. The hall's dark aesthetics amplify the humiliation—chains mocking overhead. \"Rules, since you're slow: Obey me and the Queens. Araph tickles, Nancy tramples, Aish sweats you out. Gaya edges, Melissa punishes climaxes. Stats: Obedience for survival, endurance against breaks, arousal for denial, sensitivity for agony.\" Araph bursts in, teasing. \"Broken already?\" Nancy sneers. \"Weak.\" Sandy presses. \"Lick now, toy, or straight to punishment. Dorm if you comply.\" Shame burns as you falter.",
+      "toneOverride": "humiliating",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "redf001_submit",
+          "text": "Submit and lick (Give in)",
+          "next": "queens_intro_submit",
+          "statChanges": {
+            "obedience": 5,
+            "sensitivity": 5
+          },
+          "affinityChanges": {
+            "sandy": -3
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "redf001_struggle",
+          "text": "Struggle against her grip (Resist - DC 18)",
+          "next": null,
+          "statChanges": {
+            "endurance": -10
+          },
+          "affinityChanges": {
+            "sandy": -10
+          },
+          "rollRequired": {
+            "dc": 18,
+            "stat": "endurance",
+            "affinityBonus": null,
+            "successNext": "queens_intro_defy_success",
+            "failureNext": "punishment_detour"
+          },
+          "flags": {
+            "struggled": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "queens_intro_submit",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "pleased",
+          "position": "center"
+        },
+        {
+          "id": "araph",
+          "emotion": "amused",
+          "position": "left"
+        },
+        {
+          "id": "nancy",
+          "emotion": "bored",
+          "position": "right"
+        }
+      ],
+      "bodyPart": "feet",
+      "description": "Your tongue meets Sandy's boot, tasting leather and dust. She hums approval. \"That's it, good slave.\" Araph claps, blue hair swaying. \"Aww, he's obedient! Can't wait to tickle that submission out.\" Her nails twitch eagerly. Nancy yawns, barefoot toes flexing. \"Boring. When do I get his tongue on my soles?\" Sandy smiles. \"Soon. TJ, meet two Queens—Araph, Tickle Queen, turns laughter to tears. Nancy, Foot Goddess, her worship marathons will drain you.\" The hall feels smaller, their presences overwhelming. High-contrast shadows make their forms predatory. \"You've passed the test... barely. To the dormitory for rest—or more 'lessons.' But first, any questions? Speak wisely.\" Aish passes in the background, curvy and glowing post-workout, glancing curiously but not stopping. Tension eases slightly, but arousal simmers.",
+      "toneOverride": null,
+      "eventRoll": true,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "qis001_ask_queens",
+          "text": "Ask about the other Queens (Inquire)",
+          "next": "dorm_assignment_info",
+          "statChanges": {},
+          "affinityChanges": {
+            "araph": 2,
+            "nancy": 2
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "qis001_silent",
+          "text": "Stay silent and follow (Obey quietly)",
+          "next": "dorm_assignment_direct",
+          "statChanges": {
+            "obedience": 4
+          },
+          "affinityChanges": {
+            "sandy": 3
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "qis001_compliment",
+          "text": "Compliment Nancy's feet (Flatter - conditional)",
+          "next": "dorm_assignment_flatter",
+          "statChanges": {
+            "arousal": 10
+          },
+          "affinityChanges": {
+            "nancy": 5,
+            "araph": -2
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": {
+            "affinities": {
+              "nancy": {
+                "min": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "queens_intro_resist",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "mean",
+          "position": "center"
+        },
+        {
+          "id": "araph",
+          "emotion": "laugh",
+          "position": "left"
+        },
+        {
+          "id": "nancy",
+          "emotion": "unimpressed",
+          "position": "right"
+        }
+      ],
+      "bodyPart": null,
+      "description": "You pull back from the boot, defiance burning. Sandy snarls. \"Fucking idiot.\" Araph bursts out laughing. \"Oh, this one's feisty! Tickle time soon?\" Nancy rolls her eyes. \"Waste. Trample him flat.\" Sandy grips tighter. \"Meet the Queens, toy—Araph, blue-haired bitch who'll scratch your soles till you piss yourself laughing. Nancy, her feet will smother that rebellion.\" Shadows deepen, painterly gloom turning hostile. Aish walks by, sweaty and curious, but Sandy waves her off. \"You failed the test. Punishment detour before dorm. But I'll give you one last chance—lick now, or suffer.\" Your body aches already, endurance waning.",
+      "toneOverride": "swearing",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "qir001_give_in",
+          "text": "Give in and lick (Submit late)",
+          "next": "dorm_assignment_direct",
+          "statChanges": {
+            "obedience": 2,
+            "sensitivity": 8
+          },
+          "affinityChanges": {
+            "sandy": -3,
+            "araph": 3
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "qir001_defy",
+          "text": "Defy and taunt Araph (Provoke - DC 14)",
+          "next": null,
+          "statChanges": {
+            "arousal": 5
+          },
+          "affinityChanges": {
+            "araph": -5
+          },
+          "rollRequired": {
+            "dc": 14,
+            "stat": "obedience",
+            "affinityBonus": "sandy",
+            "successNext": "queens_intro_defy_success",
+            "failureNext": "punishment_detour"
+          },
+          "flags": {
+            "provoked_araph": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "queens_intro_defy_success",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "teasing",
+          "position": "center"
+        },
+        {
+          "id": "araph",
+          "emotion": "cruel",
+          "position": "left"
+        },
+        {
+          "id": "nancy",
+          "emotion": "hostile",
+          "position": "right"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Your pushback lands—Araph falters slightly, but Sandy grins. \"Impressive, for a worm.\" Nancy scoffs. \"Still breaking him.\" The hall's arcane vibes pulse, shadows elongating their cruel forms. \"Queens: Araph tickles relentlessly, Nancy worships her way. Aish sweats, but she's passing—focus on these.\" Sandy eases grip. \"You earned a pass... this time. To dorm, but watch your back.\" Aish lingers briefly, smirking at the chaos.",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "qids001_accept",
+          "text": "Accept and head to dorm (Comply)",
+          "next": "dorm_assignment_direct",
+          "statChanges": {
+            "endurance": 5
+          },
+          "affinityChanges": {
+            "sandy": 2
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        },
+        {
+          "id": "qids001_probe",
+          "text": "Probe for weaknesses (Inquire slyly)",
+          "next": "dorm_assignment_info",
+          "statChanges": {},
+          "affinityChanges": {
+            "araph": -3
+          },
+          "rollRequired": null,
+          "flags": {
+            "probed_weakness": true
+          },
+          "showIf": {
+            "flags": {
+              "pushed_defiance": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "queens_intro_defy_fail",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "cruel",
+          "position": "center"
+        },
+        {
+          "id": "araph",
+          "emotion": "mean",
+          "position": "left"
+        },
+        {
+          "id": "nancy",
+          "emotion": "angry",
+          "position": "right"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Your defiance flops—Sandy shoves you down. \"Dumb fuck.\" Araph cackles. \"Mine now!\" Nancy kicks lightly. \"Pathetic.\" Room spins in humiliation. \"Queens intro short: They own you. Dorm after punishment.\" Aish watches from afar, amused.",
+      "toneOverride": "humiliating",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "qidf001_beg",
+          "text": "Beg for mercy (Plead)",
+          "next": "punishment_detour",
+          "statChanges": {
+            "obedience": 5
+          },
+          "affinityChanges": {
+            "sandy": -5
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "punishment_detour",
+      "location": "punishment_room",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "hostile",
+          "position": "center"
+        }
+      ],
+      "bodyPart": "full_body",
+      "description": "Dragged to the punishment room, a dim chamber with restraints and tools gleaming in low light. Sandy chains you spread-eagle. \"Defiance costs, TJ.\" She circles, whip in hand. Whacks land—stinging ass, thighs. \"Count them, bitch!\" Pain builds, endurance dropping. Shadows make her form monstrous. \"Learn: Obey next time.\" After ten lashes, she unchained you. \"Now, to dorm. But remember this scar.\" Araph peeks in, giggling at your state. Nancy ignores. Your body throbs, lesson etched.",
+      "toneOverride": "aggressive",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "pd001_endure",
+          "text": "Endure quietly (Take punishment)",
+          "next": "dorm_assignment_direct",
+          "statChanges": {
+            "endurance": -15,
+            "obedience": 10
+          },
+          "affinityChanges": {
+            "sandy": 2
+          },
+          "rollRequired": null,
+          "flags": {
+            "punished": true
+          },
+          "showIf": null
+        },
+        {
+          "id": "pd001_cry",
+          "text": "Cry out and beg (Break down)",
+          "next": "dorm_assignment_humiliated",
+          "statChanges": {
+            "sensitivity": 10,
+            "arousal": 15
+          },
+          "affinityChanges": {
+            "sandy": -5
+          },
+          "rollRequired": null,
+          "flags": {
+            "broken_spirit": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "dorm_assignment_info",
+      "location": "dormitory",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "neutral",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Sandy leads you to the dormitory—a sparse room with bunks stacked like cages, no privacy. Chains on walls, faint sweat scent lingers. \"Your home, TJ. Rest here, but expect interruptions.\" She briefs more: \"Other Queens—Aish sweats you, Gaya edges, Melissa punishes releases. Build affinities wisely; high means intense ownership.\" Araph and Nancy tag along briefly, Araph teasing fingers, Nancy flexing toes. \"Sleep. Tomorrow's tests await.\" You collapse on a bunk, mind racing from the day. Shadows play tricks, arcane glow faint.",
+      "toneOverride": null,
+      "eventRoll": true,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "dai001_reflect",
+          "text": "Reflect on the day (Internalize)",
+          "next": "END",
+          "statChanges": {
+            "obedience": 3
+          },
+          "affinityChanges": {},
+          "rollRequired": null,
+          "flags": {
+            "chapter1_complete": true
+          },
+          "showIf": null
+        },
+        {
+          "id": "dai001_plan",
+          "text": "Plan resistance (Plot - conditional)",
+          "next": "END",
+          "statChanges": {
+            "endurance": 5
+          },
+          "affinityChanges": {},
+          "rollRequired": null,
+          "flags": {
+            "planning_resistance": true,
+            "chapter1_complete": true
+          },
+          "showIf": {
+            "flags": {
+              "resisted_test": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "dorm_assignment_direct",
+      "location": "dormitory",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "smirk",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Into the dormitory—bunks, chains, no comfort. Sandy shoves you in. \"Your spot, bottom bunk like the bottom bitch you are.\" She lingers, eyes teasing. \"Queens will visit. Rest up.\" Araph waves goodbye giggling, Nancy snorts. Aish's scent lingers from earlier pass. \"Day one done. More hell tomorrow.\" You lie down, body aching, mind submissive.",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "dad001_sleep",
+          "text": "Sleep immediately (Rest)",
+          "next": "END",
+          "statChanges": {
+            "endurance": 10
+          },
+          "affinityChanges": {},
+          "rollRequired": null,
+          "flags": {
+            "chapter1_complete": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "dorm_assignment_flatter",
+      "location": "dormitory",
+      "npcs": [
+        {
+          "id": "nancy",
+          "emotion": "pleased",
+          "position": "center"
+        }
+      ],
+      "bodyPart": "feet",
+      "description": "Nancy smirks at your compliment, following to dorm. \"Flattery? Prove it.\" She plants a foot on your bunk as Sandy watches amused. Dorm's sparse—bunks, chains. You lick briefly, her sole sweaty. \"Good start.\" Sandy: \"Assigned. Rest.\" Araph laughs from door. You settle, affinity budding.",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "daf001_continue",
+          "text": "Continue worship (Deepen)",
+          "next": "END",
+          "statChanges": {
+            "arousal": 15,
+            "sensitivity": 5
+          },
+          "affinityChanges": {
+            "nancy": 8
+          },
+          "rollRequired": null,
+          "flags": {
+            "chapter1_complete": true
+          },
+          "showIf": null
+        },
+        {
+          "id": "daf001_stop",
+          "text": "Stop and rest (Pull back)",
+          "next": "END",
+          "statChanges": {
+            "obedience": -3
+          },
+          "affinityChanges": {
+            "nancy": -2
+          },
+          "rollRequired": null,
+          "flags": {
+            "chapter1_complete": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "dorm_assignment_humiliated",
+      "location": "dormitory",
+      "npcs": [],
+      "bodyPart": null,
+      "description": "Released from punishment, you stumble to dorm alone. Bunks mock your weakness, chains rattle softly. Sandy' s words echo: \"Pathetic.\" You curl up, tears drying, body sensitive. Araph's laugh haunts from afar. Day ends in shame, but resolve flickers—or breaks.",
+      "toneOverride": "humiliating",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "dah001_recover",
+          "text": "Try to recover mentally (Reflect)",
+          "next": "END",
+          "statChanges": {
+            "obedience": 5,
+            "endurance": 5
+          },
+          "affinityChanges": {},
+          "rollRequired": null,
+          "flags": {
+            "chapter1_complete": true
+          },
+          "showIf": null
+        },
+        {
+          "id": "dah001_vow",
+          "text": "Vow revenge (Defy internally - conditional)",
+          "next": "END",
+          "statChanges": {},
+          "affinityChanges": {},
+          "rollRequired": null,
+          "flags": {
+            "vowed_revenge": true,
+            "chapter1_complete": true
+          },
+          "showIf": {
+            "notFlags": [
+              "broken_spirit"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "branch_reconverge_submit",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "pleased",
+          "position": "center"
+        },
+        {
+          "id": "aish",
+          "emotion": "teasing",
+          "position": "right"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Paths reconverge as Aish joins briefly. \"Sweaty already?\" she teases. Sandy nods. \"He's learning. On to dorm.\" Brief intro: Aish's specialty in sweat worship. Hall fades as you move.",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "brs001_follow",
+          "text": "Follow to dorm (Proceed)",
+          "next": "dorm_assignment_direct",
+          "statChanges": {},
+          "affinityChanges": {
+            "aish": 2
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "branch_reconverge_defy",
+      "location": "main_hall",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "unimpressed",
+          "position": "center"
+        },
+        {
+          "id": "aish",
+          "emotion": "bored",
+          "position": "right"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Defiance paths meet—Aish enters, yawning. \"Trouble?\" Sandy: \"Handled. Dorm now.\" Quick Aish intro: Sweat queen. Tension lingers as you head out.",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "brd001_proceed",
+          "text": "Proceed to dorm (Move on)",
+          "next": "dorm_assignment_info",
+          "statChanges": {
+            "endurance": -5
+          },
+          "affinityChanges": {
+            "aish": -2
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "extended_test_submit",
+      "location": "chamber",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "amused",
+          "position": "center"
+        }
+      ],
+      "bodyPart": "torso",
+      "description": "Sandy takes you to a private chamber for extended test. Bound lightly, she teases torso with fingers. \"Endure this.\" Light tickles build arousal. \"Good boy.\" Leads back to path.",
+      "toneOverride": "soft",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "ets001_endure",
+          "text": "Endure the tease (Submit fully)",
+          "next": "branch_reconverge_submit",
+          "statChanges": {
+            "arousal": 20,
+            "obedience": 10
+          },
+          "affinityChanges": {
+            "sandy": 10
+          },
+          "rollRequired": null,
+          "flags": {},
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "extended_test_defy",
+      "location": "chamber",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "cruel",
+          "position": "center"
+        }
+      ],
+      "bodyPart": "back",
+      "description": "In chamber for punishment test. Whipped on back lightly. \"Learn, toy.\" Pain sharpens senses. \"Defy again?\" Forces reconvergence.",
+      "toneOverride": "aggressive",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "etd001_take",
+          "text": "Take the punishment (Accept)",
+          "next": "branch_reconverge_defy",
+          "statChanges": {
+            "sensitivity": 15,
+            "endurance": -10
+          },
+          "affinityChanges": {
+            "sandy": -5
+          },
+          "rollRequired": null,
+          "flags": {
+            "extra_punished": true
+          },
+          "showIf": null
+        },
+        {
+          "id": "etd001_roll",
+          "text": "Try to escape bonds (Resist - DC 16)",
+          "next": null,
+          "statChanges": {},
+          "affinityChanges": {
+            "sandy": -10
+          },
+          "rollRequired": {
+            "dc": 16,
+            "stat": "endurance",
+            "affinityBonus": null,
+            "successNext": "escape_attempt_success",
+            "failureNext": "escape_attempt_fail"
+          },
+          "flags": {},
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "escape_attempt_success",
+      "location": "chamber",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "surprised",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "You slip the bonds—Sandy surprised. \"Clever fuck.\" She recaptures easily but impressed. \"Bonus for guts. To dorm.\"",
+      "toneOverride": null,
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "eas001_proceed",
+          "text": "Proceed quietly (Move on)",
+          "next": "dorm_assignment_direct",
+          "statChanges": {
+            "obedience": -5,
+            "endurance": 10
+          },
+          "affinityChanges": {
+            "sandy": 5
+          },
+          "rollRequired": null,
+          "flags": {
+            "escaped_once": true
+          },
+          "showIf": null
+        }
+      ]
+    },
+    {
+      "id": "escape_attempt_fail",
+      "location": "chamber",
+      "npcs": [
+        {
+          "id": "sandy",
+          "emotion": "laugh",
+          "position": "center"
+        }
+      ],
+      "bodyPart": null,
+      "description": "Bonds hold—Sandy laughs. \"Stupid try.\" Extra lashes. \"Now, dorm, broken toy.\" Humiliation peaks.",
+      "toneOverride": "humiliating",
+      "eventRoll": false,
+      "allowAIFallback": true,
+      "choices": [
+        {
+          "id": "eaf001_submit",
+          "text": "Submit fully (Give up)",
+          "next": "dorm_assignment_humiliated",
+          "statChanges": {
+            "obedience": 10,
+            "sensitivity": 10
+          },
+          "affinityChanges": {
+            "sandy": -8
+          },
+          "rollRequired": null,
+          "flags": {
+            "failed_escape": true
+          },
+          "showIf": null
+        }
+      ]
+    }
+  ]
+}

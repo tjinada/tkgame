@@ -14,6 +14,7 @@ export function AdminPanel({
   onClose, 
   gameState, 
   onStateChange,
+  onStartScenario,
 }) {
   // Use render functions for lazy loading - prevents file inputs from being created when not needed
   const tabs = [
@@ -33,7 +34,13 @@ export function AdminPanel({
       id: 'scenarios',
       label: 'Scenarios',
       icon: <FileJson size={16} />,
-      render: () => <JsonManagerTab gameState={gameState} />,
+      render: () => (
+        <JsonManagerTab 
+          gameState={gameState} 
+          onStartScenario={onStartScenario}
+          onClose={onClose}
+        />
+      ),
     },
     {
       id: 'npcs',

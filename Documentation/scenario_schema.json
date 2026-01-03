@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Fetish Dominion Scenario",
+  "type": "object",
+  "required": ["id", "name", "chapter", "startScene", "scenes"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique scenario identifier (snake_case)",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name for the scenario"
+    },
+    "chapter": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Chapter number"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "startScene": {
+      "type": "string",
+      "description": "ID of the first scene"
+    },
+    "requires": {
+      "type": ["object", "null"],
+      "description": "Entry conditions for this scenario",
+      "properties": {
+        "chapter": { "type": "integer" },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "obedience": { "$ref": "#/definitions/rangeCondition" },
+            "endurance": { "$ref": "#/definitions/rangeCondition" },
+            "arousal": { "$ref": "#/definitions/rangeCondition" },
+            "sensitivity": { "$ref": "#/definitions/rangeCondition" }
+          }
+        },
+        "affinities": {
+          "type": "object",
+          "properties": {
+            "sandy": { "$ref": "#/definitions/rangeCondition" },
+            "araph": { "$ref": "#/definitions/rangeCondition" },
+            "nancy": { "$ref": "#/definitions/rangeCondition" },
+            "aish": { "$ref": "#/definitions/rangeCondition" },
+            "gaya": { "$ref": "#/definitions/rangeCondition" },
+            "melissa": { "$ref": "#/definitions/rangeCondition" }
+          }
+        },
+        "flags": {
+          "type": "object",
+          "additionalProperties": { "type": "boolean" }
+        },
+        "notFlags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/scene" }
+    }
+  },
+  "definitions": {
+    "rangeCondition": {
+      "type": "object",
+      "properties": {
+        "min": { "type": "number" },
+        "max": { "type": "number" }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "required": ["id", "location", "npcs", "description", "choices"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "location": {
+          "type": "string",
+          "enum": ["main_hall", "classroom", "workout_pit", "chamber", "dormitory", "punishment_room", "garden", "dungeon"]
+        },
+        "npcs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/npcPresence" }
+        },
+        "bodyPart": {
+          "type": ["string", "null"],
+          "enum": [null, "feet", "armpit", "hands", "face_closeup", "torso", "back", "legs", "full_body"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 100,
+          "maxLength": 2000,
+          "description": "Narrative text, 200-400 words recommended"
+        },
+        "toneOverride": {
+          "type": ["string", "null"],
+          "enum": [null, "soft", "neutral", "aggressive", "swearing", "humiliating"]
+        },
+        "eventRoll": {
+          "type": "boolean",
+          "default": false
+        },
+        "allowAIFallback": {
+          "type": "boolean",
+          "default": true
+        },
+        "choices": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": { "$ref": "#/definitions/choice" }
+        }
+      }
+    },
+    "npcPresence": {
+      "type": "object",
+      "required": ["id", "emotion", "position"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": ["sandy", "araph", "nancy", "aish", "gaya", "melissa"]
+        },
+        "emotion": {
+          "type": "string",
+          "enum": ["neutral", "smirk", "angry", "unimpressed", "mean", "laugh", "pleased", "hostile", "amused", "teasing", "cruel", "bored"]
+        },
+        "position": {
+          "type": "string",
+          "enum": ["left", "center", "right"]
+        }
+      }
+    },
+    "choice": {
+      "type": "object",
+      "required": ["id", "text", "next"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "text": {
+          "type": "string",
+          "description": "Choice text with optional action hint in parentheses"
+        },
+        "next": {
+          "type": ["string", "null"],
+          "description": "Next scene ID, 'END', or null if roll determines"
+        },
+        "statChanges": {
+          "type": "object",
+          "properties": {
+            "obedience": { "type": "integer" },
+            "endurance": { "type": "integer" },
+            "arousal": { "type": "integer" },
+            "sensitivity": { "type": "integer" }
+          }
+        },
+        "affinityChanges": {
+          "type": "object",
+          "properties": {
+            "sandy": { "type": "integer" },
+            "araph": { "type": "integer" },
+            "nancy": { "type": "integer" },
+            "aish": { "type": "integer" },
+            "gaya": { "type": "integer" },
+            "melissa": { "type": "integer" }
+          }
+        },
+        "rollRequired": {
+          "type": ["object", "null"],
+          "properties": {
+            "dc": { "type": "integer", "minimum": 1, "maximum": 25 },
+            "stat": { "type": "string", "enum": ["obedience", "endurance", "arousal", "sensitivity"] },
+            "affinityBonus": { "type": ["string", "null"] },
+            "successNext": { "type": "string" },
+            "failureNext": { "type": "string" }
+          },
+          "required": ["dc", "stat", "successNext", "failureNext"]
+        },
+        "flags": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "showIf": {
+          "type": ["object", "null"],
+          "properties": {
+            "stats": { "type": "object" },
+            "affinities": { "type": "object" },
+            "flags": { "type": "object" },
+            "notFlags": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    }
+  }
+}

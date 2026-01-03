@@ -10,7 +10,9 @@ function App() {
   const { 
     isInitialized, 
     isGameRunning, 
-    startNewGame, 
+    startNewGame,
+    startWithScenario,
+    getAvailableScenarios,
     continueGame, 
     loadGame,
     stopGame,
@@ -29,6 +31,13 @@ function App() {
   const handleStateChange = (newState) => {
     if (setFullState) {
       setFullState(newState)
+    }
+  }
+
+  // Handle starting a scenario from admin panel or main menu
+  const handleStartScenario = async (scenario) => {
+    if (startWithScenario) {
+      await startWithScenario(scenario)
     }
   }
 
@@ -51,6 +60,8 @@ function App() {
         <SlideshowBackground />
         <MainMenu
           onStartNewGame={startNewGame}
+          onStartScenario={handleStartScenario}
+          getAvailableScenarios={getAvailableScenarios}
           onLoadGame={loadGame}
           onContinue={continueGame}
           onAdminClick={() => setIsAdminOpen(true)}
@@ -62,6 +73,7 @@ function App() {
           onClose={() => setIsAdminOpen(false)}
           gameState={getFullState?.()}
           onStateChange={handleStateChange}
+          onStartScenario={handleStartScenario}
         />
       </div>
     )
@@ -82,6 +94,7 @@ function App() {
         onClose={() => setIsAdminOpen(false)}
         gameState={getFullState?.()}
         onStateChange={handleStateChange}
+        onStartScenario={handleStartScenario}
       />
     </div>
   )

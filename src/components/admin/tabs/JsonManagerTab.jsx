@@ -2,11 +2,11 @@ import { useState, useRef } from 'react'
 import { TabPanel } from '../../ui/Tabs'
 import { Button } from '../../ui/Button'
 import { Textarea } from '../../ui/Input'
-import { Upload, Download, FileJson, Trash2, Check, AlertCircle, Eye, Copy } from 'lucide-react'
+import { Upload, Download, FileJson, Trash2, Check, AlertCircle, Eye, Copy, Play } from 'lucide-react'
 
 const SCENARIOS_KEY = 'fd-scenarios'
 
-export function JsonManagerTab({ gameState }) {
+export function JsonManagerTab({ gameState, onStartScenario, onClose }) {
   const [scenarios, setScenarios] = useState(() => {
     try {
       const stored = localStorage.getItem(SCENARIOS_KEY)
@@ -128,6 +128,15 @@ export function JsonManagerTab({ gameState }) {
     setTimeout(() => setSuccess(null), 2000)
   }
 
+  const handleStartScenario = (scenario) => {
+    if (onStartScenario) {
+      onStartScenario(scenario)
+      if (onClose) {
+        onClose()
+      }
+    }
+  }
+
   return (
     <TabPanel>
       <div className="space-y-6">
@@ -200,12 +209,25 @@ export function JsonManagerTab({ gameState }) {
                     </div>
                     <div className="flex gap-2">
                       <Button 
+                        variant="primary" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleStartScenario(scenario)
+                        }}
+                        title="Start this scenario"
+                      >
+                        <Play size={14} className="mr-1" />
+                        Play
+                      </Button>
+                      <Button 
                         variant="ghost" 
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation()
                           handleExportScenario(scenario)
                         }}
+                        title="Export scenario"
                       >
                         <Download size={14} />
                       </Button>
@@ -216,6 +238,7 @@ export function JsonManagerTab({ gameState }) {
                           e.stopPropagation()
                           handleDeleteScenario(scenario.id)
                         }}
+                        title="Delete scenario"
                       >
                         <Trash2 size={14} />
                       </Button>

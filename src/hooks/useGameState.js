@@ -74,6 +74,48 @@ export function useGameState() {
     }
   }, [])
 
+  // Start a specific scenario by ID
+  const startScenario = useCallback(async (scenarioId) => {
+    if (!gameEngineRef.current) return
+    
+    setIsLoading(true)
+    setStreamingContent('')
+    try {
+      await gameEngineRef.current.startScenarioById(scenarioId)
+      setIsGameRunning(true)
+      setState(gameEngineRef.current.getState())
+      
+      // Enable auto-save
+      saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  // Start with a scenario object directly
+  const startWithScenario = useCallback(async (scenarioData) => {
+    if (!gameEngineRef.current) return
+    
+    setIsLoading(true)
+    setStreamingContent('')
+    try {
+      await gameEngineRef.current.startWithScenario(scenarioData)
+      setIsGameRunning(true)
+      setState(gameEngineRef.current.getState())
+      
+      // Enable auto-save
+      saveSystem.enableAutoSave(60000, () => gameEngineRef.current.getState())
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  // Get available scenarios from localStorage
+  const getAvailableScenarios = useCallback(() => {
+    if (!gameEngineRef.current) return []
+    return gameEngineRef.current.getAvailableScenarios()
+  }, [])
+
   const continueGame = useCallback(async () => {
     if (!commandManagerRef.current) return
     
@@ -131,6 +173,13 @@ export function useGameState() {
     setStreamingContent('')
     try {
       const result = await gameEngineRef.current.processChoice(choiceId)
+      
+      // Handle END scene
+      if (result.isEnd) {
+        // Could show a summary screen, for now just stop the game
+        // You can customize this behavior
+      }
+      
       return result
     } finally {
       setIsLoading(false)
@@ -277,6 +326,9 @@ export function useGameState() {
 
     // Actions
     startNewGame,
+    startScenario,
+    startWithScenario,
+    getAvailableScenarios,
     continueGame,
     loadGame,
     saveGame,
