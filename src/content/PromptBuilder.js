@@ -161,6 +161,7 @@ Provide your response as JSON:
   "npc": "sandy|araph|nancy|aish|gaya|melissa",
   "npcEmotion": "neutral|smirk|angry|pleased|cruel|amused|bored|hostile|teasing",
   "location": "main_hall|classroom|workout_pit|chamber|dormitory|punishment_room|garden|dungeon",
+  "bodyPart": "feet|armpit|hands|face_closeup|torso|back|legs|full_body|null",
   "choices": [
     {"id": "1", "text": "Choice description", "type": "submit"},
     {"id": "2", "text": "Choice with roll", "type": "defy", "rollRequired": {"dc": 15, "stat": "obedience"}},
@@ -169,6 +170,8 @@ Provide your response as JSON:
   "statChanges": {"obedience": 5, "arousal": 10},
   "affinityChanges": {"sandy": 3}
 }
+
+IMPORTANT: Set "bodyPart" when the scene focuses on a specific body part (e.g. feet during foot worship, armpit during sweat scenes). Use null when no specific focus.
 
 Types: submit, defy, observe, beg, custom
 Stats for rolls: obedience, endurance, arousal, sensitivity
@@ -235,6 +238,7 @@ Generate the opening scene with vivid description and give TJ his first choices.
           npc: parsed.npc || 'sandy',
           npcEmotion: parsed.npcEmotion || 'neutral',
           location: parsed.location || 'main_hall',
+          bodyPart: parsed.bodyPart || null,
           choices: parsed.choices || this._getDefaultChoices(),
           statChanges: parsed.statChanges || {},
           affinityChanges: parsed.affinityChanges || {},
@@ -252,6 +256,7 @@ Generate the opening scene with vivid description and give TJ his first choices.
       npc: 'sandy',
       npcEmotion: 'neutral',
       location: 'main_hall',
+      bodyPart: null,
       choices: this._getDefaultChoices(),
       statChanges: {},
       affinityChanges: {},

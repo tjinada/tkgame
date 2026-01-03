@@ -117,6 +117,8 @@ export function GameScreen({
           toneStyles={toneStyles}
           isLoading={isLoading}
           streamingContent={streamingContent}
+          bodyPart={currentBodyPart}
+          npcName={currentNpcData?.name}
         />
       </div>
 

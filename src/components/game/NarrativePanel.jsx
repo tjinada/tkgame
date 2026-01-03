@@ -128,6 +128,8 @@ export function NarrativePanel({
   toneStyles = {}, 
   isLoading = false,
   streamingContent = '',
+  bodyPart = null,
+  npcName = '',
 }) {
   // Use streaming content if available, otherwise scene description
   const displayContent = streamingContent || scene?.description || ''
@@ -154,22 +156,29 @@ export function NarrativePanel({
 
   return (
     <div className="flex flex-col h-full bg-background-secondary/60 backdrop-blur-md rounded-xl overflow-hidden border border-background-elevated/30">
-      {/* Header with location/NPC info */}
-      {(scene?.location || scene?.npc) && (
+      {/* Header with location/NPC/body part info */}
+      {(scene?.location || scene?.npc || bodyPart) && (
         <div className="px-6 py-3 border-b border-background-tertiary/30 flex items-center gap-4 bg-background-tertiary/20">
-          {scene.location && (
+          {scene?.location && (
             <span className="text-sm text-text-muted uppercase tracking-wider flex items-center gap-2">
               <span className="text-base">📍</span>
               {scene.location.replace(/_/g, ' ')}
             </span>
           )}
-          {scene.npc && (
+          {scene?.npc && (
             <span className="text-sm text-accent-primary uppercase tracking-wider flex items-center gap-2">
               <span className="text-base">👤</span>
               {scene.npc}
             </span>
           )}
-          {scene.source === 'ai' && (
+          {bodyPart && (
+            <span className="text-sm text-pink-400 uppercase tracking-wider flex items-center gap-2 animate-pulse">
+              <span className="text-base">🎯</span>
+              Focus: {bodyPart.replace(/_/g, ' ')}
+              {npcName && <span className="text-pink-400/60">({npcName})</span>}
+            </span>
+          )}
+          {scene?.source === 'ai' && (
             <span className="ml-auto text-sm text-accent-secondary/60 flex items-center gap-1">
               <span>✨</span> AI Generated
             </span>
@@ -187,7 +196,7 @@ export function NarrativePanel({
             </div>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-2xl">
             {blocks.map((block, index) => (
               block.type === 'dialogue' ? (
                 <DialogueBlock 
