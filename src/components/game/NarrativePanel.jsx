@@ -2,10 +2,11 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 /**
- * Parse AI-formatted narrative text
+ * Parse narrative text with smart dialogue detection
  * Format:
- * - *text* = narrative/description (italic, muted)
- * - Plain text or "quoted" = dialogue (bold, prominent, own line)
+ * - "quoted text" = dialogue (bold, prominent)
+ * - *text* = narrative (italic, muted) - AI format compatibility
+ * - Plain unquoted text = narrative (italic, muted) - default for prose
  * 
  * Returns array of { type: 'narrative' | 'dialogue', content: string }
  */
@@ -22,18 +23,17 @@ function parseFormattedText(text) {
     if (!trimmedLine) continue
     
     // Check if entire line is wrapped in asterisks: *narrative text*
-    const narrativeMatch = trimmedLine.match(/^\*(.+)\*$/)
-    if (narrativeMatch) {
+    const fullAsteriskMatch = trimmedLine.match(/^\*(.+)\*$/)
+    if (fullAsteriskMatch) {
       segments.push({ 
         type: 'narrative', 
-        content: narrativeMatch[1].trim() 
+        content: fullAsteriskMatch[1].trim() 
       })
       continue
     }
     
-    // Check if line contains mixed content with asterisks
+    // Check if line contains asterisks (AI format)
     if (trimmedLine.includes('*')) {
-      // Parse inline asterisks: some *narrative* more text *more narrative*
       const parts = trimmedLine.split(/(\*[^*]+\*)/)
       
       for (const part of parts) {
@@ -46,60 +46,102 @@ function parseFormattedText(text) {
             content: inlineNarrative[1].trim() 
           })
         } else if (part.trim()) {
-          // This is dialogue (text outside asterisks)
-          segments.push({ 
-            type: 'dialogue', 
-            content: part.trim() 
-          })
+          // Text outside asterisks - parse for quotes
+          parseLineForQuotes(part.trim(), segments)
         }
       }
       continue
     }
     
-    // No asterisks - treat as dialogue
-    segments.push({ 
-      type: 'dialogue', 
-      content: trimmedLine 
-    })
+    // No asterisks - parse for quoted dialogue vs narrative prose
+    parseLineForQuotes(trimmedLine, segments)
   }
   
   return segments
 }
 
 /**
- * Render narrative segment (descriptions, actions)
+ * Parse a line for quoted dialogue vs narrative prose
+ * "Quoted text" becomes dialogue, everything else is narrative
+ * Handles straight quotes (") and curly quotes ("")
+ */
+function parseLineForQuotes(line, segments) {
+  // Match quoted strings - handles:
+  // - Straight double quotes: "..."
+  // - Curly/smart double quotes: "..."
+  // Using a regex that captures the quote content
+  const quotePattern = /"([^"]+)"|"([^"]+)"/g
+  
+  let lastIndex = 0
+  let match
+  const localSegments = []
+  
+  while ((match = quotePattern.exec(line)) !== null) {
+    // Add any narrative text before this quote
+    if (match.index > lastIndex) {
+      const narrativeText = line.slice(lastIndex, match.index).trim()
+      if (narrativeText) {
+        localSegments.push({ type: 'narrative', content: narrativeText })
+      }
+    }
+    
+    // Get the captured content (from whichever group matched)
+    const dialogueContent = match[1] || match[2]
+    
+    // Add the quoted dialogue (include quotes in display)
+    if (dialogueContent) {
+      localSegments.push({ type: 'dialogue', content: `"${dialogueContent}"` })
+    }
+    
+    lastIndex = match.index + match[0].length
+  }
+  
+  // Add any remaining narrative text after the last quote
+  if (lastIndex < line.length) {
+    const remainingText = line.slice(lastIndex).trim()
+    if (remainingText) {
+      localSegments.push({ type: 'narrative', content: remainingText })
+    }
+  }
+  
+  // If no quotes were found, the entire line is narrative
+  if (localSegments.length === 0) {
+    segments.push({ type: 'narrative', content: line })
+  } else {
+    // Add all local segments to main segments array
+    segments.push(...localSegments)
+  }
+}
+
+/**
+ * Render narrative segment (descriptions, actions) - inline
  */
 function NarrativeSegment({ content, index }) {
   return (
-    <motion.p
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.03 }}
-      className="narrative-line"
+    <motion.span
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.015, duration: 0.3 }}
+      className="narrative-segment"
     >
-      {content}
-    </motion.p>
+      {content}{' '}
+    </motion.span>
   )
 }
 
 /**
- * Render dialogue segment (speech)
+ * Render dialogue segment (speech) - inline
  */
 function DialogueSegment({ content, index }) {
-  // Clean up content - ensure it has quotes
-  const displayContent = content.startsWith('"') || content.startsWith("'") 
-    ? content 
-    : `"${content}"`
-  
   return (
-    <motion.p
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.03 }}
-      className="dialogue-line"
+    <motion.span
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.015, duration: 0.3 }}
+      className="dialogue-segment"
     >
-      {displayContent}
-    </motion.p>
+      {content}{' '}
+    </motion.span>
   )
 }
 
@@ -168,21 +210,23 @@ export function NarrativePanel({
           </div>
         ) : (
           <div className="narrative-content">
-            {segments.map((segment, index) => (
-              segment.type === 'dialogue' ? (
-                <DialogueSegment 
-                  key={index} 
-                  content={segment.content} 
-                  index={index}
-                />
-              ) : (
-                <NarrativeSegment 
-                  key={index} 
-                  content={segment.content} 
-                  index={index}
-                />
-              )
-            ))}
+            <p className="narrative-paragraph">
+              {segments.map((segment, index) => (
+                segment.type === 'dialogue' ? (
+                  <DialogueSegment 
+                    key={index} 
+                    content={segment.content} 
+                    index={index}
+                  />
+                ) : (
+                  <NarrativeSegment 
+                    key={index} 
+                    content={segment.content} 
+                    index={index}
+                  />
+                )
+              ))}
+            </p>
             
             {/* Streaming cursor */}
             {streamingContent && (

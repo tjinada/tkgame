@@ -49,7 +49,52 @@ body {
 }
 
 /* ================================
-   NARRATIVE LINES (Descriptions)
+   NARRATIVE PARAGRAPH (Container)
+   ================================ */
+
+.narrative-paragraph {
+  font-size: 1.35rem;
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  border-left: 3px solid rgba(139, 92, 246, 0.3);
+}
+
+@media (min-width: 768px) {
+  .narrative-paragraph {
+    font-size: 1.45rem;
+    line-height: 1.95;
+  }
+}
+
+@media (min-width: 1024px) {
+  .narrative-paragraph {
+    font-size: 1.5rem;
+  }
+}
+
+/* ================================
+   NARRATIVE SEGMENTS (Inline - Descriptions)
+   ================================ */
+
+.narrative-segment {
+  color: #a1a1aa; /* Muted gray - zinc-400 */
+  font-style: italic;
+}
+
+/* ================================
+   DIALOGUE SEGMENTS (Inline - Speech)
+   ================================ */
+
+.dialogue-segment {
+  color: #f4f4f5; /* Bright white - zinc-100 */
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ================================
+   LEGACY BLOCK STYLES (for AI-generated content)
+   Keep these for backward compatibility
    ================================ */
 
 .narrative-line {
@@ -66,10 +111,6 @@ body {
     font-size: 1.4rem;
   }
 }
-
-/* ================================
-   DIALOGUE LINES (Speech)
-   ================================ */
 
 .dialogue-line {
   font-size: 1.5rem;
@@ -141,7 +182,7 @@ body {
 }
 
 /* ================================
-   SPACING ADJUSTMENTS
+   SPACING ADJUSTMENTS (Legacy)
    ================================ */
 
 .narrative-line + .dialogue-line {
