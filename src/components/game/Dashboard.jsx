@@ -1,9 +1,10 @@
 import { StatBar } from '../ui/StatBar'
 import { AffinityBadge } from '../ui/AffinityBadge'
 import { ProgressionPanel } from './ProgressionPanel'
+import { DiscoveryPanel } from './DiscoveryPanel'
 
 export function Dashboard({ gameState }) {
-  const { stats, affinities, npcs, statConfigs, getAffinityTier, activeTone, scars, progression, lastMilestone, lastStageAdvance } = gameState
+  const { stats, affinities, npcs, statConfigs, getAffinityTier, activeTone, scars, progression, lastMilestone, lastStageAdvance, npcKnowledge, activeNpcIds } = gameState
 
   return (
     <div className="flex flex-col gap-6 p-4 bg-background-secondary/70 backdrop-blur-md rounded-xl border border-background-elevated/30">
@@ -44,6 +45,20 @@ export function Dashboard({ gameState }) {
           ))}
         </div>
       </div>
+
+      {/* Discovery Section */}
+      {npcKnowledge && activeNpcIds?.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider">
+            Discovery
+          </h3>
+          <DiscoveryPanel
+            npcKnowledge={npcKnowledge}
+            npcIds={activeNpcIds}
+            compact={true}
+          />
+        </div>
+      )}
 
       {/* Progression Section */}
       <ProgressionPanel 

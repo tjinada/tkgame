@@ -1,0 +1,356 @@
+{
+  "presets": [
+    {
+      "id": "tickle-toy",
+      "name": "Tickle Toy",
+      "description": "Devastatingly ticklish everywhere. Mistresses will have you in hysterics.",
+      "portrait": "preset_tickle_toy",
+      "baseStats": {
+        "obedience": 25,
+        "endurance": 40,
+        "arousal": 0,
+        "sensitivity": 45
+      },
+      "traits": ["ticklish", "squirmy", "vocal"],
+      "vulnerabilityMatrix": {
+        "tickling": {
+          "feet": 95,
+          "armpits": 90,
+          "ribs": 85,
+          "neck": 75,
+          "stomach": 90,
+          "innerThighs": 80,
+          "back": 60,
+          "chest": 70
+        },
+        "footWorship": {
+          "feet": 50
+        },
+        "sweatWorship": {
+          "armpits": 40,
+          "feet": 35,
+          "back": 30,
+          "chest": 30
+        },
+        "edging": {
+          "groin": 55,
+          "fullBody": 50
+        },
+        "postOrgasmTorture": {
+          "groin": 70,
+          "fullBody": 60
+        },
+        "humiliation": {
+          "any": 45
+        },
+        "bondage": {
+          "fullBody": 40
+        },
+        "faceSitting": {
+          "face": 45
+        },
+        "trampling": {
+          "chest": 35,
+          "stomach": 40,
+          "back": 30
+        },
+        "nippleTorture": {
+          "chest": 50
+        },
+        "spanking": {
+          "buttocks": 40,
+          "innerThighs": 50
+        }
+      },
+      "secretWeakness": "Combined tickling + bondage causes complete breakdown",
+      "flavorText": "The moment fingers graze your skin, you're already giggling. Good luck hiding this one.",
+      "isDefault": true
+    },
+    {
+      "id": "worship-slave",
+      "name": "Worship Slave",
+      "description": "Weak to worship activities. Feet, sweat, and servitude break you down.",
+      "portrait": "preset_worship_slave",
+      "baseStats": {
+        "obedience": 35,
+        "endurance": 50,
+        "arousal": 0,
+        "sensitivity": 35
+      },
+      "traits": ["submissive", "eager", "devoted"],
+      "vulnerabilityMatrix": {
+        "tickling": {
+          "feet": 45,
+          "armpits": 50,
+          "ribs": 40,
+          "neck": 35,
+          "stomach": 45,
+          "innerThighs": 50,
+          "back": 30,
+          "chest": 35
+        },
+        "footWorship": {
+          "feet": 90
+        },
+        "sweatWorship": {
+          "armpits": 85,
+          "feet": 80,
+          "back": 70,
+          "chest": 65
+        },
+        "edging": {
+          "groin": 60,
+          "fullBody": 55
+        },
+        "postOrgasmTorture": {
+          "groin": 65,
+          "fullBody": 55
+        },
+        "humiliation": {
+          "any": 75
+        },
+        "bondage": {
+          "fullBody": 50
+        },
+        "faceSitting": {
+          "face": 80
+        },
+        "trampling": {
+          "chest": 55,
+          "stomach": 50,
+          "back": 45
+        },
+        "nippleTorture": {
+          "chest": 45
+        },
+        "spanking": {
+          "buttocks": 50,
+          "innerThighs": 45
+        }
+      },
+      "secretWeakness": "Post-workout sweat worship causes instant arousal spike",
+      "flavorText": "You were born to serve at their feet. The question is how long before they realize how much you need it.",
+      "isDefault": true
+    },
+    {
+      "id": "edge-junkie",
+      "name": "Edge Junkie",
+      "description": "Sexual stimulation is your undoing. Edging and denial destroy your willpower.",
+      "portrait": "preset_edge_junkie",
+      "baseStats": {
+        "obedience": 20,
+        "endurance": 45,
+        "arousal": 10,
+        "sensitivity": 40
+      },
+      "traits": ["desperate", "needy", "weak-willed"],
+      "vulnerabilityMatrix": {
+        "tickling": {
+          "feet": 40,
+          "armpits": 45,
+          "ribs": 35,
+          "neck": 30,
+          "stomach": 40,
+          "innerThighs": 70,
+          "back": 25,
+          "chest": 35
+        },
+        "footWorship": {
+          "feet": 55
+        },
+        "sweatWorship": {
+          "armpits": 45,
+          "feet": 40,
+          "back": 35,
+          "chest": 35
+        },
+        "edging": {
+          "groin": 95,
+          "fullBody": 85
+        },
+        "postOrgasmTorture": {
+          "groin": 90,
+          "fullBody": 80
+        },
+        "humiliation": {
+          "any": 60
+        },
+        "bondage": {
+          "fullBody": 55
+        },
+        "faceSitting": {
+          "face": 50
+        },
+        "trampling": {
+          "chest": 40,
+          "stomach": 45,
+          "back": 35
+        },
+        "nippleTorture": {
+          "chest": 75
+        },
+        "spanking": {
+          "buttocks": 55,
+          "innerThighs": 70
+        }
+      },
+      "secretWeakness": "Even the threat of edging makes you compliant",
+      "flavorText": "One touch in the right place and your defiance crumbles. Gaya is going to love you.",
+      "isDefault": true
+    },
+    {
+      "id": "defiant-one",
+      "name": "The Defiant One",
+      "description": "Resistant to most things, but everyone has a breaking point. Yours is hidden deep.",
+      "portrait": "preset_defiant",
+      "baseStats": {
+        "obedience": 10,
+        "endurance": 65,
+        "arousal": 0,
+        "sensitivity": 25
+      },
+      "traits": ["stubborn", "prideful", "competitive"],
+      "vulnerabilityMatrix": {
+        "tickling": {
+          "feet": 35,
+          "armpits": 40,
+          "ribs": 30,
+          "neck": 25,
+          "stomach": 35,
+          "innerThighs": 45,
+          "back": 20,
+          "chest": 25
+        },
+        "footWorship": {
+          "feet": 30
+        },
+        "sweatWorship": {
+          "armpits": 35,
+          "feet": 30,
+          "back": 25,
+          "chest": 25
+        },
+        "edging": {
+          "groin": 50,
+          "fullBody": 45
+        },
+        "postOrgasmTorture": {
+          "groin": 85,
+          "fullBody": 75
+        },
+        "humiliation": {
+          "any": 70
+        },
+        "bondage": {
+          "fullBody": 35
+        },
+        "faceSitting": {
+          "face": 40
+        },
+        "trampling": {
+          "chest": 30,
+          "stomach": 35,
+          "back": 25
+        },
+        "nippleTorture": {
+          "chest": 40
+        },
+        "spanking": {
+          "buttocks": 35,
+          "innerThighs": 40
+        }
+      },
+      "secretWeakness": "Post-orgasm torture completely shatters your composure",
+      "flavorText": "You'll resist. You'll fight. But when Melissa finally breaks you, it'll be spectacular.",
+      "isDefault": true
+    },
+    {
+      "id": "fresh-meat",
+      "name": "Fresh Meat",
+      "description": "Moderate vulnerabilities across the board. A blank slate for the Mistresses to explore.",
+      "portrait": "preset_balanced",
+      "baseStats": {
+        "obedience": 20,
+        "endurance": 50,
+        "arousal": 0,
+        "sensitivity": 30
+      },
+      "traits": ["uncertain", "curious", "adaptable"],
+      "vulnerabilityMatrix": {
+        "tickling": {
+          "feet": 55,
+          "armpits": 60,
+          "ribs": 50,
+          "neck": 45,
+          "stomach": 55,
+          "innerThighs": 50,
+          "back": 40,
+          "chest": 45
+        },
+        "footWorship": {
+          "feet": 50
+        },
+        "sweatWorship": {
+          "armpits": 50,
+          "feet": 45,
+          "back": 40,
+          "chest": 40
+        },
+        "edging": {
+          "groin": 60,
+          "fullBody": 55
+        },
+        "postOrgasmTorture": {
+          "groin": 70,
+          "fullBody": 60
+        },
+        "humiliation": {
+          "any": 50
+        },
+        "bondage": {
+          "fullBody": 45
+        },
+        "faceSitting": {
+          "face": 50
+        },
+        "trampling": {
+          "chest": 45,
+          "stomach": 50,
+          "back": 40
+        },
+        "nippleTorture": {
+          "chest": 50
+        },
+        "spanking": {
+          "buttocks": 50,
+          "innerThighs": 50
+        }
+      },
+      "secretWeakness": "Still undiscovered - the Mistresses will find it",
+      "flavorText": "You don't know your own weaknesses yet. Neither do they. The discovery will be... educational.",
+      "isDefault": true
+    }
+  ],
+  "traitDefinitions": [
+    { "id": "ticklish", "name": "Ticklish", "description": "Extremely sensitive to tickling" },
+    { "id": "squirmy", "name": "Squirmy", "description": "Can't stay still under stimulation" },
+    { "id": "vocal", "name": "Vocal", "description": "Loud reactions, can't stay quiet" },
+    { "id": "submissive", "name": "Submissive", "description": "Naturally inclined to obey" },
+    { "id": "eager", "name": "Eager", "description": "Wants to please" },
+    { "id": "devoted", "name": "Devoted", "description": "Forms strong attachments" },
+    { "id": "desperate", "name": "Desperate", "description": "Easily driven to begging" },
+    { "id": "needy", "name": "Needy", "description": "Craves attention and stimulation" },
+    { "id": "weak-willed", "name": "Weak-Willed", "description": "Gives in easily under pressure" },
+    { "id": "stubborn", "name": "Stubborn", "description": "Resists even when it's futile" },
+    { "id": "prideful", "name": "Prideful", "description": "Ego makes humiliation more effective" },
+    { "id": "competitive", "name": "Competitive", "description": "Tries to win even in losing situations" },
+    { "id": "uncertain", "name": "Uncertain", "description": "Unsure of own limits" },
+    { "id": "curious", "name": "Curious", "description": "Interested in new experiences" },
+    { "id": "adaptable", "name": "Adaptable", "description": "Adjusts to new situations" },
+    { "id": "defiant", "name": "Defiant", "description": "Actively resists authority" },
+    { "id": "masochistic", "name": "Masochistic", "description": "Finds pleasure in pain" },
+    { "id": "sensitive", "name": "Sensitive", "description": "Heightened physical responses" },
+    { "id": "stoic", "name": "Stoic", "description": "Tries to hide reactions" },
+    { "id": "bratty", "name": "Bratty", "description": "Misbehaves for attention" }
+  ]
+}

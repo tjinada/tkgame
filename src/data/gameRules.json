@@ -1,0 +1,181 @@
+{
+  "defaults": {
+    "discovery": {
+      "speed": "normal",
+      "sharingMode": "gossip",
+      "startingKnowledge": 0,
+      "probingEnabled": true,
+      "exploitationEnabled": true
+    },
+    "slave": {
+      "allowMasking": false,
+      "maskingDC": 15,
+      "maskingCost": 5,
+      "allowCounterDiscovery": true,
+      "showVulnerabilityHints": false
+    },
+    "difficulty": {
+      "preset": "balanced",
+      "dcModifier": 0,
+      "statChangeScale": 1.0,
+      "vulnerabilityScale": 1.0
+    },
+    "content": {
+      "mode": "ai",
+      "model": "chatgpt-4o-latest",
+      "contextMode": "full-chapter"
+    },
+    "npc": {
+      "sandyRequired": true,
+      "minNpcs": 1,
+      "maxNpcs": 20
+    }
+  },
+  
+  "difficultyPresets": {
+    "easy": {
+      "id": "easy",
+      "name": "Easy",
+      "description": "Forgiving gameplay, slower discovery",
+      "settings": {
+        "discovery": {
+          "speed": "slow",
+          "sharingMode": "none"
+        },
+        "slave": {
+          "allowMasking": true,
+          "maskingDC": 12,
+          "showVulnerabilityHints": true
+        },
+        "difficulty": {
+          "dcModifier": -2,
+          "statChangeScale": 0.75,
+          "vulnerabilityScale": 0.8
+        }
+      }
+    },
+    "balanced": {
+      "id": "balanced",
+      "name": "Balanced",
+      "description": "Standard experience",
+      "settings": {
+        "discovery": {
+          "speed": "normal",
+          "sharingMode": "gossip"
+        },
+        "slave": {
+          "allowMasking": false,
+          "showVulnerabilityHints": false
+        },
+        "difficulty": {
+          "dcModifier": 0,
+          "statChangeScale": 1.0,
+          "vulnerabilityScale": 1.0
+        }
+      }
+    },
+    "hard": {
+      "id": "hard",
+      "name": "Hard",
+      "description": "Challenging gameplay, faster discovery",
+      "settings": {
+        "discovery": {
+          "speed": "fast",
+          "sharingMode": "reports"
+        },
+        "slave": {
+          "allowMasking": false,
+          "showVulnerabilityHints": false
+        },
+        "difficulty": {
+          "dcModifier": 2,
+          "statChangeScale": 1.25,
+          "vulnerabilityScale": 1.2
+        }
+      }
+    },
+    "nightmare": {
+      "id": "nightmare",
+      "name": "Nightmare",
+      "description": "Brutal difficulty, instant sharing",
+      "settings": {
+        "discovery": {
+          "speed": "fast",
+          "sharingMode": "hivemind",
+          "startingKnowledge": 25
+        },
+        "slave": {
+          "allowMasking": false,
+          "showVulnerabilityHints": false
+        },
+        "difficulty": {
+          "dcModifier": 4,
+          "statChangeScale": 1.5,
+          "vulnerabilityScale": 1.5
+        }
+      }
+    }
+  },
+  
+  "maskingRules": {
+    "description": "Slave attempts to hide reactions from Mistresses",
+    "baseDC": 15,
+    "enduranceCost": 5,
+    "modifiers": {
+      "highVulnerability": { "threshold": 70, "dcBonus": 3, "description": "Hard to hide extreme sensitivity" },
+      "lowEndurance": { "threshold": 30, "dcBonus": 2, "description": "Too exhausted to maintain composure" },
+      "masteredKnowledge": { "dcBonus": 5, "description": "She knows you too well" },
+      "bondage": { "dcBonus": 2, "description": "Can't squirm away while restrained" }
+    },
+    "successEffect": {
+      "discoveryPrevented": true,
+      "enduranceLoss": 5,
+      "narrative": "You manage to suppress your reaction, but it costs you."
+    },
+    "failureEffect": {
+      "discoveryBonus": 10,
+      "enduranceLoss": 3,
+      "narrative": "Your attempt to hide it only makes it more obvious."
+    }
+  },
+  
+  "counterDiscoveryRules": {
+    "description": "Slave learning about Mistress weaknesses",
+    "enabled": true,
+    "discoveryChance": 0.1,
+    "discoveryConditions": [
+      "highAffinity",
+      "observationRoll",
+      "specialEvent"
+    ],
+    "hintFrequency": "occasional"
+  },
+  
+  "validationRules": {
+    "slave": {
+      "nameMinLength": 1,
+      "nameMaxLength": 50,
+      "minTraits": 0,
+      "maxTraits": 5,
+      "statMin": 0,
+      "statMax": 100,
+      "vulnerabilityMin": 0,
+      "vulnerabilityMax": 100
+    },
+    "npc": {
+      "nameMinLength": 1,
+      "nameMaxLength": 50,
+      "minPerks": 0,
+      "maxPerks": 5,
+      "minWeaknesses": 0,
+      "maxWeaknesses": 3,
+      "affinityMin": -50,
+      "affinityMax": 100
+    },
+    "scenario": {
+      "nameMinLength": 1,
+      "nameMaxLength": 100,
+      "descriptionMaxLength": 500
+    }
+  }
+}

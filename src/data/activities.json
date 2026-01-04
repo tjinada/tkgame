@@ -1,0 +1,224 @@
+{
+  "activities": [
+    {
+      "id": "tickling",
+      "name": "Tickling",
+      "category": "physical",
+      "description": "Light to intense tickling with fingers, feathers, or tools",
+      "icon": "feather",
+      "defaultIntensity": 50,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": 5, "max": 15 },
+          "endurance": { "min": -3, "max": -8 },
+          "sensitivity": { "min": 2, "max": 5 }
+        }
+      },
+      "compatibleBodyParts": ["feet", "ribs", "armpits", "neck", "stomach", "innerThighs", "back", "chest"],
+      "tools": ["fingers", "feathers", "brushes", "electric", "nails"],
+      "keywords": ["tickle", "ticklish", "giggle", "squirm", "laugh", "writhe"],
+      "isDefault": true
+    },
+    {
+      "id": "footWorship",
+      "name": "Foot Worship",
+      "category": "worship",
+      "description": "Forced worship of feet - licking, sucking, massaging",
+      "icon": "footprints",
+      "defaultIntensity": 40,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": 8, "max": 20 },
+          "obedience": { "min": 3, "max": 8 },
+          "endurance": { "min": -2, "max": -5 }
+        }
+      },
+      "compatibleBodyParts": ["feet"],
+      "tools": ["barefoot", "stockings", "boots", "sweaty", "dirty"],
+      "keywords": ["worship", "lick", "suck", "toes", "soles", "feet", "kiss"],
+      "isDefault": true
+    },
+    {
+      "id": "sweatWorship",
+      "name": "Sweat Worship",
+      "category": "worship",
+      "description": "Forced to lick and clean sweaty body parts",
+      "icon": "droplet",
+      "defaultIntensity": 60,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": 10, "max": 25 },
+          "obedience": { "min": 5, "max": 12 },
+          "sensitivity": { "min": 3, "max": 8 }
+        }
+      },
+      "compatibleBodyParts": ["armpits", "feet", "back", "chest"],
+      "tools": ["post-workout", "natural", "intense"],
+      "keywords": ["sweat", "lick", "clean", "salty", "musk", "smell", "taste"],
+      "isDefault": true
+    },
+    {
+      "id": "edging",
+      "name": "Edging",
+      "category": "sexual",
+      "description": "Bringing to the brink repeatedly without release",
+      "icon": "waves",
+      "defaultIntensity": 70,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": 20, "max": 35 },
+          "endurance": { "min": -8, "max": -15 },
+          "sensitivity": { "min": 5, "max": 12 }
+        }
+      },
+      "compatibleBodyParts": ["groin", "fullBody"],
+      "tools": ["hands", "toys", "oral", "teasing"],
+      "keywords": ["edge", "deny", "desperate", "please", "almost", "stop", "close"],
+      "isDefault": true
+    },
+    {
+      "id": "postOrgasmTorture",
+      "name": "Post-Orgasm Torture",
+      "category": "sexual",
+      "description": "Continued stimulation after release when hypersensitive",
+      "icon": "zap",
+      "defaultIntensity": 85,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": -20, "max": -10 },
+          "endurance": { "min": -15, "max": -25 },
+          "sensitivity": { "min": 15, "max": 30 }
+        }
+      },
+      "compatibleBodyParts": ["groin", "fullBody"],
+      "tools": ["hands", "toys", "slapping", "vibrator"],
+      "requiresState": "postOrgasm",
+      "keywords": ["sensitive", "too much", "stop", "overstimulation", "torture", "continue"],
+      "isDefault": true
+    },
+    {
+      "id": "humiliation",
+      "name": "Verbal Humiliation",
+      "category": "psychological",
+      "description": "Degrading words, mockery, and psychological torment",
+      "icon": "messageSquare",
+      "defaultIntensity": 50,
+      "statEffects": {
+        "base": {
+          "obedience": { "min": 5, "max": 15 },
+          "arousal": { "min": 3, "max": 10 },
+          "endurance": { "min": -2, "max": -6 }
+        }
+      },
+      "compatibleBodyParts": ["any"],
+      "tools": ["mockery", "nameCalling", "publicHumiliation", "degradation"],
+      "keywords": ["pathetic", "worthless", "bitch", "slut", "degrade", "mock", "laugh"],
+      "isDefault": true
+    },
+    {
+      "id": "bondage",
+      "name": "Bondage",
+      "category": "restraint",
+      "description": "Physical restraint and helplessness",
+      "icon": "link",
+      "defaultIntensity": 40,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": 5, "max": 12 },
+          "obedience": { "min": 3, "max": 8 }
+        }
+      },
+      "compatibleBodyParts": ["fullBody", "arms", "legs"],
+      "tools": ["rope", "cuffs", "spreaderBar", "suspension", "straps"],
+      "modifiesOtherActivities": true,
+      "activityModifier": 1.2,
+      "keywords": ["tied", "bound", "helpless", "trapped", "restrained", "immobile"],
+      "isDefault": true
+    },
+    {
+      "id": "faceSitting",
+      "name": "Face Sitting",
+      "category": "smothering",
+      "description": "Smothering with weight and dominance",
+      "icon": "arrowDown",
+      "defaultIntensity": 65,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": 10, "max": 20 },
+          "obedience": { "min": 5, "max": 12 },
+          "endurance": { "min": -5, "max": -12 }
+        }
+      },
+      "compatibleBodyParts": ["face"],
+      "tools": ["bare", "clothed", "sweaty"],
+      "keywords": ["smother", "sit", "breathe", "face", "suffocate", "weight"],
+      "isDefault": true
+    },
+    {
+      "id": "trampling",
+      "name": "Trampling",
+      "category": "physical",
+      "description": "Walking on and stepping on the body",
+      "icon": "footprints",
+      "defaultIntensity": 55,
+      "statEffects": {
+        "base": {
+          "obedience": { "min": 5, "max": 15 },
+          "endurance": { "min": -8, "max": -15 },
+          "sensitivity": { "min": 3, "max": 8 }
+        }
+      },
+      "compatibleBodyParts": ["chest", "stomach", "back", "groin"],
+      "tools": ["barefoot", "heels", "boots"],
+      "keywords": ["trample", "step", "walk", "stomp", "crush", "stand"],
+      "isDefault": true
+    },
+    {
+      "id": "nippleTorture",
+      "name": "Nipple Torture",
+      "category": "physical",
+      "description": "Focused stimulation and torture of nipples",
+      "icon": "target",
+      "defaultIntensity": 60,
+      "statEffects": {
+        "base": {
+          "arousal": { "min": 10, "max": 25 },
+          "sensitivity": { "min": 8, "max": 15 },
+          "endurance": { "min": -5, "max": -10 }
+        }
+      },
+      "compatibleBodyParts": ["chest"],
+      "tools": ["fingers", "clamps", "ice", "suction"],
+      "keywords": ["nipple", "pinch", "twist", "clamp", "sensitive"],
+      "isDefault": true
+    },
+    {
+      "id": "spanking",
+      "name": "Spanking",
+      "category": "impact",
+      "description": "Impact play on buttocks and thighs",
+      "icon": "hand",
+      "defaultIntensity": 50,
+      "statEffects": {
+        "base": {
+          "obedience": { "min": 5, "max": 12 },
+          "arousal": { "min": 5, "max": 15 },
+          "endurance": { "min": -3, "max": -8 }
+        }
+      },
+      "compatibleBodyParts": ["buttocks", "innerThighs"],
+      "tools": ["hand", "paddle", "crop", "cane"],
+      "keywords": ["spank", "slap", "hit", "punish", "red", "sting"],
+      "isDefault": true
+    }
+  ],
+  "categories": [
+    { "id": "physical", "name": "Physical", "color": "#ef4444", "description": "Direct physical stimulation" },
+    { "id": "worship", "name": "Worship", "color": "#f59e0b", "description": "Forced worship activities" },
+    { "id": "sexual", "name": "Sexual", "color": "#ec4899", "description": "Sexual stimulation and denial" },
+    { "id": "psychological", "name": "Psychological", "color": "#8b5cf6", "description": "Mental and verbal torment" },
+    { "id": "restraint", "name": "Restraint", "color": "#6366f1", "description": "Bondage and immobilization" },
+    { "id": "smothering", "name": "Smothering", "color": "#14b8a6", "description": "Breath control and weight" },
+    { "id": "impact", "name": "Impact", "color": "#f97316", "description": "Striking and impact play" }
+  ]
+}

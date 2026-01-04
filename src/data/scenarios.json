@@ -1,0 +1,249 @@
+{
+  "scenarios": [
+    {
+      "id": "classic-setup",
+      "name": "Classic Setup",
+      "description": "Default 6 Mistresses vs Fresh Meat slave. The standard experience.",
+      "createdAt": "2026-01-02T10:00:00Z",
+      "updatedAt": "2026-01-02T10:00:00Z",
+      "isDefault": true,
+      "isFavorite": true,
+      
+      "slave": {
+        "profileId": "fresh-meat",
+        "profileType": "preset",
+        "overrides": {}
+      },
+      
+      "npcs": [
+        { "profileId": "sandy", "required": true },
+        { "profileId": "araph" },
+        { "profileId": "nancy" },
+        { "profileId": "aish" },
+        { "profileId": "gaya" },
+        { "profileId": "melissa" }
+      ],
+      
+      "rules": {
+        "difficulty": "balanced",
+        "discovery": {
+          "speed": "normal",
+          "sharingMode": "gossip",
+          "startingKnowledge": 0
+        },
+        "slave": {
+          "allowMasking": false,
+          "maskingDC": 15,
+          "maskingCost": 5,
+          "allowCounterDiscovery": true,
+          "showVulnerabilityHints": false
+        },
+        "content": {
+          "mode": "ai",
+          "model": "chatgpt-4o-latest"
+        }
+      },
+      
+      "tags": ["default", "balanced", "full-roster"]
+    },
+    {
+      "id": "tickle-hell",
+      "name": "Tickle Hell",
+      "description": "Tickle Toy slave vs tickle-focused Mistresses. Prepare to laugh until you cry.",
+      "createdAt": "2026-01-02T10:00:00Z",
+      "updatedAt": "2026-01-02T10:00:00Z",
+      "isDefault": true,
+      "isFavorite": false,
+      
+      "slave": {
+        "profileId": "tickle-toy",
+        "profileType": "preset",
+        "overrides": {
+          "baseStats": {
+            "endurance": 35
+          }
+        }
+      },
+      
+      "npcs": [
+        { "profileId": "sandy", "required": true },
+        { "profileId": "araph" },
+        { "profileId": "melissa" }
+      ],
+      
+      "rules": {
+        "difficulty": "hard",
+        "discovery": {
+          "speed": "fast",
+          "sharingMode": "gossip",
+          "startingKnowledge": 0
+        },
+        "slave": {
+          "allowMasking": false,
+          "allowCounterDiscovery": true,
+          "showVulnerabilityHints": false
+        },
+        "content": {
+          "mode": "ai",
+          "model": "chatgpt-4o-latest"
+        }
+      },
+      
+      "tags": ["tickle", "hard", "focused"]
+    },
+    {
+      "id": "worship-paradise",
+      "name": "Worship Paradise",
+      "description": "Worship Slave vs the foot and sweat specialists. Devotion will be tested.",
+      "createdAt": "2026-01-02T10:00:00Z",
+      "updatedAt": "2026-01-02T10:00:00Z",
+      "isDefault": true,
+      "isFavorite": false,
+      
+      "slave": {
+        "profileId": "worship-slave",
+        "profileType": "preset",
+        "overrides": {}
+      },
+      
+      "npcs": [
+        { "profileId": "sandy", "required": true },
+        { "profileId": "nancy" },
+        { "profileId": "aish" }
+      ],
+      
+      "rules": {
+        "difficulty": "balanced",
+        "discovery": {
+          "speed": "normal",
+          "sharingMode": "gossip",
+          "startingKnowledge": 0
+        },
+        "slave": {
+          "allowMasking": false,
+          "allowCounterDiscovery": true,
+          "showVulnerabilityHints": false
+        },
+        "content": {
+          "mode": "ai",
+          "model": "chatgpt-4o-latest"
+        }
+      },
+      
+      "tags": ["worship", "balanced", "focused"]
+    },
+    {
+      "id": "edge-of-sanity",
+      "name": "Edge of Sanity",
+      "description": "Edge Junkie vs Gaya and Melissa. How long can you hold out?",
+      "createdAt": "2026-01-02T10:00:00Z",
+      "updatedAt": "2026-01-02T10:00:00Z",
+      "isDefault": true,
+      "isFavorite": false,
+      
+      "slave": {
+        "profileId": "edge-junkie",
+        "profileType": "preset",
+        "overrides": {}
+      },
+      
+      "npcs": [
+        { "profileId": "sandy", "required": true },
+        { "profileId": "gaya" },
+        { "profileId": "melissa" }
+      ],
+      
+      "rules": {
+        "difficulty": "hard",
+        "discovery": {
+          "speed": "normal",
+          "sharingMode": "gossip",
+          "startingKnowledge": 0
+        },
+        "slave": {
+          "allowMasking": false,
+          "allowCounterDiscovery": true,
+          "showVulnerabilityHints": false
+        },
+        "content": {
+          "mode": "ai",
+          "model": "chatgpt-4o-latest"
+        }
+      },
+      
+      "tags": ["edging", "hard", "focused"]
+    },
+    {
+      "id": "break-the-defiant",
+      "name": "Break the Defiant",
+      "description": "The Defiant One vs all 6 Mistresses. They WILL find your weakness.",
+      "createdAt": "2026-01-02T10:00:00Z",
+      "updatedAt": "2026-01-02T10:00:00Z",
+      "isDefault": true,
+      "isFavorite": false,
+      
+      "slave": {
+        "profileId": "defiant-one",
+        "profileType": "preset",
+        "overrides": {}
+      },
+      
+      "npcs": [
+        { "profileId": "sandy", "required": true },
+        { "profileId": "araph" },
+        { "profileId": "nancy" },
+        { "profileId": "aish" },
+        { "profileId": "gaya" },
+        { "profileId": "melissa" }
+      ],
+      
+      "rules": {
+        "difficulty": "nightmare",
+        "discovery": {
+          "speed": "fast",
+          "sharingMode": "hivemind",
+          "startingKnowledge": 0
+        },
+        "slave": {
+          "allowMasking": false,
+          "allowCounterDiscovery": true,
+          "showVulnerabilityHints": false
+        },
+        "content": {
+          "mode": "ai",
+          "model": "chatgpt-4o-latest"
+        }
+      },
+      
+      "tags": ["nightmare", "full-roster", "challenge"]
+    }
+  ],
+  
+  "customScenarios": [],
+  
+  "schema": {
+    "id": "string (auto-generated UUID)",
+    "name": "string",
+    "description": "string",
+    "createdAt": "ISO date string",
+    "updatedAt": "ISO date string",
+    "isDefault": "boolean",
+    "isFavorite": "boolean",
+    "slave": {
+      "profileId": "string (references preset or custom profile)",
+      "profileType": "string (preset | custom)",
+      "overrides": "object (partial slave profile to override)"
+    },
+    "npcs": [{
+      "profileId": "string (references NPC profile)",
+      "required": "boolean (true for Sandy)"
+    }],
+    "rules": {
+      "difficulty": "string (easy | balanced | hard | nightmare)",
+      "discovery": "object",
+      "slave": "object",
+      "content": "object"
+    },
+    "tags": ["array of strings for filtering"]
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "knowledgeLevels": {
+    "unaware": {
+      "id": "unaware",
+      "name": "Unaware",
+      "icon": "░",
+      "color": "#6b7280",
+      "minConfidence": 0,
+      "maxConfidence": 24,
+      "description": "Has no idea about this weakness",
+      "behaviorModifier": 1.0,
+      "narrativeHints": [
+        "shows no special interest",
+        "tries different approaches randomly",
+        "hasn't noticed anything particular"
+      ]
+    },
+    "suspicious": {
+      "id": "suspicious",
+      "name": "Suspicious",
+      "icon": "🔍",
+      "color": "#f59e0b",
+      "minConfidence": 25,
+      "maxConfidence": 49,
+      "description": "Noticed something, may probe further",
+      "behaviorModifier": 1.25,
+      "narrativeHints": [
+        "eyes narrow with interest",
+        "tries that approach again",
+        "makes a mental note",
+        "smirks knowingly"
+      ]
+    },
+    "confirmed": {
+      "id": "confirmed",
+      "name": "Confirmed",
+      "icon": "✓",
+      "color": "#ef4444",
+      "minConfidence": 50,
+      "maxConfidence": 79,
+      "description": "Knows this is a weakness, will exploit",
+      "behaviorModifier": 1.5,
+      "narrativeHints": [
+        "goes straight for your weakness",
+        "knows exactly what to do",
+        "exploits your vulnerability deliberately",
+        "targets your weak spot with precision"
+      ]
+    },
+    "mastered": {
+      "id": "mastered",
+      "name": "Mastered",
+      "icon": "★",
+      "color": "#dc2626",
+      "minConfidence": 80,
+      "maxConfidence": 100,
+      "description": "Complete understanding, devastating effectiveness",
+      "behaviorModifier": 2.0,
+      "narrativeHints": [
+        "owns you completely in this domain",
+        "has perfected breaking you this way",
+        "knows your body better than you do",
+        "devastatingly effective"
+      ]
+    }
+  },
+  
+  "overallKnowledgeStates": {
+    "unaware": { "label": "Unaware", "minScore": 0, "maxScore": 10, "color": "#6b7280" },
+    "probing": { "label": "Probing", "minScore": 11, "maxScore": 30, "color": "#a855f7" },
+    "learning": { "label": "Learning", "minScore": 31, "maxScore": 50, "color": "#f59e0b" },
+    "dangerous": { "label": "Dangerous", "minScore": 51, "maxScore": 75, "color": "#ef4444" },
+    "devastating": { "label": "Devastating", "minScore": 76, "maxScore": 100, "color": "#dc2626" }
+  },
+  
+  "discoveryTriggers": {
+    "highReaction": {
+      "id": "highReaction",
+      "name": "Strong Reaction",
+      "condition": "statChange > threshold",
+      "threshold": 15,
+      "confidenceGain": 15,
+      "narrative": "Your body betrays you - {npc} notices the intense reaction."
+    },
+    "veryHighReaction": {
+      "id": "veryHighReaction",
+      "name": "Extreme Reaction",
+      "condition": "statChange > threshold",
+      "threshold": 25,
+      "confidenceGain": 25,
+      "narrative": "{npc}'s eyes light up with wicked recognition. You couldn't hide that one."
+    },
+    "failedEndurance": {
+      "id": "failedEndurance",
+      "name": "Failed Endurance Check",
+      "condition": "enduranceCheckFailed && margin > threshold",
+      "threshold": 5,
+      "confidenceGain": 20,
+      "narrative": "{npc}'s eyes light up. 'Found it,' she whispers."
+    },
+    "criticalFail": {
+      "id": "criticalFail",
+      "name": "Critical Failure",
+      "condition": "diceRoll == 1",
+      "confidenceGain": 30,
+      "narrative": "You completely break down. {npc} will NEVER forget this."
+    },
+    "repeatedSuccess": {
+      "id": "repeatedSuccess",
+      "name": "Repeated Strong Reactions",
+      "condition": "consecutiveHighReactions >= threshold",
+      "threshold": 3,
+      "confidenceGain": 20,
+      "narrative": "The pattern is undeniable. {npc} has figured you out."
+    },
+    "deliberateProbe": {
+      "id": "deliberateProbe",
+      "name": "Deliberate Probing",
+      "condition": "npcIsProbing && reaction > moderate",
+      "confidenceGain": 25,
+      "narrative": "{npc} was testing you deliberately. Now she knows."
+    }
+  },
+  
+  "discoverySpeed": {
+    "slow": {
+      "id": "slow",
+      "name": "Slow",
+      "multiplier": 0.5,
+      "description": "Mistresses learn your weaknesses very gradually"
+    },
+    "normal": {
+      "id": "normal",
+      "name": "Normal",
+      "multiplier": 1.0,
+      "description": "Standard discovery rate"
+    },
+    "fast": {
+      "id": "fast",
+      "name": "Fast",
+      "multiplier": 1.5,
+      "description": "Mistresses learn your weaknesses quickly"
+    },
+    "instant": {
+      "id": "instant",
+      "name": "Instant",
+      "multiplier": 3.0,
+      "description": "Mistresses immediately recognize weaknesses (brutal)"
+    }
+  },
+  
+  "sharingModes": {
+    "none": {
+      "id": "none",
+      "name": "No Sharing",
+      "description": "Each Mistress learns independently",
+      "shareChance": 0,
+      "shareAmount": 0
+    },
+    "gossip": {
+      "id": "gossip",
+      "name": "Gossip",
+      "description": "Mistresses occasionally share discoveries",
+      "shareChance": 0.15,
+      "shareAmount": 0.5,
+      "minLevelToShare": "confirmed",
+      "narrative": "Word spreads among the Mistresses..."
+    },
+    "reports": {
+      "id": "reports",
+      "name": "Reports to Sandy",
+      "description": "All discoveries are reported to Sandy, who decides what to share",
+      "shareChance": 0.3,
+      "shareAmount": 0.4,
+      "reportTo": "sandy",
+      "narrative": "Sandy reviews the reports with interest..."
+    },
+    "hivemind": {
+      "id": "hivemind",
+      "name": "Hivemind",
+      "description": "All Mistresses instantly know what any discovers (brutal)",
+      "shareChance": 1.0,
+      "shareAmount": 0.8,
+      "narrative": "The Mistresses share everything instantly."
+    }
+  },
+  
+  "probingBehavior": {
+    "enabled": true,
+    "probeChance": 0.2,
+    "probeBonus": 1.5,
+    "probingNarrative": [
+      "{npc} seems to be testing something specific...",
+      "{npc} watches your reaction carefully.",
+      "This feels like a deliberate experiment.",
+      "{npc} tries a different approach, studying you."
+    ]
+  },
+  
+  "exploitationBehavior": {
+    "enabled": true,
+    "confirmedTargetChance": 0.6,
+    "masteredTargetChance": 0.85,
+    "exploitNarrative": [
+      "{npc} goes straight for your known weakness.",
+      "She knows exactly where to hit you.",
+      "{npc} exploits what she's learned about you.",
+      "Your weakness is her favorite target now."
+    ]
+  },
+  
+  "reactionThresholds": {
+    "minimal": { "min": 0, "max": 5, "label": "Minimal" },
+    "low": { "min": 6, "max": 10, "label": "Low" },
+    "moderate": { "min": 11, "max": 15, "label": "Moderate" },
+    "high": { "min": 16, "max": 25, "label": "High" },
+    "extreme": { "min": 26, "max": 100, "label": "Extreme" }
+  }
+}

@@ -1,6 +1,7 @@
 import configData from '../data/config.json'
 import npcsData from '../data/npcs.json'
 import { progressionSystem } from './ProgressionSystem.js'
+import discoveryRules from '../data/discoveryRules.json'
 
 const AFFINITY_TIERS = configData.affinityTiers
 
@@ -31,6 +32,13 @@ function getInitialState() {
     // Progression reference (actual data in MongoDB)
     progressionInitialized: false,
     saveSlotId: null,
+    
+    // Custom game setup
+    gameConfig: null,           // Full game configuration from setup wizard
+    slaveProfile: null,         // Resolved slave profile with vulnerabilities
+    activeNpcIds: [],           // NPCs active in this game
+    npcKnowledge: {},           // NPC knowledge tracking { npcId: { activities: {}, overallScore } }
+    gameRules: null,            // Discovery speed, sharing mode, etc.
   }
 }
 
@@ -333,6 +341,258 @@ export class StateManager {
   reset() {
     this.state = getInitialState()
     this._notifyListeners()
+  }
+
+  // ========== Custom Game Setup ==========
+
+  /**
+   * Initialize game from a game config (from setup wizard)
+   * @param {Object} gameConfig - Full game configuration
+   */
+  initializeFromGameConfig(gameConfig) {
+    this.state.gameConfig = gameConfig
+    this.state.slaveProfile = gameConfig.slave
+    this.state.activeNpcIds = gameConfig.npcs.map(n => n.id)
+    this.state.gameRules = gameConfig.rules
+    
+    // Set starting stats from slave profile
+    if (gameConfig.slave?.baseStats) {
+      this.state.stats = { ...gameConfig.slave.baseStats }
+    }
+    
+    // Initialize affinities for active NPCs only
+    this.state.affinities = {}
+    for (const npc of gameConfig.npcs) {
+      this.state.affinities[npc.id] = npc.startingAffinity ?? 0
+    }
+    
+    // Initialize NPC knowledge
+    this._initializeNpcKnowledge(gameConfig.rules?.discovery?.startingKnowledge || 0)
+    
+    this._notifyListeners()
+  }
+
+  /**
+   * Initialize NPC knowledge tracking
+   * @param {number} startingKnowledge - Initial knowledge percentage (0-100)
+   */
+  _initializeNpcKnowledge(startingKnowledge = 0) {
+    this.state.npcKnowledge = {}
+    
+    for (const npcId of this.state.activeNpcIds || []) {
+      this.state.npcKnowledge[npcId] = {
+        activities: {},
+        overallScore: startingKnowledge
+      }
+    }
+  }
+
+  /**
+   * Get slave vulnerability for activity + body part
+   * @param {string} activityId
+   * @param {string} bodyPartId
+   * @returns {number} 0-100 vulnerability score
+   */
+  getVulnerability(activityId, bodyPartId) {
+    const matrix = this.state.slaveProfile?.vulnerabilityMatrix
+    if (!matrix) return 50 // Default
+    return matrix[activityId]?.[bodyPartId] ?? 50
+  }
+
+  /**
+   * Get full vulnerability matrix
+   * @returns {Object}
+   */
+  getVulnerabilityMatrix() {
+    return this.state.slaveProfile?.vulnerabilityMatrix || {}
+  }
+
+  /**
+   * Get slave traits
+   * @returns {string[]}
+   */
+  getSlaveTraits() {
+    return this.state.slaveProfile?.traits || []
+  }
+
+  /**
+   * Check if slave has a specific trait
+   * @param {string} traitId
+   * @returns {boolean}
+   */
+  hasTrait(traitId) {
+    return this.getSlaveTraits().includes(traitId)
+  }
+
+  /**
+   * Get active NPC IDs
+   * @returns {string[]}
+   */
+  getActiveNpcIds() {
+    return [...(this.state.activeNpcIds || [])]
+  }
+
+  /**
+   * Check if NPC is active in this game
+   * @param {string} npcId
+   * @returns {boolean}
+   */
+  isNpcActive(npcId) {
+    return this.state.activeNpcIds?.includes(npcId) ?? false
+  }
+
+  /**
+   * Get game rules
+   * @returns {Object}
+   */
+  getGameRules() {
+    return this.state.gameRules || {}
+  }
+
+  /**
+   * Get discovery speed multiplier
+   * @returns {number}
+   */
+  getDiscoverySpeedMultiplier() {
+    const speed = this.state.gameRules?.discovery?.speed || 'normal'
+    return discoveryRules.discoverySpeed[speed]?.multiplier ?? 1.0
+  }
+
+  /**
+   * Get knowledge sharing mode
+   * @returns {string}
+   */
+  getSharingMode() {
+    return this.state.gameRules?.discovery?.sharingMode || 'gossip'
+  }
+
+  // ========== NPC Knowledge ==========
+
+  /**
+   * Get NPC's knowledge about a specific weakness
+   * @param {string} npcId
+   * @param {string} activityId
+   * @param {string} bodyPartId
+   * @returns {Object} { confidence: number, level: string }
+   */
+  getNpcKnowledge(npcId, activityId, bodyPartId) {
+    const key = `${activityId}_${bodyPartId}`
+    const knowledge = this.state.npcKnowledge?.[npcId]?.activities?.[key]
+    
+    if (!knowledge) {
+      return { confidence: 0, level: 'unaware' }
+    }
+    
+    // Determine level from confidence
+    let level = 'unaware'
+    for (const [levelId, config] of Object.entries(discoveryRules.knowledgeLevels)) {
+      if (knowledge.confidence >= config.minConfidence && knowledge.confidence <= config.maxConfidence) {
+        level = levelId
+        break
+      }
+    }
+    
+    return { confidence: knowledge.confidence, level }
+  }
+
+  /**
+   * Update NPC's knowledge about a weakness
+   * @param {string} npcId
+   * @param {string} activityId
+   * @param {string} bodyPartId
+   * @param {number} confidence - New confidence value (0-100)
+   */
+  updateNpcKnowledge(npcId, activityId, bodyPartId, confidence) {
+    if (!this.state.npcKnowledge) {
+      this.state.npcKnowledge = {}
+    }
+    if (!this.state.npcKnowledge[npcId]) {
+      this.state.npcKnowledge[npcId] = { activities: {}, overallScore: 0 }
+    }
+    
+    const key = `${activityId}_${bodyPartId}`
+    const prev = this.state.npcKnowledge[npcId].activities[key]?.confidence || 0
+    
+    this.state.npcKnowledge[npcId].activities[key] = {
+      confidence: Math.max(0, Math.min(100, confidence)),
+      lastTested: Date.now(),
+      observations: (this.state.npcKnowledge[npcId].activities[key]?.observations || [])
+    }
+    
+    // Recalculate overall score
+    this._recalculateNpcOverallScore(npcId)
+    
+    this._notifyListeners()
+    
+    return { previous: prev, current: confidence }
+  }
+
+  /**
+   * Add observation to NPC knowledge
+   * @param {string} npcId
+   * @param {string} activityId
+   * @param {string} bodyPartId
+   * @param {string} observation
+   */
+  addNpcObservation(npcId, activityId, bodyPartId, observation) {
+    const key = `${activityId}_${bodyPartId}`
+    if (!this.state.npcKnowledge?.[npcId]?.activities?.[key]) return
+    
+    const obs = this.state.npcKnowledge[npcId].activities[key].observations || []
+    obs.push({ text: observation, timestamp: Date.now() })
+    
+    // Keep only last 5 observations
+    if (obs.length > 5) {
+      obs.shift()
+    }
+    
+    this.state.npcKnowledge[npcId].activities[key].observations = obs
+    this._notifyListeners()
+  }
+
+  /**
+   * Recalculate NPC's overall knowledge score
+   * @param {string} npcId
+   */
+  _recalculateNpcOverallScore(npcId) {
+    const knowledge = this.state.npcKnowledge?.[npcId]
+    if (!knowledge) return
+    
+    const activities = Object.values(knowledge.activities || {})
+    if (activities.length === 0) {
+      knowledge.overallScore = 0
+      return
+    }
+    
+    const totalConfidence = activities.reduce((sum, a) => sum + (a.confidence || 0), 0)
+    knowledge.overallScore = Math.round(totalConfidence / activities.length)
+  }
+
+  /**
+   * Get NPC's overall knowledge state
+   * @param {string} npcId
+   * @returns {Object} { score: number, state: string }
+   */
+  getNpcOverallKnowledge(npcId) {
+    const score = this.state.npcKnowledge?.[npcId]?.overallScore || 0
+    
+    let state = 'unaware'
+    for (const [stateId, config] of Object.entries(discoveryRules.overallKnowledgeStates)) {
+      if (score >= config.minScore && score <= config.maxScore) {
+        state = stateId
+        break
+      }
+    }
+    
+    return { score, state }
+  }
+
+  /**
+   * Get full NPC knowledge object for UI
+   * @returns {Object}
+   */
+  getAllNpcKnowledge() {
+    return this.state.npcKnowledge || {}
   }
 
   // Event listeners

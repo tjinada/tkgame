@@ -1,0 +1,26 @@
+{
+  "profiles": [],
+  "schema": {
+    "id": "string (auto-generated UUID)",
+    "name": "string",
+    "description": "string",
+    "portrait": "string (asset reference)",
+    "baseStats": {
+      "obedience": "number (0-100)",
+      "endurance": "number (0-100)",
+      "arousal": "number (0-100)",
+      "sensitivity": "number (0-100)"
+    },
+    "traits": ["array of trait IDs"],
+    "vulnerabilityMatrix": {
+      "activityId": {
+        "bodyPartId": "number (0-100)"
+      }
+    },
+    "secretWeakness": "string (narrative description)",
+    "flavorText": "string (intro text)",
+    "createdAt": "ISO date string",
+    "updatedAt": "ISO date string",
+    "isCustom": true
+  }
+}

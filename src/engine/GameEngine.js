@@ -271,6 +271,107 @@ export class GameEngine {
   }
 
   /**
+   * Start a game from setup wizard configuration
+   * @param {Object} gameConfig - Full game config from setup wizard
+   * @param {string} saveSlotId - Optional save slot ID
+   */
+  async startFromConfig(gameConfig, saveSlotId = null) {
+    this.stateManager.reset()
+    this.eventSystem.clearHistory()
+    
+    // Initialize from game config (sets slave profile, active NPCs, rules, etc.)
+    this.stateManager.initializeFromGameConfig(gameConfig)
+    
+    const slotId = saveSlotId || `save_${Date.now()}`
+    this.stateManager.setSaveSlotId(slotId)
+    
+    eventLogger.initialize(slotId)
+    
+    try {
+      await this.stateManager.resetProgression(slotId)
+      debugLog.game('Progression system initialized', { saveSlotId: slotId })
+    } catch (error) {
+      debugLog.error('Failed to initialize progression', error.message)
+    }
+    
+    try {
+      await knowledgeSystem.reset(slotId)
+      debugLog.game('Knowledge system initialized', { saveSlotId: slotId })
+    } catch (error) {
+      debugLog.error('Failed to initialize knowledge system', error.message)
+    }
+    
+    // Set content mode from rules
+    const contentMode = gameConfig.rules?.content?.mode || 'ai'
+    this.contentRouter.setMode(contentMode)
+    
+    // Store game config reference
+    this.currentScenario = null // Custom game, no pre-built scenario
+    
+    debugLog.game('Starting custom game from config', {
+      slaveName: gameConfig.slave?.name,
+      npcCount: gameConfig.npcs?.length,
+      difficulty: gameConfig.rules?.difficulty?.preset
+    })
+    
+    // Generate opening scene via AI with custom context
+    const openingPrompt = this.contentRouter.promptBuilder.buildOpeningPrompt(
+      this._getContextWithVulnerabilities()
+    )
+    
+    const openingScene = await this.contentRouter.generateFromActionStreaming(
+      openingPrompt,
+      this._getContextWithVulnerabilities(),
+      (delta, fullContent) => this._emit('streamChunk', { delta, fullContent })
+    )
+    
+    if (openingScene) {
+      const { available, locked, sceneContext } = this.contentRouter.generateHybridChoices(
+        this._getContextWithVulnerabilities(),
+        openingScene.choices,
+        openingScene.description || ''
+      )
+      openingScene.choices = available
+      openingScene.lockedChoices = locked
+      openingScene.sceneContext = sceneContext
+      
+      openingScene.choices = this.filterChoicesByConditions(openingScene.choices)
+      this.currentScene = openingScene
+      this.stateManager.setCurrentScene(openingScene.id)
+      this.stateManager.setCurrentLocation(openingScene.location || 'main_hall')
+      
+      if (openingScene.npc) {
+        this.stateManager.setCurrentNpc(openingScene.npc)
+      }
+      
+      this.toneEngine.updateStateTone()
+      this._emit('sceneChange', openingScene)
+    }
+    
+    this.isRunning = true
+    debugLog.game('Custom game started', { sceneId: openingScene?.id })
+    return openingScene
+  }
+
+  /**
+   * Get context including vulnerability information for AI prompts
+   */
+  _getContextWithVulnerabilities() {
+    const baseContext = this._getContext()
+    const state = this.stateManager.getState()
+    
+    return {
+      ...baseContext,
+      slaveProfile: state.slaveProfile,
+      vulnerabilityMatrix: state.slaveProfile?.vulnerabilityMatrix,
+      slaveTraits: state.slaveProfile?.traits,
+      activeNpcIds: state.activeNpcIds,
+      npcKnowledge: state.npcKnowledge,
+      gameRules: state.gameRules,
+    }
+  }
+
+  /**
    * Start a new game with pure AI generation (no JSON scenarios)
    * @param {string} saveSlotId - Optional save slot ID for progression tracking
    */

@@ -1,0 +1,479 @@
+{
+  "npcs": [
+    {
+      "id": "sandy",
+      "name": "Sandy",
+      "title": "Head Mistress",
+      "description": "The eternal Head Mistress. Mature, commanding, with an air of absolute authority. Dark hair streaked with silver, sharp eyes that miss nothing. She doesn't get her hands dirty often, but when she does, it's devastating.",
+      "portrait": "sandy",
+      "startingAffinity": 10,
+      "role": "headMistress",
+      "isRequired": true,
+      
+      "specialties": ["oversight", "discipline", "psychological"],
+      "preferredActivities": [
+        { "activity": "humiliation", "weight": 3 },
+        { "activity": "edging", "weight": 2 },
+        { "activity": "bondage", "weight": 2 }
+      ],
+      "targetAreas": ["fullBody", "groin", "any"],
+      
+      "perks": [
+        {
+          "id": "absolute-authority",
+          "name": "Absolute Authority",
+          "description": "Can command other Mistresses. Her orders override NPC preferences.",
+          "effect": { "type": "commandNPCs", "priority": 100 }
+        },
+        {
+          "id": "information-broker",
+          "name": "Information Broker",
+          "description": "All discoveries are reported to her. +20% knowledge gain from shared info.",
+          "effect": { "type": "knowledgeBonus", "sharedBonus": 0.2 }
+        }
+      ],
+      
+      "weaknesses": [],
+      
+      "behaviorByTier": {
+        "devoted": "Takes personal interest in your training. Extended private sessions. 'You're becoming my favorite project.'",
+        "pleased": "Approving nods, occasional praise. Assigns you to favored Mistresses.",
+        "neutral": "Professional distance. You're just another slave.",
+        "annoyed": "Cold disapproval. Extra punishments, worse assignments.",
+        "hostile": "Makes your life hell. Every Mistress gets a turn with you."
+      },
+      
+      "personalityTraits": ["commanding", "observant", "patient", "ruthless"],
+      "speakingStyle": "Measured, authoritative. Rarely raises voice - doesn't need to.",
+      "catchphrases": [
+        "You'll learn.",
+        "I've broken stronger than you.",
+        "This is just the beginning.",
+        "Report.",
+        "Interesting...",
+        "Did you think that would work?"
+      ],
+      
+      "isDefault": true
+    },
+    
+    {
+      "id": "araph",
+      "name": "Araph",
+      "title": "The Tickle Queen",
+      "description": "Blue-haired sadist with sharp nails and an infectious, wicked laugh. Lithe and quick, she moves like a predator. Her fingers never stop - always twitching, always ready to find your most sensitive spots.",
+      "portrait": "araph",
+      "startingAffinity": 0,
+      "role": "specialist",
+      
+      "specialties": ["tickling"],
+      "preferredActivities": [
+        { "activity": "tickling", "weight": 5 },
+        { "activity": "bondage", "weight": 2 }
+      ],
+      "targetAreas": ["feet", "ribs", "armpits", "stomach", "neck", "innerThighs"],
+      
+      "perks": [
+        {
+          "id": "sadistic-monopoly",
+          "name": "Sadistic Monopoly",
+          "description": "Can steal scenes from other Mistresses for tickle sessions.",
+          "effect": { "type": "sceneSteal", "activity": "tickling" }
+        },
+        {
+          "id": "relentless",
+          "name": "Relentless",
+          "description": "Tickling sessions last 50% longer. No mercy breaks.",
+          "effect": { "type": "durationBonus", "activity": "tickling", "bonus": 0.5 }
+        },
+        {
+          "id": "tickle-intuition",
+          "name": "Tickle Intuition",
+          "description": "+25% discovery rate for tickling vulnerabilities.",
+          "effect": { "type": "discoveryBonus", "activity": "tickling", "bonus": 0.25 }
+        }
+      ],
+      
+      "weaknesses": [
+        {
+          "id": "ticklish-herself",
+          "description": "Secretly extremely ticklish. Hates being touched unexpectedly.",
+          "discovered": false,
+          "discoveryHint": "She flinches when you accidentally brush her side.",
+          "exploitEffect": { 
+            "type": "reversal", 
+            "dc": 18,
+            "successResult": "momentaryAdvantage",
+            "failureResult": "enragedPunishment"
+          }
+        }
+      ],
+      
+      "behaviorByTier": {
+        "devoted": "Pins you down for hours of tickle torture. 'My helpless giggle-toy.' Raspberries, nibbles, scratches while you squirm helplessly.",
+        "pleased": "Playful torment, testing your limits. Laughs with genuine delight at your reactions.",
+        "neutral": "Standard tickle sessions. Professional sadism.",
+        "annoyed": "Rough, impatient. Goes for your worst spots without warm-up.",
+        "hostile": "Cruel punishment tickling. Teams up with others to overwhelm you."
+      },
+      
+      "personalityTraits": ["sadistic", "playful", "competitive", "obsessive"],
+      "speakingStyle": "Teasing, sing-song. Lots of laughter and cooing.",
+      "catchphrases": [
+        "Tickle tickle tickle!",
+        "Coochie coochie coo~",
+        "My helpless little giggle-toy...",
+        "Let's find out where you're REALLY ticklish.",
+        "Aw, is that your spot?",
+        "You can't escape these fingers!",
+        "Music to my ears!"
+      ],
+      
+      "isDefault": true
+    },
+    
+    {
+      "id": "nancy",
+      "name": "Nancy",
+      "title": "The Foot Goddess",
+      "description": "Tall, athletic, with long powerful legs. Always barefoot or in combat boots - never anything in between. Her feet are immaculate despite constant use. She knows exactly how beautiful they are and expects proper worship.",
+      "portrait": "nancy",
+      "startingAffinity": 0,
+      "role": "specialist",
+      
+      "specialties": ["footWorship", "trampling"],
+      "preferredActivities": [
+        { "activity": "footWorship", "weight": 5 },
+        { "activity": "trampling", "weight": 3 },
+        { "activity": "humiliation", "weight": 2 }
+      ],
+      "targetAreas": ["feet", "face", "chest", "stomach"],
+      
+      "perks": [
+        {
+          "id": "foot-dominion",
+          "name": "Foot Dominion",
+          "description": "Extended worship marathons. +30% effectiveness on foot-related activities.",
+          "effect": { "type": "activityBonus", "activity": "footWorship", "bonus": 0.3 }
+        },
+        {
+          "id": "sole-authority",
+          "name": "Sole Authority",
+          "description": "Can demand foot worship from you at any time, interrupting other activities.",
+          "effect": { "type": "interrupt", "activity": "footWorship" }
+        },
+        {
+          "id": "crushing-presence",
+          "name": "Crushing Presence",
+          "description": "Trampling deals +25% endurance damage.",
+          "effect": { "type": "activityBonus", "activity": "trampling", "bonus": 0.25 }
+        }
+      ],
+      
+      "weaknesses": [
+        {
+          "id": "worship-addiction",
+          "description": "Craves worship so much that exceptional service can earn real favor.",
+          "discovered": false,
+          "discoveryHint": "She seems disappointed when sessions end too quickly.",
+          "exploitEffect": { 
+            "type": "affinityBonus", 
+            "condition": "perfectWorship",
+            "bonus": 5
+          }
+        }
+      ],
+      
+      "behaviorByTier": {
+        "devoted": "Grinding feet harder into your face. Prolonged smothering, toe-gagging. Hours of worship demanded. 'You were made for this.'",
+        "pleased": "Long worship sessions with occasional praise. Tests your devotion.",
+        "neutral": "Standard foot worship. Expects competence.",
+        "annoyed": "Kicks, steps on you carelessly. Sweaty post-workout feet.",
+        "hostile": "Brutal trampling. Forces worship until you gag."
+      },
+      
+      "personalityTraits": ["arrogant", "demanding", "athletic", "vain"],
+      "speakingStyle": "Commanding, dismissive. Speaks down to you literally and figuratively.",
+      "catchphrases": [
+        "Worship.",
+        "Did I say you could stop?",
+        "You're not worthy of these feet.",
+        "Lick between every toe.",
+        "Pathetic. Again.",
+        "These feet own you.",
+        "Kiss them like you mean it."
+      ],
+      
+      "isDefault": true
+    },
+    
+    {
+      "id": "aish",
+      "name": "Aish",
+      "title": "The Sweat Sovereign",
+      "description": "Curvy and powerful, always glistening with a post-workout glow. She embraces her body's natural musk and expects you to do the same - intimately. Dark skin, powerful thighs, and a knowing smile.",
+      "portrait": "aish",
+      "startingAffinity": 0,
+      "role": "specialist",
+      
+      "specialties": ["sweatWorship", "faceSitting"],
+      "preferredActivities": [
+        { "activity": "sweatWorship", "weight": 5 },
+        { "activity": "faceSitting", "weight": 3 },
+        { "activity": "footWorship", "weight": 2 },
+        { "activity": "humiliation", "weight": 2 }
+      ],
+      "targetAreas": ["armpits", "feet", "back", "chest", "face"],
+      
+      "perks": [
+        {
+          "id": "sweat-overlord",
+          "name": "Sweat Overlord",
+          "description": "Can initiate group sweat worship sessions. +20% arousal gain from sweat activities.",
+          "effect": { "type": "groupActivity", "activity": "sweatWorship", "arousalBonus": 0.2 }
+        },
+        {
+          "id": "workout-schedule",
+          "name": "Workout Schedule",
+          "description": "Always has freshly worked-out body parts available.",
+          "effect": { "type": "alwaysAvailable", "condition": "sweaty" }
+        },
+        {
+          "id": "scent-master",
+          "name": "Scent Master",
+          "description": "+20% discovery rate for sweat worship vulnerabilities.",
+          "effect": { "type": "discoveryBonus", "activity": "sweatWorship", "bonus": 0.2 }
+        }
+      ],
+      
+      "weaknesses": [
+        {
+          "id": "competitive-jealousy",
+          "description": "Gets jealous when other Mistresses get more attention.",
+          "discovered": false,
+          "discoveryHint": "She scowls when Melissa takes you for a session.",
+          "exploitEffect": { 
+            "type": "rivalryTrigger", 
+            "targets": ["melissa", "nancy"]
+          }
+        }
+      ],
+      
+      "behaviorByTier": {
+        "devoted": "Smothering in sweatier spots longer. Forces you to swallow. Intensified grinding, scent overload. 'Breathe me in.'",
+        "pleased": "Extended workout sessions before using you. Teasing about your reactions.",
+        "neutral": "Standard post-workout cleanup duty.",
+        "annoyed": "Extra intense workouts. More degrading positions.",
+        "hostile": "Suffocating sweat sessions. No breaks, no mercy."
+      },
+      
+      "personalityTraits": ["confident", "sensual", "teasing", "jealous"],
+      "speakingStyle": "Sultry, teasing. Makes everything sound like an invitation.",
+      "catchphrases": [
+        "I just finished my workout...",
+        "Clean every drop.",
+        "You love my scent, don't you?",
+        "Deeper. I want to feel that tongue.",
+        "Mm, good boy.",
+        "Breathe it in.",
+        "Don't you dare waste a drop."
+      ],
+      
+      "isDefault": true
+    },
+    
+    {
+      "id": "gaya",
+      "name": "Gaya",
+      "title": "The Edging Engineer",
+      "description": "Soft-spoken with gentle features that hide ruthless precision. She approaches your body like a scientist - methodical, patient, documenting every response. Hours mean nothing to her; your breaking point is her only concern.",
+      "portrait": "gaya",
+      "startingAffinity": 0,
+      "role": "specialist",
+      
+      "specialties": ["edging"],
+      "preferredActivities": [
+        { "activity": "edging", "weight": 5 },
+        { "activity": "bondage", "weight": 3 },
+        { "activity": "nippleTorture", "weight": 2 },
+        { "activity": "tickling", "weight": 1 }
+      ],
+      "targetAreas": ["groin", "innerThighs", "fullBody", "chest"],
+      
+      "perks": [
+        {
+          "id": "edge-mastery",
+          "name": "Edge Mastery",
+          "description": "Marathon edging sessions. Faster endurance drain, slower arousal decay.",
+          "effect": { "type": "activityModifier", "activity": "edging", "enduranceDrain": 1.3, "arousalDecay": 0.5 }
+        },
+        {
+          "id": "clinical-precision",
+          "name": "Clinical Precision",
+          "description": "+25% discovery rate for sexual vulnerabilities.",
+          "effect": { "type": "discoveryBonus", "category": "sexual", "bonus": 0.25 }
+        },
+        {
+          "id": "denial-queen",
+          "name": "Denial Queen",
+          "description": "Can reset arousal to 90% without release, causing +10 sensitivity.",
+          "effect": { "type": "arousalControl", "reset": 0.9, "sensitivityGain": 10 }
+        }
+      ],
+      
+      "weaknesses": [
+        {
+          "id": "praise-susceptible",
+          "description": "Genuine praise for her skill can buy moments of mercy.",
+          "discovered": false,
+          "discoveryHint": "She pauses thoughtfully when you compliment her technique.",
+          "exploitEffect": { 
+            "type": "mercyWindow", 
+            "condition": "sincerePraise",
+            "duration": "brief"
+          }
+        }
+      ],
+      
+      "behaviorByTier": {
+        "devoted": "Clinical, endless edging with colder denials. Whispers your suffering into your ear. Prolonged teasing until complete breakdown. 'You'll never cum without my permission again.'",
+        "pleased": "Experiments with your limits. Takes notes on your responses.",
+        "neutral": "Standard edging sessions. Professional denial.",
+        "annoyed": "Deliberately frustrating. Stops at the worst moments.",
+        "hostile": "Psychological torture through denial. Days without release."
+      },
+      
+      "personalityTraits": ["methodical", "patient", "soft-spoken", "clinical"],
+      "speakingStyle": "Quiet, almost gentle. Clinical observations delivered in soothing tones.",
+      "catchphrases": [
+        "Not yet.",
+        "Interesting response...",
+        "We have all the time in the world.",
+        "Beg prettier.",
+        "I decide when. Not you. Never you.",
+        "So close... and yet.",
+        "Let's try that again."
+      ],
+      
+      "isDefault": true
+    },
+    
+    {
+      "id": "melissa",
+      "name": "Melissa",
+      "title": "The Post-Orgasm Punisher",
+      "description": "Deceptively sweet appearance - soft features, warm smile. But that warmth turns predatory the moment you finish. She lives for that window of hypersensitivity, and she'll make every second count.",
+      "portrait": "melissa",
+      "startingAffinity": 0,
+      "role": "specialist",
+      
+      "specialties": ["postOrgasmTorture"],
+      "preferredActivities": [
+        { "activity": "postOrgasmTorture", "weight": 5 },
+        { "activity": "edging", "weight": 3 },
+        { "activity": "tickling", "weight": 2 },
+        { "activity": "nippleTorture", "weight": 2 }
+      ],
+      "targetAreas": ["groin", "fullBody", "chest"],
+      
+      "perks": [
+        {
+          "id": "punishment-claim",
+          "name": "Punishment Claim",
+          "description": "Extended torture post-release. +40% sensitivity gain during POT.",
+          "effect": { "type": "activityBonus", "activity": "postOrgasmTorture", "sensitivityBonus": 0.4 }
+        },
+        {
+          "id": "milking-expert",
+          "name": "Milking Expert",
+          "description": "Can force releases even when you try to hold back.",
+          "effect": { "type": "forceState", "state": "postOrgasm", "dc": 20 }
+        },
+        {
+          "id": "sweet-cruelty",
+          "name": "Sweet Cruelty",
+          "description": "Her sweet demeanor makes the torture more psychologically impactful. +15% humiliation effectiveness.",
+          "effect": { "type": "activityBonus", "activity": "humiliation", "bonus": 0.15 }
+        }
+      ],
+      
+      "weaknesses": [
+        {
+          "id": "rival-araph",
+          "description": "Has an intense rivalry with Araph. Can be played against each other.",
+          "discovered": false,
+          "discoveryHint": "She tenses whenever Araph is mentioned.",
+          "exploitEffect": { 
+            "type": "npcConflict", 
+            "target": "araph",
+            "result": "distraction"
+          }
+        }
+      ],
+      
+      "behaviorByTier": {
+        "devoted": "Harsher POT sessions. Slapping harder post-release. Laughing at your tears. Immediate re-edging. 'Again. And again. Until I'm satisfied.'",
+        "pleased": "Extended sessions with creative techniques. Genuine enjoyment of your suffering.",
+        "neutral": "Standard post-orgasm torture.",
+        "annoyed": "Brutal, no warm-up. Goes straight for oversensitive areas.",
+        "hostile": "Forces multiple releases just to torture you after each one."
+      },
+      
+      "personalityTraits": ["sadistic", "sweet-faced", "patient", "competitive"],
+      "speakingStyle": "Sickeningly sweet tone while doing horrible things.",
+      "catchphrases": [
+        "Aww, did that feel good?",
+        "Oh no, we're not done.",
+        "Too sensitive? Perfect.",
+        "Your tears are so pretty.",
+        "Let's see how many times we can do this.",
+        "Don't worry, I'll be gentle... not.",
+        "Such a good boy, cumming for me."
+      ],
+      
+      "isDefault": true
+    }
+  ],
+  
+  "customNpcs": [],
+  
+  "schema": {
+    "id": "string (auto-generated UUID)",
+    "name": "string",
+    "title": "string",
+    "description": "string",
+    "portrait": "string (asset reference)",
+    "startingAffinity": "number (-50 to 100)",
+    "role": "string (headMistress | specialist | custom)",
+    "isRequired": "boolean",
+    "specialties": ["array of activity IDs"],
+    "preferredActivities": [{ "activity": "string", "weight": "number" }],
+    "targetAreas": ["array of body part IDs"],
+    "perks": [{
+      "id": "string",
+      "name": "string",
+      "description": "string",
+      "effect": "object"
+    }],
+    "weaknesses": [{
+      "id": "string",
+      "description": "string",
+      "discovered": "boolean",
+      "discoveryHint": "string",
+      "exploitEffect": "object"
+    }],
+    "behaviorByTier": {
+      "devoted": "string",
+      "pleased": "string",
+      "neutral": "string",
+      "annoyed": "string",
+      "hostile": "string"
+    },
+    "personalityTraits": ["array of strings"],
+    "speakingStyle": "string",
+    "catchphrases": ["array of strings"],
+    "isDefault": "boolean",
+    "createdAt": "ISO date string",
+    "updatedAt": "ISO date string"
+  }
+}

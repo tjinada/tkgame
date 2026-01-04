@@ -1,0 +1,164 @@
+{
+  "bodyParts": [
+    {
+      "id": "feet",
+      "name": "Feet",
+      "category": "lower",
+      "description": "Soles, toes, arches",
+      "icon": "footprints",
+      "subRegions": ["soles", "toes", "arches", "heels", "tops"],
+      "defaultSensitivity": 1.0,
+      "isDefault": true
+    },
+    {
+      "id": "armpits",
+      "name": "Armpits",
+      "category": "upper",
+      "description": "Underarm hollows",
+      "icon": "armpit",
+      "subRegions": ["hollows", "sides"],
+      "defaultSensitivity": 1.2,
+      "isDefault": true
+    },
+    {
+      "id": "ribs",
+      "name": "Ribs",
+      "category": "torso",
+      "description": "Rib cage and sides",
+      "icon": "ribcage",
+      "subRegions": ["sides", "lower", "upper"],
+      "defaultSensitivity": 1.0,
+      "isDefault": true
+    },
+    {
+      "id": "neck",
+      "name": "Neck",
+      "category": "upper",
+      "description": "Neck and throat area",
+      "icon": "neck",
+      "subRegions": ["front", "sides", "back", "ears"],
+      "defaultSensitivity": 0.8,
+      "isDefault": true
+    },
+    {
+      "id": "stomach",
+      "name": "Stomach",
+      "category": "torso",
+      "description": "Belly and lower abdomen",
+      "icon": "stomach",
+      "subRegions": ["upperAbs", "lowerAbs", "bellyButton", "sides"],
+      "defaultSensitivity": 1.0,
+      "isDefault": true
+    },
+    {
+      "id": "innerThighs",
+      "name": "Inner Thighs",
+      "category": "lower",
+      "description": "Inner leg area",
+      "icon": "thigh",
+      "subRegions": ["upper", "mid", "knee"],
+      "defaultSensitivity": 1.3,
+      "isDefault": true
+    },
+    {
+      "id": "back",
+      "name": "Back",
+      "category": "torso",
+      "description": "Upper and lower back",
+      "icon": "back",
+      "subRegions": ["upperBack", "lowerBack", "spine", "shoulderBlades"],
+      "defaultSensitivity": 0.7,
+      "isDefault": true
+    },
+    {
+      "id": "chest",
+      "name": "Chest",
+      "category": "torso",
+      "description": "Chest and pectoral area",
+      "icon": "chest",
+      "subRegions": ["pecs", "nipples", "sternum"],
+      "defaultSensitivity": 0.9,
+      "isDefault": true
+    },
+    {
+      "id": "groin",
+      "name": "Groin",
+      "category": "intimate",
+      "description": "Genital area",
+      "icon": "groin",
+      "subRegions": ["shaft", "head", "balls", "perineum"],
+      "defaultSensitivity": 2.0,
+      "isDefault": true,
+      "isIntimate": true
+    },
+    {
+      "id": "buttocks",
+      "name": "Buttocks",
+      "category": "lower",
+      "description": "Rear end",
+      "icon": "buttocks",
+      "subRegions": ["cheeks", "crack", "sitBones"],
+      "defaultSensitivity": 1.1,
+      "isDefault": true
+    },
+    {
+      "id": "face",
+      "name": "Face",
+      "category": "upper",
+      "description": "Face and head",
+      "icon": "face",
+      "subRegions": ["cheeks", "lips", "chin", "forehead"],
+      "defaultSensitivity": 0.8,
+      "isDefault": true
+    },
+    {
+      "id": "arms",
+      "name": "Arms",
+      "category": "upper",
+      "description": "Arms and hands",
+      "icon": "arm",
+      "subRegions": ["upperArm", "forearm", "wrists", "hands", "fingers"],
+      "defaultSensitivity": 0.6,
+      "isDefault": true
+    },
+    {
+      "id": "legs",
+      "name": "Legs",
+      "category": "lower",
+      "description": "Outer legs and calves",
+      "icon": "leg",
+      "subRegions": ["thighs", "calves", "knees", "ankles"],
+      "defaultSensitivity": 0.7,
+      "isDefault": true
+    },
+    {
+      "id": "fullBody",
+      "name": "Full Body",
+      "category": "general",
+      "description": "Entire body or multiple areas",
+      "icon": "body",
+      "subRegions": [],
+      "defaultSensitivity": 1.0,
+      "isDefault": true,
+      "isComposite": true
+    },
+    {
+      "id": "any",
+      "name": "Any/Psychological",
+      "category": "general",
+      "description": "Psychological activities not tied to specific body parts",
+      "icon": "brain",
+      "subRegions": [],
+      "defaultSensitivity": 1.0,
+      "isDefault": true,
+      "isPsychological": true
+    }
+  ],
+  "categories": [
+    { "id": "upper", "name": "Upper Body", "color": "#3b82f6" },
+    { "id": "torso", "name": "Torso", "color": "#10b981" },
+    { "id": "lower", "name": "Lower Body", "color": "#f59e0b" },
+    { "id": "intimate", "name": "Intimate", "color": "#ec4899" },
+    { "id": "general", "name": "General", "color": "#6b7280" }
+  ]
+}
