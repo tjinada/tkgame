@@ -292,6 +292,60 @@ class KnowledgeSystem {
     return knowledge?.relationship || 'peer'
   }
 
+  /**
+   * Get descriptors for NPCs that TJ hasn't properly met yet
+   * For AI context to avoid using names TJ doesn't know
+   */
+  getUnknownNpcDescriptors() {
+    if (!this.knowledge || !this.config?.npcDescriptors) return {}
+
+    const unknownNpcs = {}
+    const npcs = ['sandy', 'araph', 'nancy', 'aish', 'gaya', 'melissa']
+
+    for (const npcId of npcs) {
+      const tier = this.knowledge.tjKnowledge.npcs[npcId]?.tier || 'unknown'
+      
+      // Only include NPCs that TJ hasn't properly met (unknown or aware)
+      // Once 'met', TJ knows their name from introduction
+      if (tier === 'unknown' || tier === 'aware') {
+        const descriptors = this.config.npcDescriptors[npcId]?.[tier] || 
+                            this.config.npcDescriptors[npcId]?.unknown || 
+                            [`the ${npcId}`]
+        unknownNpcs[npcId] = {
+          tier,
+          descriptors,
+          // Provide a primary descriptor for consistent reference
+          primary: descriptors[0]
+        }
+      }
+    }
+
+    return unknownNpcs
+  }
+
+  /**
+   * Get the appropriate descriptor for an NPC based on TJ's knowledge
+   * Returns the name if known, or a descriptor if not
+   */
+  getNpcDescriptor(npcId) {
+    if (!this.knowledge || !this.config?.npcDescriptors) {
+      return npcId.charAt(0).toUpperCase() + npcId.slice(1)
+    }
+
+    const tier = this.knowledge.tjKnowledge.npcs[npcId]?.tier || 'unknown'
+    
+    // If TJ has properly met them, use their name
+    if (tier === 'met' || tier === 'familiar' || tier === 'intimate') {
+      return npcId.charAt(0).toUpperCase() + npcId.slice(1)
+    }
+
+    // Otherwise return a descriptor
+    const descriptors = this.config.npcDescriptors[npcId]?.[tier] || 
+                        this.config.npcDescriptors[npcId]?.unknown
+    
+    return descriptors?.[0] || npcId.charAt(0).toUpperCase() + npcId.slice(1)
+  }
+
   // ═══════════════════════════════════════════════════════════════════
   // CHOICE FILTERING
   // ═══════════════════════════════════════════════════════════════════

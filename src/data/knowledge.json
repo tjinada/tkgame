@@ -1,4 +1,37 @@
 {
+  "npcDescriptors": {
+    "sandy": {
+      "unknown": ["the imposing woman", "the commanding figure", "the woman in charge"],
+      "aware": ["Sandy", "the Head Mistress"],
+      "met": ["Sandy", "Mistress Sandy"]
+    },
+    "araph": {
+      "unknown": ["the blue-haired woman", "the woman with sharp nails", "the grinning newcomer with feathers"],
+      "aware": ["Araph", "the blue-haired one called Araph"],
+      "met": ["Araph", "the Tickle Queen"]
+    },
+    "nancy": {
+      "unknown": ["the tall athletic woman", "the barefoot newcomer", "the muscular woman"],
+      "aware": ["Nancy", "the athletic one called Nancy"],
+      "met": ["Nancy", "the Foot Goddess"]
+    },
+    "aish": {
+      "unknown": ["the curvy woman", "the sweaty newcomer", "the glistening woman"],
+      "aware": ["Aish", "the one called Aish"],
+      "met": ["Aish", "the Sweat Sovereign"]
+    },
+    "gaya": {
+      "unknown": ["the soft-spoken woman", "the quiet newcomer", "the methodical woman"],
+      "aware": ["Gaya", "the quiet one called Gaya"],
+      "met": ["Gaya", "the Edging Engineer"]
+    },
+    "melissa": {
+      "unknown": ["the cruel-looking woman", "the smirking newcomer", "the woman with cold eyes"],
+      "aware": ["Melissa", "the one called Melissa"],
+      "met": ["Melissa", "the Post-Orgasm Punisher"]
+    }
+  },
+
   "npcProfiles": {
     "sandy": {
       "title": "Head Mistress",

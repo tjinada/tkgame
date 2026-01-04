@@ -289,11 +289,15 @@ class ContextBuilder {
       // Get recent witnessed gossip
       const witnessedGossip = knowledgeSystem.getWitnessedGossip()
       
+      // Get unknown NPC descriptors for AI naming guidance
+      const unknownNpcDescriptors = knowledgeSystem.getUnknownNpcDescriptors()
+      
       return {
         tjKnownNpcs: knownNpcs,
         discoveredLocations,
         currentNpcKnowledge,
-        witnessedGossip: witnessedGossip.slice(-3)
+        witnessedGossip: witnessedGossip.slice(-3),
+        unknownNpcDescriptors
       }
     } catch (error) {
       console.error('Failed to gather knowledge context:', error)
@@ -424,14 +428,33 @@ class ContextBuilder {
       const k = context.knowledge
       const knowledgeLines = ['=== KNOWLEDGE STATE ===']
 
+      // CRITICAL: Unknown NPC descriptors - must come first!
+      if (k.unknownNpcDescriptors && Object.keys(k.unknownNpcDescriptors).length > 0) {
+        knowledgeLines.push('')
+        knowledgeLines.push('⚠️ CRITICAL - UNKNOWN NPCs (DO NOT USE THEIR NAMES):')
+        knowledgeLines.push('TJ has NOT been introduced to these characters yet.')
+        knowledgeLines.push('In narrative AND choices, refer to them ONLY by description:')
+        knowledgeLines.push('')
+        
+        for (const [npcId, data] of Object.entries(k.unknownNpcDescriptors)) {
+          const name = npcId.charAt(0).toUpperCase() + npcId.slice(1)
+          knowledgeLines.push(`  • ${name} → Use: "${data.descriptors.join('" or "')}"`)
+        }
+        
+        knowledgeLines.push('')
+        knowledgeLines.push('Only use their real names AFTER a formal introduction scene.')
+      }
+
       // What TJ knows about NPCs
       if (k.tjKnownNpcs && k.tjKnownNpcs.length > 0) {
+        knowledgeLines.push('')
         const npcKnowledge = k.tjKnownNpcs.map(n => {
           const tier = this._getKnowledgeTierDescription(n.tier)
           return `${n.npcId} (${tier})`
         }).join(', ')
         knowledgeLines.push(`TJ knows: ${npcKnowledge}`)
       } else {
+        knowledgeLines.push('')
         knowledgeLines.push('TJ knows no one yet - first encounters should include introductions.')
       }
 
