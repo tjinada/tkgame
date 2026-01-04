@@ -7,7 +7,8 @@ import { NpcEditorTab } from './tabs/NpcEditorTab'
 import { EventEditorTab } from './tabs/EventEditorTab'
 import { StateInspectorTab } from './tabs/StateInspectorTab'
 import { DebugTab } from './tabs/DebugTab'
-import { Settings, Image, FileJson, Users, Zap, Activity, Bug } from 'lucide-react'
+import KnowledgeGraphTab from './tabs/KnowledgeGraphTab'
+import { Settings, Image, FileJson, Users, Zap, Activity, Bug, Network } from 'lucide-react'
 
 export function AdminPanel({ 
   isOpen, 
@@ -53,6 +54,12 @@ export function AdminPanel({
       label: 'Events',
       icon: <Zap size={16} />,
       render: () => <EventEditorTab />,
+    },
+    {
+      id: 'knowledge',
+      label: 'Knowledge',
+      icon: <Network size={16} />,
+      render: () => <KnowledgeGraphTab saveSlotId={gameState?.saveSlotId} />,
     },
     {
       id: 'state',

@@ -90,6 +90,9 @@ const defaultSettings = {
   aiNpcConsistency: 'strict', // 'strict', 'flexible'
   aiSurpriseEvents: true,
   
+  // -- Context System --
+  enableRichContext: true, // Include progression/events in AI prompts
+  
   // ===================
   // VISUAL SETTINGS
   // ===================

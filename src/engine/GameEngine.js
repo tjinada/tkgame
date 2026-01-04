@@ -5,6 +5,7 @@ import { ToneEngine } from './ToneEngine'
 import { ContentRouter } from '../content/ContentRouter'
 import { progressionSystem } from './ProgressionSystem.js'
 import { eventLogger } from './EventLogger.js'
+import knowledgeSystem from './KnowledgeSystem.js'
 import { debugLog } from '../components/admin/tabs/DebugTab'
 import sampleScenario from '../data/scenarios/sample.json'
 
@@ -198,6 +199,14 @@ export class GameEngine {
       debugLog.error('Failed to initialize progression', error.message)
     }
     
+    // Initialize knowledge system
+    try {
+      await knowledgeSystem.reset(slotId)
+      debugLog.game('Knowledge system initialized', { saveSlotId: slotId })
+    } catch (error) {
+      debugLog.error('Failed to initialize knowledge system', error.message)
+    }
+    
     // Store current scenario reference
     this.currentScenario = scenarioData
     
@@ -283,6 +292,14 @@ export class GameEngine {
       debugLog.error('Failed to initialize progression', error.message)
     }
     
+    // Initialize knowledge system
+    try {
+      await knowledgeSystem.reset(slotId)
+      debugLog.game('Knowledge system initialized', { saveSlotId: slotId })
+    } catch (error) {
+      debugLog.error('Failed to initialize knowledge system', error.message)
+    }
+    
     // Set content router to AI-only mode
     this.contentRouter.setMode('ai-only')
     
@@ -363,6 +380,14 @@ export class GameEngine {
       } catch (error) {
         debugLog.error('Failed to load progression', error.message)
       }
+      
+      // Initialize knowledge system
+      try {
+        await knowledgeSystem.initialize(saveSlotId)
+        debugLog.game('Knowledge system loaded', { saveSlotId })
+      } catch (error) {
+        debugLog.error('Failed to load knowledge system', error.message)
+      }
     }
     
     // Try to load the scenario that was being played
@@ -421,6 +446,10 @@ export class GameEngine {
     if (!choice) {
       return { error: 'Invalid choice' }
     }
+
+    // Resolve expired consequences at turn start
+    const currentTurn = this.stateManager.getState().turn
+    await this.contentRouter.resolveExpiredConsequences(currentTurn)
 
     debugLog.game(`Choice selected: ${choice.text}`, { choiceId })
 
@@ -525,6 +554,16 @@ export class GameEngine {
     )
     if (progressionResults) {
       result.progression = progressionResults
+    }
+
+    // Process knowledge tracking
+    const knowledgeResults = await this._processKnowledgeUpdates(
+      this.currentScene,
+      choice,
+      result.roll
+    )
+    if (knowledgeResults) {
+      result.knowledge = knowledgeResults
     }
 
     // Log event for context tracking
@@ -697,6 +736,10 @@ export class GameEngine {
       return { error: 'Game not running' }
     }
 
+    // Resolve expired consequences at turn start
+    const currentTurn = this.stateManager.getState().turn
+    await this.contentRouter.resolveExpiredConsequences(currentTurn)
+
     debugLog.game(`Custom action: ${actionText.substring(0, 50)}...`)
 
     // Increment turn
@@ -725,6 +768,13 @@ export class GameEngine {
     
     // Process progression tracking for current scene before moving to next
     const progressionResults = await this._processProgression(
+      this.currentScene,
+      { text: actionText, type: 'custom' },
+      null
+    )
+
+    // Process knowledge tracking
+    const knowledgeResults = await this._processKnowledgeUpdates(
       this.currentScene,
       { text: actionText, type: 'custom' },
       null
@@ -1028,6 +1078,175 @@ export class GameEngine {
       debugLog.error('Failed to log event', error.message)
       return null
     }
+  }
+
+  /**
+   * Process knowledge updates after a scene
+   * @param {Object} scene - The current scene
+   * @param {Object} choice - The player's choice
+   * @param {Object} rollResult - Dice roll result if any
+   * @returns {Promise<Object>} Knowledge update results
+   */
+  async _processKnowledgeUpdates(scene, choice, rollResult) {
+    if (!this.stateManager.getSaveSlotId()) {
+      return null
+    }
+
+    try {
+      const state = this.stateManager.getState()
+      const results = { tjUpdates: [], npcUpdates: [], gossipEvents: [] }
+
+      // Update TJ's knowledge of NPCs in the scene
+      const npcsInScene = this._extractNpcsFromScene(scene)
+      for (const npcId of npcsInScene) {
+        const updateResult = await knowledgeSystem.recordTJMeetsNpc(npcId, state.turn, {
+          traits: this._extractInteractionTags(scene, choice, rollResult),
+          facts: [],
+          secrets: []
+        })
+        if (updateResult) {
+          results.tjUpdates.push(updateResult)
+          if (updateResult.tierChanged) {
+            debugLog.game('TJ knowledge tier changed', updateResult)
+          }
+        }
+      }
+
+      // Update TJ's location knowledge
+      if (scene.location) {
+        const locResult = await knowledgeSystem.recordTJVisitsLocation(scene.location, state.turn)
+        if (locResult?.statusChanged) {
+          debugLog.game('TJ discovered location', locResult)
+        }
+      }
+
+      // Record NPC's direct experience with TJ
+      for (const npcId of npcsInScene) {
+        const experience = {
+          turn: state.turn,
+          summary: this._generateExperienceSummary(scene, choice, rollResult),
+          tags: this._extractInteractionTags(scene, choice, rollResult),
+          intensity: this._calculateInteractionIntensity(scene, choice, rollResult),
+          location: scene.location || state.currentLocation,
+          fetishes: this._extractFetishesFromScene(scene)
+        }
+        const npcResult = await knowledgeSystem.recordNpcExperience(npcId, experience)
+        if (npcResult) {
+          results.npcUpdates.push(npcResult)
+        }
+      }
+
+      // Process gossip if multiple NPCs present
+      if (npcsInScene.length >= 2) {
+        const gossipEvents = await knowledgeSystem.processSceneGossip(
+          npcsInScene,
+          state.turn,
+          true // TJ witnessed
+        )
+        results.gossipEvents = gossipEvents
+        if (gossipEvents.length > 0) {
+          debugLog.game('Gossip occurred', { count: gossipEvents.length })
+        }
+      }
+
+      return results
+    } catch (error) {
+      debugLog.error('Knowledge update failed', error.message)
+      return null
+    }
+  }
+
+  /**
+   * Extract NPCs from a scene
+   */
+  _extractNpcsFromScene(scene) {
+    const npcs = []
+    if (scene.npcs && Array.isArray(scene.npcs)) {
+      for (const npc of scene.npcs) {
+        npcs.push(typeof npc === 'string' ? npc : npc.id)
+      }
+    } else if (scene.npc) {
+      npcs.push(scene.npc)
+    }
+    return npcs
+  }
+
+  /**
+   * Extract interaction tags from scene/choice for knowledge tracking
+   */
+  _extractInteractionTags(scene, choice, rollResult) {
+    const tags = []
+    
+    // From choice type
+    if (choice?.type === 'submit') tags.push('obedient')
+    if (choice?.type === 'defy') tags.push(rollResult?.success ? 'defiant' : 'disobedient')
+    if (choice?.type === 'beg') tags.push('eager')
+    if (choice?.type === 'worship') tags.push('worshipful')
+    
+    // From roll result
+    if (rollResult?.critical === 'success') tags.push('skilled')
+    if (rollResult?.critical === 'failure') tags.push('pathetic')
+    
+    // From scene content
+    const desc = (scene?.description || '').toLowerCase()
+    if (desc.includes('endur') || desc.includes('withstand')) tags.push('resilient')
+    if (desc.includes('trembl') || desc.includes('shak')) tags.push('trembling')
+    if (desc.includes('moan') || desc.includes('cry') || desc.includes('scream')) tags.push('vocal')
+    if (desc.includes('squirm') || desc.includes('writhe')) tags.push('squirming')
+    
+    return [...new Set(tags)]
+  }
+
+  /**
+   * Generate a summary of the experience for NPC knowledge
+   */
+  _generateExperienceSummary(scene, choice, rollResult) {
+    const choiceText = choice?.text || 'custom action'
+    const outcome = rollResult ? (rollResult.success ? 'succeeded' : 'failed') : 'completed'
+    return `TJ ${outcome}: ${choiceText.substring(0, 50)}`
+  }
+
+  /**
+   * Calculate interaction intensity for knowledge tracking
+   */
+  _calculateInteractionIntensity(scene, choice, rollResult) {
+    let intensity = 5
+    if (rollResult?.critical === 'success') intensity += 2
+    if (rollResult?.critical === 'failure') intensity += 3
+    if (scene?.bodyPart) intensity += 1
+    if (choice?.type === 'defy') intensity += 2
+    return Math.min(intensity, 10)
+  }
+
+  /**
+   * Extract fetishes from scene content
+   */
+  _extractFetishesFromScene(scene) {
+    const fetishes = []
+    const desc = (scene?.description || '').toLowerCase()
+    const bodyPart = scene?.bodyPart?.toLowerCase() || ''
+    
+    if (bodyPart === 'feet' || desc.includes('foot') || desc.includes('feet')) fetishes.push('foot_worship')
+    if (bodyPart === 'armpit' || desc.includes('sweat')) fetishes.push('sweat_worship')
+    if (desc.includes('tickl')) fetishes.push('tickling')
+    if (desc.includes('edge') || desc.includes('denial')) fetishes.push('edging')
+    if (desc.includes('orgasm')) fetishes.push('post_orgasm')
+    
+    return fetishes
+  }
+
+  /**
+   * Get the knowledge system instance
+   */
+  getKnowledgeSystem() {
+    return knowledgeSystem
+  }
+
+  /**
+   * Filter choices by knowledge requirements
+   */
+  filterChoicesByKnowledge(choices) {
+    return knowledgeSystem.filterChoicesByKnowledge(choices)
   }
 
   /**

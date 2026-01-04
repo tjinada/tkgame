@@ -1,6 +1,7 @@
 import { ScenarioLoader } from './ScenarioLoader'
 import { NanoGPTClient } from './NanoGPTClient'
 import { PromptBuilder } from './PromptBuilder'
+import { contextBuilder } from './ContextBuilder.js'
 import { ChoiceGenerator } from '../engine/ChoiceGenerator'
 import { settingsService } from '../services/SettingsService'
 import { debugLog } from '../components/admin/tabs/DebugTab'
@@ -103,17 +104,26 @@ export class ContentRouter {
       }
     }
 
+    // Build rich context from progression and events
+    const richContext = await this._buildRichContext(context)
+    
     const systemPrompt = this.promptBuilder.buildSystemPrompt(context)
     const userMessage = this.promptBuilder.buildUserMessage(actionText, context)
+    
+    // Combine system prompt with rich context
+    const enhancedSystemPrompt = richContext 
+      ? `${systemPrompt}\n\n${richContext}`
+      : systemPrompt
 
     // Log the full prompt for debugging
-    debugLog.prompt(systemPrompt, userMessage, {
+    debugLog.prompt(enhancedSystemPrompt, userMessage, {
       ...context,
       turn: context.history?.length || 0,
+      hasRichContext: !!richContext,
     })
 
     const response = await this.nanoGPTClient.chat([
-      { role: 'system', content: systemPrompt },
+      { role: 'system', content: enhancedSystemPrompt },
       { role: 'user', content: userMessage },
     ])
 
@@ -146,18 +156,27 @@ export class ContentRouter {
       }
     }
 
+    // Build rich context from progression and events
+    const richContext = await this._buildRichContext(context)
+    
     const systemPrompt = this.promptBuilder.buildSystemPrompt(context)
     const userMessage = this.promptBuilder.buildUserMessage(actionText, context)
+    
+    // Combine system prompt with rich context
+    const enhancedSystemPrompt = richContext 
+      ? `${systemPrompt}\n\n${richContext}`
+      : systemPrompt
 
     // Log the full prompt for debugging
-    debugLog.prompt(systemPrompt, userMessage, {
+    debugLog.prompt(enhancedSystemPrompt, userMessage, {
       ...context,
       turn: context.history?.length || 0,
+      hasRichContext: !!richContext,
     })
 
     const response = await this.nanoGPTClient.streamChat(
       [
-        { role: 'system', content: systemPrompt },
+        { role: 'system', content: enhancedSystemPrompt },
         { role: 'user', content: userMessage },
       ],
       onChunk
@@ -276,6 +295,60 @@ export class ContentRouter {
    */
   setHybridChoices(enabled) {
     this.useHybridChoices = enabled
+  }
+
+  /**
+   * Build rich context from progression and events
+   * @param {Object} context - Game context
+   * @returns {Promise<string>} Formatted context string
+   */
+  async _buildRichContext(context) {
+    try {
+      // Check if rich context is enabled in settings
+      const enableRichContext = settingsService.get('enableRichContext')
+      if (enableRichContext === false) {
+        return ''
+      }
+
+      const richContext = await contextBuilder.buildContext({
+        turn: context.turn || context.history?.length || 0,
+        chapter: context.chapter || 1
+      })
+
+      return richContext.formatted || ''
+    } catch (error) {
+      console.error('Failed to build rich context:', error)
+      return ''
+    }
+  }
+
+  /**
+   * Get NPC-specific context for scene generation
+   * @param {string} npcId - NPC identifier
+   * @param {Object} context - Game context
+   * @returns {Promise<string>} NPC context
+   */
+  async getNpcContext(npcId, context = {}) {
+    try {
+      return await contextBuilder.getNpcContext(npcId, {
+        turn: context.turn || context.history?.length || 0
+      })
+    } catch (error) {
+      console.error('Failed to get NPC context:', error)
+      return ''
+    }
+  }
+
+  /**
+   * Resolve expired consequences at turn start
+   * @param {number} currentTurn - Current turn number
+   */
+  async resolveExpiredConsequences(currentTurn) {
+    try {
+      await contextBuilder.resolveExpiredConsequences(currentTurn)
+    } catch (error) {
+      console.error('Failed to resolve expired consequences:', error)
+    }
   }
 }
 

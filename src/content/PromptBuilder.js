@@ -1,6 +1,7 @@
 import npcsData from '../data/npcs.json'
 import configData from '../data/config.json'
 import { settingsService } from '../services/SettingsService'
+import { contextBuilder } from './ContextBuilder.js'
 
 export class PromptBuilder {
   constructor(options = {}) {
@@ -16,6 +17,41 @@ export class PromptBuilder {
    */
   setContextLimit(limit) {
     this.contextLimit = limit || 6
+  }
+
+  /**
+   * Build rich context from progression and events
+   * @param {Object} context - Game context
+   * @returns {Promise<string>} Formatted context for AI
+   */
+  async buildRichContext(context) {
+    try {
+      const richContext = await contextBuilder.buildContext({
+        turn: context.turn || 0,
+        chapter: context.chapter || 1
+      })
+      return richContext.formatted || ''
+    } catch (error) {
+      console.error('Failed to build rich context:', error)
+      return ''
+    }
+  }
+
+  /**
+   * Get NPC-specific context
+   * @param {string} npcId - NPC identifier
+   * @param {Object} context - Game context
+   * @returns {Promise<string>} NPC context
+   */
+  async getNpcContext(npcId, context) {
+    try {
+      return await contextBuilder.getNpcContext(npcId, {
+        turn: context.turn || 0
+      })
+    } catch (error) {
+      console.error('Failed to get NPC context:', error)
+      return ''
+    }
   }
 
   /**

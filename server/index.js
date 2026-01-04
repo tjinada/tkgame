@@ -11,6 +11,7 @@ import scenariosRouter from './routes/scenarios.js'
 import chatRouter from './routes/chat.js'
 import progressionRouter from './routes/progression.js'
 import eventsRouter from './routes/events.js'
+import knowledgeRouter from './routes/knowledge.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -28,6 +29,7 @@ app.use('/api/scenarios', scenariosRouter)
 app.use('/api/chat', chatRouter)
 app.use('/api/progression', progressionRouter)
 app.use('/api/events', eventsRouter)
+app.use('/api/knowledge', knowledgeRouter)
 
 // Health check
 app.get('/api/health', (req, res) => {

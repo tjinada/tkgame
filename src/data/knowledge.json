@@ -1,0 +1,172 @@
+{
+  "npcProfiles": {
+    "sandy": {
+      "title": "Head Mistress",
+      "gossipStyle": "strategic",
+      "gossipLikelihood": 0.3,
+      "sharesTo": ["araph", "nancy", "aish", "gaya", "melissa"],
+      "receivesFrom": ["araph", "nancy", "aish", "gaya", "melissa"],
+      "baseRelationships": {
+        "araph": { "relationship": "subordinate", "trust": 75 },
+        "nancy": { "relationship": "subordinate", "trust": 70 },
+        "aish": { "relationship": "subordinate", "trust": 85 },
+        "gaya": { "relationship": "subordinate", "trust": 80 },
+        "melissa": { "relationship": "subordinate", "trust": 65 }
+      }
+    },
+    "araph": {
+      "title": "The Tickle Queen",
+      "gossipStyle": "braggart",
+      "gossipLikelihood": 0.7,
+      "sharesTo": ["sandy", "nancy", "melissa"],
+      "receivesFrom": ["sandy", "nancy", "melissa"],
+      "baseRelationships": {
+        "sandy": { "relationship": "boss", "trust": 80 },
+        "nancy": { "relationship": "rival", "trust": 40 },
+        "aish": { "relationship": "peer", "trust": 50 },
+        "gaya": { "relationship": "peer", "trust": 45 },
+        "melissa": { "relationship": "ally", "trust": 70 }
+      }
+    },
+    "nancy": {
+      "title": "The Foot Goddess",
+      "gossipStyle": "competitive",
+      "gossipLikelihood": 0.5,
+      "sharesTo": ["sandy", "araph"],
+      "receivesFrom": ["sandy", "araph", "aish"],
+      "baseRelationships": {
+        "sandy": { "relationship": "boss", "trust": 75 },
+        "araph": { "relationship": "rival", "trust": 35 },
+        "aish": { "relationship": "peer", "trust": 55 },
+        "gaya": { "relationship": "peer", "trust": 50 },
+        "melissa": { "relationship": "peer", "trust": 45 }
+      }
+    },
+    "aish": {
+      "title": "The Sweat Sovereign",
+      "gossipStyle": "professional",
+      "gossipLikelihood": 0.4,
+      "sharesTo": ["sandy"],
+      "receivesFrom": ["sandy"],
+      "baseRelationships": {
+        "sandy": { "relationship": "boss", "trust": 90 },
+        "araph": { "relationship": "peer", "trust": 50 },
+        "nancy": { "relationship": "peer", "trust": 55 },
+        "gaya": { "relationship": "peer", "trust": 60 },
+        "melissa": { "relationship": "peer", "trust": 50 }
+      }
+    },
+    "gaya": {
+      "title": "The Edging Engineer",
+      "gossipStyle": "secretive",
+      "gossipLikelihood": 0.1,
+      "sharesTo": [],
+      "receivesFrom": ["sandy", "melissa"],
+      "baseRelationships": {
+        "sandy": { "relationship": "boss", "trust": 70 },
+        "araph": { "relationship": "peer", "trust": 40 },
+        "nancy": { "relationship": "peer", "trust": 45 },
+        "aish": { "relationship": "peer", "trust": 55 },
+        "melissa": { "relationship": "ally", "trust": 65 }
+      }
+    },
+    "melissa": {
+      "title": "The Post-Orgasm Punisher",
+      "gossipStyle": "scheming",
+      "gossipLikelihood": 0.5,
+      "sharesTo": ["araph", "gaya"],
+      "receivesFrom": ["sandy", "araph", "gaya"],
+      "baseRelationships": {
+        "sandy": { "relationship": "boss", "trust": 65 },
+        "araph": { "relationship": "ally", "trust": 70 },
+        "nancy": { "relationship": "peer", "trust": 40 },
+        "aish": { "relationship": "peer", "trust": 45 },
+        "gaya": { "relationship": "ally", "trust": 65 }
+      }
+    }
+  },
+
+  "knowledgeTiers": {
+    "tj_npc": {
+      "unknown": { "level": 0, "description": "Never encountered", "color": "#374151" },
+      "aware": { "level": 1, "description": "Heard name or glimpsed", "color": "#f59e0b" },
+      "met": { "level": 2, "description": "Had direct interaction", "color": "#22c55e" },
+      "familiar": { "level": 3, "description": "Knows personality", "color": "#3b82f6" },
+      "intimate": { "level": 4, "description": "Knows secrets", "color": "#8b5cf6" }
+    },
+    "location": {
+      "undiscovered": { "level": 0, "description": "Doesn't know it exists", "color": "#374151" },
+      "heard_of": { "level": 1, "description": "Someone mentioned it", "color": "#f59e0b" },
+      "visited": { "level": 2, "description": "Has been there once", "color": "#22c55e" },
+      "familiar": { "level": 3, "description": "Knows layout well", "color": "#3b82f6" }
+    }
+  },
+
+  "impressionLevels": {
+    "prized": { "score": 3, "description": "Highly valued", "color": "#10b981" },
+    "promising": { "score": 1, "description": "Shows potential", "color": "#22c55e" },
+    "neutral": { "score": 0, "description": "No strong opinion", "color": "#6b7280" },
+    "disappointing": { "score": -2, "description": "Below expectations", "color": "#f59e0b" },
+    "worthless": { "score": -3, "description": "Complete failure", "color": "#ef4444" }
+  },
+
+  "traitCategories": {
+    "positive": [
+      "obedient", "eager", "compliant", "skilled", "resilient", 
+      "devoted", "worshipful", "attentive", "enduring", "responsive"
+    ],
+    "negative": [
+      "defiant", "lazy", "weak", "pathetic", "disobedient", 
+      "rebellious", "stubborn", "resistant", "ungrateful", "slow"
+    ],
+    "neutral": [
+      "nervous", "quiet", "watchful", "curious", "cautious",
+      "ticklish", "sensitive", "vocal", "silent", "trembling"
+    ],
+    "physical": [
+      "ticklish", "sensitive", "enduring", "vocal", "sweaty",
+      "responsive", "trembling", "squirming"
+    ]
+  },
+
+  "relationshipTypes": {
+    "boss": { "description": "Superior authority", "trustModifier": 10 },
+    "subordinate": { "description": "Under authority", "trustModifier": 0 },
+    "peer": { "description": "Equal standing", "trustModifier": 0 },
+    "rival": { "description": "Competitive relationship", "trustModifier": -15 },
+    "ally": { "description": "Close collaborator", "trustModifier": 15 }
+  },
+
+  "locationConnections": {
+    "starting_room": { "startsDiscovered": true, "connectedTo": ["main_hall"] },
+    "main_hall": { "startsDiscovered": false, "connectedTo": ["starting_room", "classroom", "workout_pit", "chamber", "dormitory", "garden"] },
+    "classroom": { "startsDiscovered": false, "connectedTo": ["main_hall"] },
+    "workout_pit": { "startsDiscovered": false, "connectedTo": ["main_hall"] },
+    "chamber": { "startsDiscovered": false, "connectedTo": ["main_hall", "dungeon"] },
+    "dormitory": { "startsDiscovered": false, "connectedTo": ["main_hall"] },
+    "punishment_room": { "startsDiscovered": false, "connectedTo": ["dungeon", "chamber"] },
+    "garden": { "startsDiscovered": false, "connectedTo": ["main_hall"] },
+    "dungeon": { "startsDiscovered": false, "connectedTo": ["chamber", "punishment_room"] }
+  },
+
+  "graphVisualization": {
+    "nodeColors": {
+      "player": "#ec4899",
+      "npc": "#8b5cf6",
+      "location": "#3b82f6"
+    },
+    "edgeColors": {
+      "tj_knows": "#22c55e",
+      "npc_knows_tj": "#f59e0b",
+      "npc_knows_npc": "#6b7280",
+      "gossip": "#ef4444"
+    },
+    "tierColors": {
+      "unknown": "#374151",
+      "aware": "#f59e0b",
+      "met": "#22c55e",
+      "familiar": "#3b82f6",
+      "intimate": "#8b5cf6"
+    }
+  }
+}
